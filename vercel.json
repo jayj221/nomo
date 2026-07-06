@@ -1,0 +1,8 @@
+{
+  "crons": [
+    { "path": "/api/cron/daily-match", "schedule": "50 7 * * *" },
+    { "path": "/api/cron/fire-window?slot=morning", "schedule": "0 9 * * *" },
+    { "path": "/api/cron/fire-window?slot=evening", "schedule": "0 20 * * *" },
+    { "path": "/api/cron/fire-window?slot=random", "schedule": "0 11-19 * * *" }
+  ]
+}
