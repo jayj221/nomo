@@ -34,10 +34,10 @@ export default function SignupPage() {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-6">
-      <h1 className="text-2xl font-semibold">Window</h1>
+      <h1 className="text-2xl font-semibold">Nomo</h1>
       <p className="mt-1 text-sm text-secondary">
-        Anonymous first. Voice before faces. Nothing reveals unless you both
-        choose it.
+        No more fake connections. Anonymous first, voice before faces —
+        nothing reveals unless you both choose it.
       </p>
 
       <form onSubmit={submit} className="mt-10 flex flex-col gap-3">

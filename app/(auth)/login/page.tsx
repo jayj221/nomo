@@ -33,9 +33,9 @@ export default function LoginPage() {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-6">
-      <h1 className="text-2xl font-semibold">Window</h1>
+      <h1 className="text-2xl font-semibold">Nomo</h1>
       <p className="mt-1 text-sm text-secondary">
-        Talk first. Reveal on your terms.
+        No more fake connections. Talk first, reveal on your terms.
       </p>
 
       <form onSubmit={submit} className="mt-10 flex flex-col gap-3">

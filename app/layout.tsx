@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Window",
-  description: "Talk first. Reveal on your terms.",
+  title: "Nomo",
+  description: "No more fake connections. No more talk that goes nowhere.",
 };
 
 export const viewport: Viewport = {
