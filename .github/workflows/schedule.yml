@@ -1,0 +1,36 @@
+# Scheduled jobs — replaces Vercel crons (Hobby plan only allows daily).
+# Times are UTC. Requires:
+#   secret  CRON_SECRET — must match the Vercel env var of the same name
+#   variable APP_URL    — the production URL, e.g. https://nomo.vercel.app
+name: schedule
+
+on:
+  schedule:
+    - cron: "50 7 * * *" # daily curated profile
+    - cron: "0 9 * * *" # morning anchor window
+    - cron: "0 20 * * *" # evening anchor window
+    - cron: "0 11-19 * * *" # random window tick (fires once/day server-side)
+  workflow_dispatch:
+    inputs:
+      path:
+        description: "API path to hit (for manual testing)"
+        required: false
+        default: "/api/cron/fire-window?slot=manual"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call cron endpoint
+        env:
+          APP_URL: ${{ vars.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          case "${{ github.event.schedule }}" in
+            "50 7 * * *")  path="/api/cron/daily-match" ;;
+            "0 9 * * *")   path="/api/cron/fire-window?slot=morning" ;;
+            "0 20 * * *")  path="/api/cron/fire-window?slot=evening" ;;
+            "0 11-19 * * *") path="/api/cron/fire-window?slot=random" ;;
+            *) path="${{ inputs.path }}" ;;
+          esac
+          curl -fsS -H "Authorization: Bearer $CRON_SECRET" "$APP_URL$path"
