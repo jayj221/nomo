@@ -40,9 +40,10 @@ export function LivenessCheck() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const video = videoRef.current;
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      const stream = videoRef.current?.srcObject as MediaStream | null;
+      const stream = video?.srcObject as MediaStream | null;
       stream?.getTracks().forEach((t) => t.stop());
     };
   }, []);
