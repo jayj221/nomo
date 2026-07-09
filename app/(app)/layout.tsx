@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { WindowListener } from "@/components/window/WindowListener";
+import { SignOutButton } from "@/components/ui/SignOutButton";
 
 export default async function AppLayout({
   children,
@@ -24,7 +25,13 @@ export default async function AppLayout({
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-md flex-col">
       <WindowListener />
-      <div className="flex-1 px-6 pb-24 pt-8">{children}</div>
+      <header className="flex items-center justify-between px-6 pt-5">
+        <span className="text-[11px] uppercase tracking-widest text-faint">
+          Nomo
+        </span>
+        <SignOutButton />
+      </header>
+      <div className="flex-1 px-6 pb-24 pt-6">{children}</div>
       <nav className="fixed inset-x-0 bottom-0 border-t border-line bg-bg">
         <div className="mx-auto flex max-w-md">
           <Link
