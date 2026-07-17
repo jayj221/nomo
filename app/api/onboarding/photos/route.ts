@@ -43,14 +43,20 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    try {
-      const score = await scorePhoto(signed.signedUrl);
-      scored.push({ path, score });
-    } catch {
-      return NextResponse.json(
-        { error: "We couldn't process one of your photos. Try a different one." },
-        { status: 422 },
-      );
+    if (!process.env.REPLICATE_API_TOKEN) {
+      // Launch fallback: no scoring model configured → everyone lands in
+      // the same neutral bracket. Set REPLICATE_API_TOKEN to enable.
+      scored.push({ path, score: 5.0 });
+    } else {
+      try {
+        const score = await scorePhoto(signed.signedUrl);
+        scored.push({ path, score });
+      } catch {
+        return NextResponse.json(
+          { error: "We couldn't process one of your photos. Try a different one." },
+          { status: 422 },
+        );
+      }
     }
   }
 
