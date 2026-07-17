@@ -4,6 +4,20 @@
 
 create extension if not exists pgcrypto;
 
+-- ------------------------------------------------------------- waitlist
+-- Pre-launch signups. Public may insert (join) but never read the list.
+create table if not exists public.waitlist (
+  id uuid primary key default gen_random_uuid(),
+  email text unique not null,
+  referrer text,
+  created_at timestamptz default now()
+);
+alter table public.waitlist enable row level security;
+drop policy if exists "waitlist public join" on public.waitlist;
+create policy "waitlist public join" on public.waitlist
+  for insert to anon, authenticated
+  with check (char_length(email) between 3 and 320);
+
 -- ---------------------------------------------------------------- users
 create table public.users (
   id uuid primary key default gen_random_uuid(),
