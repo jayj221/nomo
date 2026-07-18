@@ -260,36 +260,36 @@
         <div class="step">
           <span class="step-index">01</span>
           <div>
-            <p class="step-title">Three prompts</p>
-            <p class="step-body">You write three honest answers. No photo attached, no name. That is all anyone sees of you at first.</p>
+            <p class="step-title">You're placed, privately</p>
+            <p class="step-body">Upload your photos and our AI places you in a bracket. You see your placement exactly once — nobody else ever does, and neither do you again. You only ever meet people in your own bracket.</p>
           </div>
         </div>
         <div class="step">
           <span class="step-index">02</span>
           <div>
-            <p class="step-title">A window opens</p>
-            <p class="step-body">A few times a day, for everyone at once, a 15-minute window opens. If you both liked each other's words, a live voice call fires.</p>
+            <p class="step-title">Ten people a day</p>
+            <p class="step-body">Every morning: ten people, ranked one to ten by how much your vibe overlaps — ideas, mentality, music. No photos, no names. Just their three honest answers. Read them all. Mark who you'd talk to.</p>
           </div>
         </div>
         <div class="step">
           <span class="step-index">03</span>
           <div>
-            <p class="step-title">Just voices</p>
-            <p class="step-body">The call starts fully anonymous. Two people, a real conversation, no faces. You skip anytime — no reason needed.</p>
+            <p class="step-title">One window. One hour.</p>
+            <p class="step-body">At a random moment each day, everyone's phone lights up at once. The window is open for one hour. Mutual picks become live voice calls — start with your number one, and if the vibe isn't there, move down the list.</p>
           </div>
         </div>
         <div class="step">
           <span class="step-index">04</span>
           <div>
-            <p class="step-title">See each other</p>
-            <p class="step-body">A few minutes in, if you both tap yes, photos appear. Not a moment before, and never one-sided.</p>
+            <p class="step-title">Two reveals a day</p>
+            <p class="step-body">When a call feels like something, ask for the reveal. If they ask too, photos appear — for both of you at once. You get two reveals a day. Spend them like they matter, because they do.</p>
           </div>
         </div>
         <div class="step">
           <span class="step-index">05</span>
           <div>
             <p class="step-title">Names, then everything</p>
-            <p class="step-body">Names come next. After that, chat and socials — shared only when you both choose to keep going.</p>
+            <p class="step-body">Names come after faces. Then chat and socials — shared only when you both choose to keep going.</p>
           </div>
         </div>
       </div>
@@ -319,10 +319,10 @@
       <p class="eyebrow">The window</p>
       <h2>It opens for everyone at once.</h2>
       <div class="window-motif">
-        <span class="window-clock" id="clock">15:00</span>
-        <span class="window-cap">How long a window stays open. Show up, or catch the next one.</span>
+        <span class="window-clock" id="clock">60:00</span>
+        <span class="window-cap">One hour, once a day, at a moment nobody knows in advance.</span>
       </div>
-      <p class="lead">No infinite feed. No endless swiping. Scarcity is the point — it makes every window worth showing up for.</p>
+      <p class="lead">No infinite feed. No endless swiping. Ten people, one window, two reveals — scarcity is the point. It makes every window worth showing up for.</p>
     </section>
 
     <!-- QUOTE -->
@@ -443,9 +443,9 @@
     /* ── Illustrative window countdown (loops; clearly a demo) ────── */
     var clock = document.getElementById("clock");
     if (clock && !reduce) {
-      var secs = 900;
+      var secs = 3600;
       setInterval(function () {
-        secs = secs <= 0 ? 900 : secs - 1;
+        secs = secs <= 0 ? 3600 : secs - 1;
         var m = Math.floor(secs / 60), s = secs % 60;
         clock.textContent = m + ":" + (s < 10 ? "0" : "") + s;
       }, 1000);

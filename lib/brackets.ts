@@ -1,19 +1,11 @@
-// Bracket assignment logic. Server-side only — bracket_score and
-// bracket_tier are never returned to the client in any API response.
+// Bracket assignment logic. A user's bracket (1–10) is computed from
+// facial-geometry scoring at onboarding. It is shown ONCE to the user
+// themselves, then never again — and never to anyone else.
 
-export type BracketTier =
-  | "0-4.5"
-  | "4.5-6.0"
-  | "6.0-7.5"
-  | "7.5-9.0"
-  | "9.0-10";
+export type BracketTier = number; // integer 1–10
 
 export function assignTier(score: number): BracketTier {
-  if (score < 4.5) return "0-4.5";
-  if (score < 6.0) return "4.5-6.0";
-  if (score < 7.5) return "6.0-7.5";
-  if (score < 9.0) return "7.5-9.0";
-  return "9.0-10";
+  return Math.max(1, Math.min(10, Math.round(score)));
 }
 
 /** Average of the top 3 photo scores → bracket_score. */
@@ -22,6 +14,10 @@ export function bracketScoreFromPhotos(photoScores: number[]): number {
   const avg = top3.reduce((s, v) => s + v, 0) / top3.length;
   return Math.round(avg * 100) / 100;
 }
+
+// Daily reveal budget: each user can be part of at most 2 photo
+// reveals per day. Scarcity is the product.
+export const REVEALS_PER_DAY = 2;
 
 // Behavioral score adjustments (0–10, starts at 5.0)
 export const BEHAVIORAL_START = 5.0;

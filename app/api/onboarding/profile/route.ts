@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireUser, isResponse } from "@/lib/auth";
+import { VIBE_TAGS, MIN_TAGS, MAX_TAGS } from "@/lib/tags";
 
 const GENDERS = ["man", "woman", "nonbinary"];
 
@@ -9,7 +10,20 @@ export async function POST(request: Request) {
   const { user, supabase } = auth;
 
   const body = await request.json().catch(() => null);
-  const { first_name, age, city, gender, seeking } = body ?? {};
+  const { first_name, age, city, gender, seeking, vibe_tags } = body ?? {};
+
+  const validTags = new Set(VIBE_TAGS as readonly string[]);
+  if (
+    !Array.isArray(vibe_tags) ||
+    vibe_tags.length < MIN_TAGS ||
+    vibe_tags.length > MAX_TAGS ||
+    vibe_tags.some((t: string) => !validTags.has(t))
+  ) {
+    return NextResponse.json(
+      { error: `Pick ${MIN_TAGS}–${MAX_TAGS} vibe tags` },
+      { status: 400 },
+    );
+  }
 
   if (typeof first_name !== "string" || !first_name.trim()) {
     return NextResponse.json({ error: "First name required" }, { status: 400 });
@@ -42,6 +56,7 @@ export async function POST(request: Request) {
       city: city.trim(),
       gender,
       seeking,
+      vibe_tags,
       last_active: new Date().toISOString(),
     })
     .eq("id", user.id);

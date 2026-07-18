@@ -6,17 +6,13 @@ import {
 } from "@/lib/brackets";
 
 describe("assignTier", () => {
-  it("assigns tier boundaries correctly", () => {
-    expect(assignTier(0)).toBe("0-4.5");
-    expect(assignTier(4.49)).toBe("0-4.5");
-    expect(assignTier(4.5)).toBe("4.5-6.0");
-    expect(assignTier(5.99)).toBe("4.5-6.0");
-    expect(assignTier(6.0)).toBe("6.0-7.5");
-    expect(assignTier(7.49)).toBe("6.0-7.5");
-    expect(assignTier(7.5)).toBe("7.5-9.0");
-    expect(assignTier(8.99)).toBe("7.5-9.0");
-    expect(assignTier(9.0)).toBe("9.0-10");
-    expect(assignTier(10)).toBe("9.0-10");
+  it("rounds scores to integer brackets 1–10", () => {
+    expect(assignTier(0)).toBe(1); // floor at 1
+    expect(assignTier(1.4)).toBe(1);
+    expect(assignTier(5.5)).toBe(6);
+    expect(assignTier(7.49)).toBe(7);
+    expect(assignTier(9.6)).toBe(10);
+    expect(assignTier(12)).toBe(10); // ceiling at 10
   });
 });
 

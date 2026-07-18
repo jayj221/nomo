@@ -2,8 +2,16 @@ import { NextResponse } from "next/server";
 import { requireUser, isResponse } from "@/lib/auth";
 import { createAdminSupabase } from "@/lib/supabase/admin";
 import { buildRevealPayload } from "@/lib/reveal";
-import { MAX_CALL_STEP, callStepToConnectionStep } from "@/lib/steps";
-import { clampScore, STEP_UNLOCK_REWARD } from "@/lib/brackets";
+import {
+  MAX_CALL_STEP,
+  callStepToConnectionStep,
+  CALL_STEP,
+} from "@/lib/steps";
+import {
+  clampScore,
+  STEP_UNLOCK_REWARD,
+  REVEALS_PER_DAY,
+} from "@/lib/brackets";
 
 // Mutual consent to move to the next step. Each participant posts their
 // "yes"; the step only advances when BOTH flags are set. Nothing about
@@ -51,6 +59,46 @@ export async function POST(request: Request) {
 
   // Both agreed — advance the step and reset flags for the next one
   const newStep = call.unlock_step + 1;
+
+  // Photo reveals are budgeted: 2 per user per day. Check both sides
+  // before the reveal happens; consume one credit each on success.
+  if (newStep === CALL_STEP.PHOTO) {
+    const today = new Date().toISOString().slice(0, 10);
+    for (const id of [call.participant_a, call.participant_b]) {
+      const { count } = await admin
+        .from("reveal_events")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", id)
+        .eq("date", today);
+      if ((count ?? 0) >= REVEALS_PER_DAY) {
+        const mine = id === user.id;
+        return NextResponse.json(
+          {
+            error: mine
+              ? "You've used both reveals for today."
+              : "They're out of reveals for today.",
+            budget_exhausted: true,
+          },
+          { status: 429 },
+        );
+      }
+    }
+    await admin.from("reveal_events").insert([
+      {
+        user_id: call.participant_a,
+        other_user_id: call.participant_b,
+        call_id: callId,
+        date: today,
+      },
+      {
+        user_id: call.participant_b,
+        other_user_id: call.participant_a,
+        call_id: callId,
+        date: today,
+      },
+    ]);
+  }
+
   await admin
     .from("calls")
     .update({

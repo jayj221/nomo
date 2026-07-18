@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
+import { VIBE_TAGS, MIN_TAGS, MAX_TAGS } from "@/lib/tags";
 
 const SEEKING_OPTIONS = [
   { label: "Men", value: ["man"] },
@@ -17,8 +18,19 @@ export default function ProfilePage() {
   const [city, setCity] = useState("");
   const [gender, setGender] = useState<string | null>(null);
   const [seeking, setSeeking] = useState<string[] | null>(null);
+  const [tags, setTags] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  function toggleTag(tag: string) {
+    setTags((prev) =>
+      prev.includes(tag)
+        ? prev.filter((t) => t !== tag)
+        : prev.length < MAX_TAGS
+          ? [...prev, tag]
+          : prev,
+    );
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -33,6 +45,7 @@ export default function ProfilePage() {
         city,
         gender,
         seeking,
+        vibe_tags: tags,
       }),
     });
     if (!res.ok) {
@@ -116,12 +129,38 @@ export default function ProfilePage() {
             </button>
           ))}
         </div>
+
+        <p className="mt-3 text-xs uppercase tracking-widest text-faint">
+          Your vibe · pick {MIN_TAGS}–{MAX_TAGS} ({tags.length} picked)
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {VIBE_TAGS.map((tag) => (
+            <button
+              key={tag}
+              type="button"
+              onClick={() => toggleTag(tag)}
+              className={`rounded-btn border px-3 py-1.5 text-sm ${
+                tags.includes(tag)
+                  ? "border-white/60 text-fg"
+                  : "border-line text-secondary"
+              }`}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+        <p className="text-xs text-faint">
+          Your daily ten is ranked by how much of this you share.
+        </p>
       </div>
 
       {error && <p className="mt-4 text-sm text-bad">{error}</p>}
 
       <div className="mt-auto pt-8">
-        <Button type="submit" disabled={busy || !gender || !seeking}>
+        <Button
+          type="submit"
+          disabled={busy || !gender || !seeking || tags.length < MIN_TAGS}
+        >
           {busy ? "Saving" : "Continue"}
         </Button>
       </div>

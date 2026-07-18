@@ -24,8 +24,10 @@ create table public.users (
   email text unique not null,
   created_at timestamptz default now(),
   onboarding_complete boolean default false,
-  bracket_score numeric(4,2),          -- AI-assigned, 0–10, never shown to user
-  bracket_tier text,                   -- '0-4.5' | '4.5-6.0' | '6.0-7.5' | '7.5-9.0' | '9.0-10'
+  bracket_score numeric(4,2),          -- AI-assigned, 0–10
+  bracket_tier integer check (bracket_tier between 1 and 10),
+  score_viewed boolean default false,  -- the score is shown ONCE to its owner
+  vibe_tags text[],                    -- music/mentality tags, drive lineup ranking
   first_name text,                     -- shown only after step 4 unlock
   gender text check (gender in ('man','woman','nonbinary')),
   seeking text[],
@@ -98,15 +100,20 @@ join public.likes b on a.from_user = b.to_user and a.to_user = b.from_user
 where a.from_user < a.to_user;
 
 -- ---------------------------------------------------------- daily_match
+-- The daily lineup: 10 same-bracket people per user per day, ranked
+-- 1–10 by vibe/tag compatibility. rank 1 = most compatible.
 create table public.daily_match (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references public.users(id) on delete cascade,
   matched_user_id uuid references public.users(id) on delete cascade,
   date date not null,
+  rank integer not null check (rank between 1 and 10),
   revealed boolean default false,
   created_at timestamptz default now(),
-  unique (user_id, date)
+  unique (user_id, date, rank),
+  unique (user_id, date, matched_user_id)
 );
+
 
 -- -------------------------------------------------------------- windows
 create table public.windows (
@@ -129,6 +136,17 @@ create table public.calls (
   unlock_step integer default 1,       -- 1=voice only, 2=photo, 3=name+profile, 4=chat
   step_unlocked_by_a boolean default false,
   step_unlocked_by_b boolean default false,
+  created_at timestamptz default now()
+);
+
+-- ------------------------------------------------------- reveal_events
+-- One row per participant per photo reveal. Budget: 2 per user per day.
+create table public.reveal_events (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references public.users(id) on delete cascade,
+  other_user_id uuid references public.users(id),
+  call_id uuid references public.calls(id),
+  date date not null default (now()::date),
   created_at timestamptz default now()
 );
 
@@ -192,6 +210,8 @@ alter table public.connections enable row level security;
 alter table public.messages enable row level security;
 alter table public.social_shares enable row level security;
 alter table public.reports enable row level security;
+alter table public.reveal_events enable row level security;
+-- reveal_events: service-role only (no client policies on purpose)
 alter table public.voice_fingerprints enable row level security;
 
 -- users: a user may read/update their own row, but NOT the scoring columns.
@@ -205,10 +225,12 @@ create policy "users update own" on public.users
 revoke select, update on public.users from authenticated, anon;
 grant select (id, email, created_at, onboarding_complete, first_name, gender,
               seeking, city, age, liveness_verified, voice_fingerprint_stored,
-              last_active)
+              last_active, vibe_tags)
   on public.users to authenticated;
-grant update (first_name, gender, seeking, city, age, last_active)
+grant update (first_name, gender, seeking, city, age, last_active, vibe_tags)
   on public.users to authenticated;
+-- score_viewed, bracket_score, bracket_tier stay service-role only:
+-- the one-time score view flows through the API, never direct reads.
 
 -- photos: owner can insert/read their own. Other users NEVER read photos
 -- directly — reveals go through the server (signed URLs, unlock-gated).

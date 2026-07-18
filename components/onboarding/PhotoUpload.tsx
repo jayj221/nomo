@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
+import { scoreFace, type Point } from "@/lib/facescore";
 
 const MAX_PHOTOS = 6;
 const MIN_PHOTOS = 2;
@@ -13,30 +14,52 @@ const MIN_PHOTOS = 2;
 interface Slot {
   file: File;
   preview: string;
+  score: number;
 }
 
-type Phase = "picking" | "checking" | "uploading" | "scoring";
+type Phase = "picking" | "checking" | "uploading" | "placement";
 
-// Face presence check only — confirms a face exists in the photo.
-// Deliberately NOT facial recognition; nothing is compared to anyone.
-async function hasFace(file: File): Promise<boolean> {
+// Landmark model is loaded once and reused across photos.
+let landmarkerPromise: Promise<
+  import("@mediapipe/tasks-vision").FaceLandmarker
+> | null = null;
+
+async function getLandmarker() {
+  if (!landmarkerPromise) {
+    landmarkerPromise = (async () => {
+      const vision = await import("@mediapipe/tasks-vision");
+      const fileset = await vision.FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm",
+      );
+      return vision.FaceLandmarker.createFromOptions(fileset, {
+        baseOptions: {
+          modelAssetPath:
+            "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+        },
+        runningMode: "IMAGE",
+        numFaces: 1,
+      });
+    })();
+  }
+  return landmarkerPromise;
+}
+
+// Face presence + geometry scoring, entirely on-device. The photo's
+// landmarks never leave the browser — only the resulting number does.
+async function analyzePhoto(
+  file: File,
+): Promise<{ face: boolean; score: number }> {
   try {
-    const { default: Human } = await import("@vladmandic/human");
-    const human = new Human({
-      modelBasePath: "https://cdn.jsdelivr.net/npm/@vladmandic/human/models/",
-      face: { enabled: true, detector: { maxDetected: 1 } },
-      body: { enabled: false },
-      hand: { enabled: false },
-      gesture: { enabled: false },
-    });
+    const landmarker = await getLandmarker();
     const bitmap = await createImageBitmap(file);
-    const result = await human.detect(bitmap);
+    const result = landmarker.detect(bitmap);
     bitmap.close();
-    return result.face.length > 0;
+    const pts = result.faceLandmarks?.[0] as Point[] | undefined;
+    if (!pts || pts.length < 400) return { face: false, score: 0 };
+    return { face: true, score: scoreFace(pts) };
   } catch {
-    // If the model fails to load, don't block the user — the server
-    // pipeline is the authority on photo validity.
-    return true;
+    // Model failed to load — don't block the user; neutral placement.
+    return { face: true, score: 5 };
   }
 }
 
@@ -45,6 +68,7 @@ export function PhotoUpload() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [slots, setSlots] = useState<Slot[]>([]);
   const [phase, setPhase] = useState<Phase>("picking");
+  const [tier, setTier] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function addFiles(files: FileList | null) {
@@ -55,11 +79,12 @@ export function PhotoUpload() {
     for (const file of Array.from(files)) {
       if (next.length >= MAX_PHOTOS) break;
       if (!file.type.startsWith("image/")) continue;
-      if (!(await hasFace(file))) {
-        setError("We need photos with your face in them.");
+      const { face, score } = await analyzePhoto(file);
+      if (!face) {
+        setError("We need photos with your face clearly visible.");
         continue;
       }
-      next.push({ file, preview: URL.createObjectURL(file) });
+      next.push({ file, preview: URL.createObjectURL(file), score });
     }
     setSlots(next);
     setPhase("picking");
@@ -79,7 +104,7 @@ export function PhotoUpload() {
     } = await supabase.auth.getUser();
     if (!user) return;
 
-    const paths: string[] = [];
+    const payload: { path: string; score: number }[] = [];
     for (const slot of slots) {
       const ext = slot.file.name.split(".").pop() || "jpg";
       const path = `${user.id}/${crypto.randomUUID()}.${ext}`;
@@ -91,14 +116,13 @@ export function PhotoUpload() {
         setPhase("picking");
         return;
       }
-      paths.push(path);
+      payload.push({ path, score: slot.score });
     }
 
-    setPhase("scoring");
     const res = await fetch("/api/onboarding/photos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ storage_paths: paths }),
+      body: JSON.stringify({ photos: payload }),
     });
     if (!res.ok) {
       const data = await res.json().catch(() => null);
@@ -106,7 +130,42 @@ export function PhotoUpload() {
       setPhase("picking");
       return;
     }
-    router.push("/prompts");
+    const data = await res.json();
+    if (data.placement?.tier) {
+      setTier(data.placement.tier);
+      setPhase("placement");
+    } else {
+      router.push("/prompts");
+    }
+  }
+
+  // ── The one-time placement screen ────────────────────────────────
+  if (phase === "placement" && tier !== null) {
+    return (
+      <div className="flex flex-1 flex-col">
+        <p className="text-[11px] uppercase tracking-widest text-faint">
+          Your placement — shown once, only to you
+        </p>
+        <div className="mt-8 flex flex-col items-center rounded-card border border-line bg-card p-10 text-center">
+          <p className="text-6xl font-light tabular-nums">{tier}</p>
+          <p className="mt-2 text-sm text-secondary">of 10 brackets</p>
+          <p className="mt-6 max-w-xs text-sm leading-relaxed text-secondary">
+            Everyone in your daily ten is in this same bracket. Nobody —
+            including them — ever sees this number. After this screen,
+            neither do you.
+          </p>
+          <p className="mt-4 max-w-xs text-xs leading-relaxed text-faint">
+            Placement is a geometry heuristic, not a truth about you. From
+            here, everything runs on your words and your voice.
+          </p>
+        </div>
+        <div className="mt-auto pt-8">
+          <Button onClick={() => router.push("/prompts")}>
+            Understood — continue
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   const busy = phase !== "picking";
@@ -115,8 +174,8 @@ export function PhotoUpload() {
     <div className="flex flex-1 flex-col">
       <h1 className="text-xl font-semibold">Your photos</h1>
       <p className="mt-1 text-sm text-secondary">
-        {MIN_PHOTOS}–{MAX_PHOTOS} photos. Nobody sees them until you both
-        choose to reveal.
+        {MIN_PHOTOS}–{MAX_PHOTOS} photos. Analyzed on your device, then kept
+        private — nobody sees them until you both choose a reveal.
       </p>
 
       <div className="mt-6 grid grid-cols-3 gap-3">
@@ -162,13 +221,9 @@ export function PhotoUpload() {
       {error && <p className="mt-4 text-sm text-bad">{error}</p>}
 
       <div className="mt-auto pt-8">
-        <Button
-          onClick={submit}
-          disabled={slots.length < MIN_PHOTOS || busy}
-        >
-          {phase === "checking" && "Checking photos"}
+        <Button onClick={submit} disabled={slots.length < MIN_PHOTOS || busy}>
+          {phase === "checking" && "Analyzing on your device"}
           {phase === "uploading" && "Uploading"}
-          {phase === "scoring" && "Processing — this takes a moment"}
           {phase === "picking" && "Continue"}
         </Button>
       </div>
