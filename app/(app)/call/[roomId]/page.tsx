@@ -40,8 +40,19 @@ export default function CallPage() {
   const endedRef = useRef(false);
 
   const [phase, setPhase] = useState<Phase>("connecting");
+  const [mode, setMode] = useState<"voice" | "text">("voice");
   const [error, setError] = useState<string | null>(null);
   const [remoteTrack, setRemoteTrack] = useState<MediaStreamTrack | null>(null);
+
+  // Text-session chat: ephemeral, broadcast-only. Nothing is stored —
+  // the real chat unlocks at step 5 like everything else.
+  const [chat, setChat] = useState<
+    { id: string; mine: boolean; content: string }[]
+  >([]);
+  const [draft, setDraft] = useState("");
+  const chatChannelRef = useRef<ReturnType<
+    ReturnType<typeof createClient>["channel"]
+  > | null>(null);
 
   const [total, setTotal] = useState(0);
   const [segmentEnd, setSegmentEnd] = useState(INITIAL_CALL_SECONDS);
@@ -63,6 +74,13 @@ export default function CallPage() {
     if (endedRef.current) return;
     endedRef.current = true;
     try {
+      chatChannelRef.current?.send({
+        type: "broadcast",
+        event: "left",
+        payload: {},
+      });
+    } catch {}
+    try {
       dailyRef.current?.leave();
       dailyRef.current?.destroy();
     } catch {}
@@ -80,7 +98,8 @@ export default function CallPage() {
     let cancelled = false;
 
     async function connect() {
-      let creds: { room_url: string; token: string } | null = null;
+      let creds: { room_url: string; token: string; mode?: string } | null =
+        null;
       const cached = sessionStorage.getItem(`call:${callId}`);
       if (cached) creds = JSON.parse(cached);
       if (!creds) {
@@ -94,10 +113,18 @@ export default function CallPage() {
           return;
         }
         const d = await res.json();
-        creds = { room_url: d.room_url, token: d.token };
+        creds = { room_url: d.room_url, token: d.token, mode: d.mode };
         setCallStep(d.unlock_step ?? 1);
       }
       if (cancelled) return;
+
+      if (creds.mode === "text") {
+        // No Daily room — realtime broadcast carries the session.
+        setMode("text");
+        setPhase("live");
+        setTimeout(() => setOpenerVisible(false), 10_000);
+        return;
+      }
 
       const { default: DailyIframe } = await import("@daily-co/daily-js");
       const daily = DailyIframe.createCallObject({
@@ -155,8 +182,31 @@ export default function CallPage() {
   }, [phase]);
 
   useEffect(() => {
-    if (phase === "live" && total >= segmentEnd) endCall();
-  }, [total, segmentEnd, phase, endCall]);
+    if (mode === "voice" && phase === "live" && total >= segmentEnd) endCall();
+  }, [total, segmentEnd, phase, mode, endCall]);
+
+  // Text-session transport
+  useEffect(() => {
+    if (mode !== "text" || phase !== "live") return;
+    const supabase = createClient();
+    const channel = supabase.channel(`session:${callId}`);
+    channel
+      .on("broadcast", { event: "msg" }, ({ payload }) => {
+        setChat((prev) => [
+          ...prev,
+          { id: payload.id, mine: false, content: payload.content },
+        ]);
+      })
+      .on("broadcast", { event: "left" }, () => {
+        endCall();
+      })
+      .subscribe();
+    chatChannelRef.current = channel;
+    return () => {
+      supabase.removeChannel(channel);
+      chatChannelRef.current = null;
+    };
+  }, [mode, phase, callId, endCall]);
 
   // Mutual extension: both said "I'm in" → +2 minutes
   useEffect(() => {
@@ -203,6 +253,19 @@ export default function CallPage() {
       supabase.removeChannel(channel);
     };
   }, [callId, callStep]);
+
+  function sendChat() {
+    const content = draft.trim();
+    if (!content) return;
+    const id = crypto.randomUUID();
+    setChat((prev) => [...prev, { id, mine: true, content }]);
+    chatChannelRef.current?.send({
+      type: "broadcast",
+      event: "msg",
+      payload: { id, content },
+    });
+    setDraft("");
+  }
 
   function sayExtend() {
     setMyExtend(true);
@@ -302,6 +365,7 @@ export default function CallPage() {
 
   const remaining = Math.max(0, segmentEnd - total);
   const showExtend =
+    mode === "voice" &&
     phase === "live" &&
     remaining <= EXTEND_PROMPT_AT_REMAINING &&
     total > extendHandledAt;
@@ -325,9 +389,35 @@ export default function CallPage() {
         <CallTimer seconds={total} />
       </div>
 
-      <div className="mt-12">
-        <Waveform track={remoteTrack} />
-      </div>
+      {mode === "voice" ? (
+        <div className="mt-12">
+          <Waveform track={remoteTrack} />
+        </div>
+      ) : (
+        <div className="mt-6 flex max-h-[36vh] flex-col gap-2 overflow-y-auto rounded-card border border-line bg-card p-3">
+          {chat.length === 0 && (
+            <p className="py-4 text-center text-sm text-faint">
+              Text session. It lives and dies with this window.
+            </p>
+          )}
+          {chat.map((m) => (
+            <div
+              key={m.id}
+              className={`flex ${m.mine ? "justify-end" : "justify-start"}`}
+            >
+              <span
+                className={`max-w-[75%] rounded-card border px-3 py-1.5 text-sm ${
+                  m.mine
+                    ? "border-white/20 bg-white/10 text-fg"
+                    : "border-line bg-bg text-fg"
+                }`}
+              >
+                {m.content}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Revealed photo slides in from below at step 2+ */}
       {reveal.photo_url && (
@@ -396,23 +486,45 @@ export default function CallPage() {
           />
         )}
 
-        <div className="flex gap-3">
-          {/* Skip: always available, zero friction, no confirmation */}
-          <Button variant="danger" onClick={endCall}>
-            Skip
-          </Button>
-          <Button
-            variant={showExtend ? "primary" : "secondary"}
-            onClick={sayExtend}
-            disabled={!showExtend || myExtend}
-          >
-            {myExtend
-              ? "Waiting for them"
-              : showExtend
-                ? `I'm in — extend (${remaining}s)`
-                : "Extend"}
-          </Button>
-        </div>
+        {mode === "text" ? (
+          <div className="flex gap-2">
+            {/* Skip: always available, zero friction, no confirmation */}
+            <Button variant="danger" full={false} onClick={endCall} className="px-4">
+              Skip
+            </Button>
+            <input
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") sendChat();
+              }}
+              placeholder="Type"
+              maxLength={500}
+              className="min-w-0 flex-1 px-4 py-3 text-sm"
+            />
+            <Button full={false} onClick={sendChat} className="px-4">
+              Send
+            </Button>
+          </div>
+        ) : (
+          <div className="flex gap-3">
+            {/* Skip: always available, zero friction, no confirmation */}
+            <Button variant="danger" onClick={endCall}>
+              Skip
+            </Button>
+            <Button
+              variant={showExtend ? "primary" : "secondary"}
+              onClick={sayExtend}
+              disabled={!showExtend || myExtend}
+            >
+              {myExtend
+                ? "Waiting for them"
+                : showExtend
+                  ? `I'm in — extend (${remaining}s)`
+                  : "Extend"}
+            </Button>
+          </div>
+        )}
       </div>
 
       <style jsx global>{`

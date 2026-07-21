@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   const admin = createAdminSupabase();
   const { data: call } = await admin
     .from("calls")
-    .select("id, room_url, participant_a, participant_b, unlock_step, ended_at")
+    .select("id, mode, room_url, participant_a, participant_b, unlock_step, ended_at")
     .eq("id", callId)
     .maybeSingle();
   if (!call || call.ended_at) {
@@ -30,12 +30,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Not your call" }, { status: 403 });
   }
 
-  const roomName =
-    new URL(call.room_url).pathname.split("/").filter(Boolean).pop() ?? "";
-  const token = await createMeetingToken(roomName, user.id);
+  let token: string | null = null;
+  if (call.mode === "voice" && call.room_url) {
+    const roomName =
+      new URL(call.room_url).pathname.split("/").filter(Boolean).pop() ?? "";
+    token = await createMeetingToken(roomName, user.id);
+  }
 
   return NextResponse.json({
     call_id: call.id,
+    mode: call.mode,
     room_url: call.room_url,
     token,
     unlock_step: call.unlock_step,

@@ -31,7 +31,7 @@ export async function GET() {
         .eq("id", entry.matched_user_id)
         .single(),
     ]);
-    if (prompts.length !== 3) continue;
+    if (prompts.length < 2) continue;
     const liked = likedSet.has(entry.matched_user_id);
     profiles.push({
       profile_id: entry.matched_user_id,

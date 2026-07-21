@@ -17,6 +17,8 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const otherUserId: string = body?.other_user_id;
   const windowId: string = body?.window_id;
+  // Voice is the default and the emphasis; text is allowed.
+  const mode: "voice" | "text" = body?.mode === "text" ? "text" : "voice";
   if (!otherUserId || !windowId || otherUserId === user.id) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
@@ -60,7 +62,7 @@ export async function POST(request: Request) {
   // (the second person to tap gets the same room, their own token).
   const { data: existing } = await admin
     .from("calls")
-    .select("id, room_url, unlock_step")
+    .select("id, room_url, unlock_step, mode")
     .eq("window_id", windowId)
     .is("ended_at", null)
     .or(
@@ -70,25 +72,30 @@ export async function POST(request: Request) {
     .maybeSingle();
 
   if (existing) {
-    const token = await createMeetingToken(
-      roomNameFromUrl(existing.room_url),
-      user.id,
-    );
+    // The initiator chose the mode; the joiner lands in the same session.
+    const token =
+      existing.mode === "voice" && existing.room_url
+        ? await createMeetingToken(roomNameFromUrl(existing.room_url), user.id)
+        : null;
     return NextResponse.json({
       call_id: existing.id,
+      mode: existing.mode,
       room_url: existing.room_url,
       token,
       unlock_step: existing.unlock_step,
     });
   }
 
-  const room = await createRoom();
-  const token = await createMeetingToken(room.name, user.id);
+  // Text sessions need no Daily room — realtime broadcast carries them.
+  const room = mode === "voice" ? await createRoom() : null;
+  const token =
+    room !== null ? await createMeetingToken(room.name, user.id) : null;
 
   const { data: call, error } = await admin
     .from("calls")
     .insert({
-      room_url: room.url,
+      mode,
+      room_url: room?.url ?? null,
       participant_a: user.id,
       participant_b: otherUserId,
       window_id: windowId,
@@ -105,13 +112,14 @@ export async function POST(request: Request) {
   await channel.send({
     type: "broadcast",
     event: "incoming-call",
-    payload: { call_id: call.id, from: "someone", window_id: windowId },
+    payload: { call_id: call.id, mode, window_id: windowId },
   });
   await admin.removeChannel(channel);
 
   return NextResponse.json({
     call_id: call.id,
-    room_url: room.url,
+    mode,
+    room_url: room?.url ?? null,
     token,
     unlock_step: 1,
   });

@@ -4,7 +4,8 @@ import { moderateText } from "@/lib/openai";
 import {
   QUESTIONS,
   MAX_ANSWER_LENGTH,
-  REQUIRED_PROMPT_COUNT,
+  MIN_PROMPTS,
+  MAX_PROMPTS,
 } from "@/lib/questions";
 
 interface PromptInput {
@@ -21,8 +22,15 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const prompts: PromptInput[] = body?.prompts;
 
-  if (!Array.isArray(prompts) || prompts.length !== REQUIRED_PROMPT_COUNT) {
-    return NextResponse.json({ error: "Pick exactly 3" }, { status: 400 });
+  if (
+    !Array.isArray(prompts) ||
+    prompts.length < MIN_PROMPTS ||
+    prompts.length > MAX_PROMPTS
+  ) {
+    return NextResponse.json(
+      { error: `Pick ${MIN_PROMPTS}–${MAX_PROMPTS}` },
+      { status: 400 },
+    );
   }
 
   const validKeys = new Set(QUESTIONS.map((q) => q.key as string));
@@ -41,9 +49,9 @@ export async function POST(request: Request) {
       );
     }
   }
-  if (new Set(prompts.map((p) => p.question_key)).size !== 3) {
+  if (new Set(prompts.map((p) => p.question_key)).size !== prompts.length) {
     return NextResponse.json(
-      { error: "Pick 3 different questions" },
+      { error: "Pick different questions" },
       { status: 400 },
     );
   }

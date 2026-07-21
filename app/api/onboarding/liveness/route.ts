@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireUser, isResponse } from "@/lib/auth";
 import { createAdminSupabase } from "@/lib/supabase/admin";
-import { REQUIRED_PROMPT_COUNT } from "@/lib/questions";
+import { MIN_PROMPTS } from "@/lib/questions";
 
 // Marks liveness verified after the client-side MediaPipe check passes,
 // and completes onboarding if every other gate is satisfied.
@@ -37,7 +37,7 @@ export async function POST() {
 
   if (
     (photoCount ?? 0) < 2 ||
-    (promptCount ?? 0) < REQUIRED_PROMPT_COUNT ||
+    (promptCount ?? 0) < MIN_PROMPTS ||
     !profileComplete ||
     !profile?.bracket_tier
   ) {

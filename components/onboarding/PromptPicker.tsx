@@ -57,13 +57,13 @@ export function PromptPicker() {
   }
 
   const ready =
-    drafts.length === 3 && drafts.every((d) => d.answer.trim().length > 0);
+    drafts.length >= 2 && drafts.every((d) => d.answer.trim().length > 0);
 
   return (
     <div className="flex flex-1 flex-col">
       <h1 className="text-xl font-semibold">Three prompts</h1>
       <p className="mt-1 text-sm text-secondary">
-        This is all anyone sees at first. Make it worth a call.
+        This is all anyone sees at first. Pick two or three. Make them worth a call.
       </p>
 
       <div className="mt-6 flex flex-col gap-3">

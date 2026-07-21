@@ -4,13 +4,16 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { WindowCountdown } from "@/components/window/WindowCountdown";
-import { ConnectionSlot } from "@/components/window/ConnectionSlot";
-import type { ActiveWindow, AvailableConnection } from "@/types/app.types";
+import {
+  ConnectionSlot,
+  type AvailableSlot,
+} from "@/components/window/ConnectionSlot";
+import type { ActiveWindow } from "@/types/app.types";
 
 export default function WindowPage() {
   const router = useRouter();
   const [window, setWindow] = useState<ActiveWindow | null>(null);
-  const [connections, setConnections] = useState<AvailableConnection[]>([]);
+  const [connections, setConnections] = useState<AvailableSlot[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [joining, setJoining] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +50,7 @@ export default function WindowPage() {
     };
   }, [router]);
 
-  async function join(other: AvailableConnection) {
+  async function join(other: AvailableSlot, mode: "voice" | "text") {
     if (!window) return;
     setJoining(true);
     setError(null);
@@ -57,6 +60,7 @@ export default function WindowPage() {
       body: JSON.stringify({
         other_user_id: other.connection_user_id,
         window_id: window.id,
+        mode,
       }),
     });
     if (!res.ok) {
@@ -68,7 +72,7 @@ export default function WindowPage() {
     const d = await res.json();
     sessionStorage.setItem(
       `call:${d.call_id}`,
-      JSON.stringify({ room_url: d.room_url, token: d.token }),
+      JSON.stringify({ room_url: d.room_url, token: d.token, mode: d.mode }),
     );
     router.push(`/call/${d.call_id}`);
   }
@@ -95,7 +99,7 @@ export default function WindowPage() {
       <WindowCountdown expiresAt={window.expires_at} onExpired={load} />
 
       <p className="mb-4 mt-10 text-sm text-secondary">
-        Your mutual connections available now: {connections.length}
+        Available now: {connections.length} · start with your #1
       </p>
 
       <div className="flex flex-col gap-2">
@@ -103,7 +107,7 @@ export default function WindowPage() {
           <ConnectionSlot
             key={c.connection_user_id}
             connection={c}
-            onJoin={() => join(c)}
+            onJoin={(mode) => join(c, mode)}
             busy={joining}
           />
         ))}

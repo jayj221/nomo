@@ -27,4 +27,5 @@ export function questionText(key: string): string {
 }
 
 export const MAX_ANSWER_LENGTH = 200;
-export const REQUIRED_PROMPT_COUNT = 3;
+export const MIN_PROMPTS = 2;
+export const MAX_PROMPTS = 3;

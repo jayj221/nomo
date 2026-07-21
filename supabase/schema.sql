@@ -126,7 +126,8 @@ create table public.windows (
 -- ---------------------------------------------------------------- calls
 create table public.calls (
   id uuid primary key default gen_random_uuid(),
-  room_url text,
+  mode text default 'voice' check (mode in ('voice','text')),
+  room_url text,                       -- null for text sessions
   participant_a uuid references public.users(id),
   participant_b uuid references public.users(id),
   window_id uuid references public.windows(id),
