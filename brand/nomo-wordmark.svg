@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 120" fill="none">
+  <!-- nomo wordmark: monoline lowercase. The last o holds a blush dot:
+       someone's in there, sealed until you both choose. -->
+  <g stroke="#F5F2EF" stroke-width="11" stroke-linecap="round">
+    <path d="M22,92 L22,44"/>
+    <path d="M22,66 C22,40 74,40 74,66 L74,92"/>
+    <circle cx="118" cy="66" r="26"/>
+    <path d="M160,92 L160,44"/>
+    <path d="M160,66 C160,40 206,40 206,66 L206,92"/>
+    <path d="M206,66 C206,40 252,40 252,66 L252,92"/>
+    <circle cx="294" cy="66" r="26"/>
+  </g>
+  <circle cx="294" cy="66" r="7" fill="#C98B8B"/>
+</svg>
