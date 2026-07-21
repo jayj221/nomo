@@ -10,5 +10,6 @@
     <path d="M206,66 C206,40 252,40 252,66 L252,92"/>
     <circle cx="294" cy="66" r="26"/>
   </g>
+  <circle cx="118" cy="66" r="7" fill="#8B6355"/>
   <circle cx="294" cy="66" r="7" fill="#C98B8B"/>
 </svg>
