@@ -403,34 +403,84 @@
        Backend-free capture: submitting opens the visitor's mail app
        addressed here. CHANGE this to whatever address should receive
        signups (a dedicated inbox keeps your personal one private). */
-    var INVITE_EMAIL = "jjoshi221@gmail.com";
+    /* ── Waitlist backend ────────────────────────────────────────────
+       Signups are recorded straight into your own Supabase database.
+       View them anytime: Supabase dashboard → Table Editor → waitlist.
+       If Supabase is ever unreachable, we fall back to an email handoff
+       so a signup is never fully lost. */
+    var SUPABASE_URL = "https://uhnfrydaiczkhdysepdb.supabase.co";
+    var SUPABASE_KEY = "sb_publishable_QYpe7GpYyiAtxiAKZj-_bA_aQdULQkn";
+    var INVITE_EMAIL = "jjoshi221@gmail.com"; // fallback recipient only
 
     var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    /* ── Waitlist forms → mailto handoff ─────────────────────────── */
+    function markDone(rowId, noteId, msg, sub) {
+      document.getElementById(rowId).classList.add("hidden");
+      var note = document.getElementById(noteId);
+      if (!note) return;
+      note.outerHTML =
+        '<div class="cta-done">' + msg +
+        (sub ? '<div class="sub">' + sub + "</div>" : "") + "</div>";
+    }
+
+    function mailtoFallback(email) {
+      var subject = "Nomo waitlist";
+      var body = "Add me to the Nomo waitlist.\n\nMy email: " + email + "\n";
+      window.location.href = "mailto:" + INVITE_EMAIL +
+        "?subject=" + encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(body);
+    }
+
+    function recordSignup(email) {
+      var params = new URLSearchParams(window.location.search);
+      return fetch(SUPABASE_URL + "/rest/v1/waitlist", {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: "Bearer " + SUPABASE_KEY,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal"
+        },
+        body: JSON.stringify({
+          email: email,
+          referrer:
+            (params.get("utm_source") || document.referrer || "direct").slice(0, 300)
+        })
+      }).then(function (r) {
+        // 201 created, or 409 duplicate = they're already on the list
+        if (r.status === 201 || r.status === 409) return "ok";
+        throw new Error("status " + r.status);
+      });
+    }
+
     function wireForm(formId, rowId, noteId, emailId) {
       var form = document.getElementById(formId);
       if (!form) return;
       form.addEventListener("submit", function (e) {
         e.preventDefault();
         var input = document.getElementById(emailId);
-        var email = (input.value || "").trim();
+        var email = (input.value || "").trim().toLowerCase();
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           input.focus();
           input.style.borderColor = "rgba(226,75,74,0.7)";
           return;
         }
-        var subject = "Nomo — add me to the waitlist";
-        var body = "I'd like early access to Nomo.\n\nMy email: " + email + "\n";
-        window.location.href = "mailto:" + INVITE_EMAIL +
-          "?subject=" + encodeURIComponent(subject) +
-          "&body=" + encodeURIComponent(body);
+        var btn = form.querySelector("button");
+        if (btn) { btn.disabled = true; btn.textContent = "One moment"; }
 
-        document.getElementById(rowId).classList.add("hidden");
-        var note = document.getElementById(noteId);
-        note.outerHTML =
-          '<div class="cta-done">You\'re almost in.' +
-          '<div class="sub">Your mail app just opened. Hit send and your spot is locked.</div></div>';
+        recordSignup(email)
+          .then(function () {
+            markDone(rowId, noteId,
+              "You're in.",
+              "We'll reach out when your first window is ready.");
+          })
+          .catch(function () {
+            // Supabase unreachable — don't lose the signup
+            mailtoFallback(email);
+            markDone(rowId, noteId,
+              "Almost there.",
+              "Your mail app just opened. Hit send and your spot is locked.");
+          });
       });
     }
     wireForm("cta-hero", "row-hero", "note-hero", "email-hero");
