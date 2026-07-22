@@ -240,6 +240,12 @@
   }
   .demo { cursor: pointer; }
   .demo-hint { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--reveal); }
+  /* setup selector (who you are / who you want to meet) */
+  .setup-q { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); margin: 16px 0 8px; }
+  .setup-q.first { margin-top: 2px; }
+  .setup-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .setup-row button { font: inherit; font-size: 0.9rem; color: var(--ink-2); background: transparent; border: 1px solid var(--line-strong); border-radius: 8px; padding: 9px 16px; cursor: pointer; transition: border-color 0.15s ease; }
+  .setup-row button.sel { color: #000; background: var(--white); border-color: var(--white); font-weight: 600; }
 
   .demo-controls { display: flex; gap: 10px; margin-top: 6px; }
   /* primary control filled + gently breathing so it clearly invites a tap */
@@ -617,15 +623,18 @@
     // Abstract gradient avatars — not real people, each a distinct hue.
     function avatar(p) {
       var id = "av" + p.id;
+      var hair = p.masc
+        ? '<path d="M39,41 C42,29 78,29 81,41 C81,34 73,30 60,30 C47,30 39,34 39,41 Z" fill="rgba(0,0,0,0.16)"/>'
+        : '<path d="M40,46 C40,25 80,25 80,46 C80,35 72,31 60,31 C48,31 40,35 40,46 Z" fill="rgba(0,0,0,0.16)"/>';
       return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">'
         + '<defs><radialGradient id="' + id + '" cx="36%" cy="24%" r="90%">'
         + '<stop offset="0%" stop-color="' + p.hue[0] + '"/>'
         + '<stop offset="100%" stop-color="' + p.hue[1] + '"/>'
         + '</radialGradient></defs>'
         + '<rect width="120" height="120" fill="url(#' + id + ')"/>'
-        + '<circle cx="60" cy="46" r="31" fill="rgba(0,0,0,0.16)"/>'
+        + '<circle cx="60" cy="46" r="31" fill="rgba(0,0,0,0.14)"/>'
         + '<circle cx="60" cy="50" r="20" fill="rgba(255,255,255,0.93)"/>'
-        + '<path d="M40,46 C40,25 80,25 80,46 C80,35 72,31 60,31 C48,31 40,35 40,46 Z" fill="rgba(0,0,0,0.16)"/>'
+        + hair
         + '<path d="M25,120 C27,93 43,83 60,83 C77,83 93,93 95,120 Z" fill="rgba(255,255,255,0.93)"/>'
         + '</svg>';
     }
@@ -639,7 +648,7 @@
         + '<path d="M8,78 C10,56 20,50 31,50 C42,50 52,56 54,78 Z" fill="rgba(255,255,255,0.22)"/></svg>';
     }
 
-    var PEOPLE = [
+    var WOMEN = [
       { id:1,  name:"Maya",    age:26, tag:"indie",     hue:["#d79a9a","#4a2f45"], chips:["indie","deep talks","pottery"],     q:"What I'm really like when I'm comfortable", a:"I'll reorganise your bookshelf by colour and defend it as a personality trait." },
       { id:2,  name:"Kavya",   age:24, tag:"film nerd", hue:["#9aa7d7","#2b3550"], chips:["film nerd","chai","late nights"],    q:"My most controversial take",               a:"Every good story is just people avoiding one honest conversation." },
       { id:3,  name:"Aanya",   age:27, tag:"techno",    hue:["#8fcbb3","#264a3d"], chips:["techno","running","dogs"],           q:"A small thing that makes my day",          a:"A song dropping exactly as the metro doors open." },
@@ -652,8 +661,32 @@
       { id:10, name:"Ira",     age:23, tag:"traveller", hue:["#d7d19a","#4a4626"], chips:["traveller","techno","stray cats"],   q:"What I'd do with nothing to lose",          a:"Book the one-way ticket I keep leaving in my cart." }
     ];
 
-    var PHASES = ["upload","cohort","profile","window","reveal","choice","match"];
-    var phase = "upload";
+    var MEN = [
+      { id:11, name:"Arjun",   age:27, masc:true, tag:"indie",      hue:["#8fb0d7","#26374f"], chips:["indie","trekking","vinyl"],        q:"What I'm really like when I'm comfortable", a:"I'll make you a four-hour playlist and narrate every transition." },
+      { id:12, name:"Kabir",   age:25, masc:true, tag:"hip-hop",    hue:["#c9a98b","#4a3a26"], chips:["hip-hop","basketball","street food"], q:"My most controversial take",             a:"Pineapple belongs on pizza and on the aux." },
+      { id:13, name:"Rohan",   age:28, masc:true, tag:"film nerd",  hue:["#a99ad7","#332650"], chips:["film","chai","late drives"],       q:"A small thing that makes my day",          a:"Finding parking on the first try. Unreasonable joy." },
+      { id:14, name:"Dev",     age:24, masc:true, tag:"gym rat",    hue:["#8fd7b6","#264a37"], chips:["gym","cooking","dogs"],            q:"The way to my heart",                      a:"Steal food off my plate. I'll pretend to mind." },
+      { id:15, name:"Ishaan",  age:26, masc:true, tag:"deep talks", hue:["#d79aa9","#4a2733"], chips:["deep talks","poetry","coffee"],    q:"What I'm actually like at 2am",            a:"Texting you a theory about time I'll be embarrassed about by noon." },
+      { id:16, name:"Aryan",   age:23, masc:true, tag:"techno",     hue:["#9ad2d7","#264649"], chips:["techno","bikes","travel"],         q:"What I'd do with nothing to lose",          a:"Ride to the coast tonight and figure the rest out there." },
+      { id:17, name:"Vivaan",  age:27, masc:true, tag:"foodie",     hue:["#d7c08f","#4a3d26"], chips:["foodie","football","history"],     q:"The thing people get wrong about me",       a:"Loud doesn't mean I'm not paying attention. I catch everything." },
+      { id:18, name:"Reyansh", age:25, masc:true, tag:"artist",     hue:["#b78fd7","#3a2650"], chips:["artist","sketching","rain"],       q:"Something I care about more than I should", a:"The one pen that writes exactly right." },
+      { id:19, name:"Faiz",    age:26, masc:true, tag:"jazz",       hue:["#8fd79a","#264a30"], chips:["jazz","books","slow mornings"],    q:"What I'd never admit on a first date",      a:"I already know which song I'd want playing." },
+      { id:20, name:"Neil",    age:24, masc:true, tag:"night owl",  hue:["#d79a8f","#4a2d26"], chips:["night owl","gaming","stray cats"], q:"My idea of a perfect day",                 a:"Nowhere to be, good food, and someone who laughs at my worst jokes." }
+    ];
+
+    var MIXED = [];
+    for (var mi = 0; mi < 5; mi++) { MIXED.push(WOMEN[mi]); MIXED.push(MEN[mi]); }
+
+    var PEOPLE = WOMEN;
+    var myGender = null;   // "guy" | "girl"
+    var wantMeet = null;   // "guys" | "girls" | "everyone"
+    function setPool() {
+      PEOPLE = wantMeet === "guys" ? MEN : wantMeet === "girls" ? WOMEN : MIXED;
+      person = 0;
+    }
+
+    var PHASES = ["setup","upload","cohort","profile","window","reveal","choice","match"];
+    var phase = "setup";
     var person = 0;
 
     var stageEl = document.getElementById("demo-stage");
@@ -665,9 +698,21 @@
 
     dotsEl.innerHTML = PHASES.map(function () { return '<span class="dot"></span>'; }).join("");
     function chip(c) { return '<span class="chip">' + c + '</span>'; }
+    function opt(attr, val, cur, label) {
+      return '<button data-' + attr + '="' + val + '"' + (cur === val ? ' class="sel"' : '') + '>' + label + '</button>';
+    }
 
     function stageHTML() {
       var p = PEOPLE[person];
+      if (phase === "setup") {
+        return '<div>'
+          + '<p class="stage-caption">First, so we show you the right people.</p>'
+          + '<p class="setup-q">I\'m a…</p>'
+          + '<div class="setup-row">' + opt("g","guy",myGender,"Guy") + opt("g","girl",myGender,"Girl") + '</div>'
+          + '<p class="setup-q">I want to meet…</p>'
+          + '<div class="setup-row">' + opt("w","girls",wantMeet,"Girls") + opt("w","guys",wantMeet,"Guys") + opt("w","everyone",wantMeet,"Everyone") + '</div>'
+          + '</div>';
+      }
       if (phase === "upload") {
         return '<div><div class="photo-grid"><span class="ph">' + SIL("#2c3038") + '</span><span class="ph">' + SIL("#33302c") + '</span><span class="ph">' + SIL("#2c3330") + '</span></div>'
           + '<p class="stage-caption" style="margin-top:12px">Your photos go in. AI places you in a bracket, privately. Nobody sees them yet, including your ten.</p></div>';
@@ -700,6 +745,7 @@
 
     function labelText() {
       var p = PEOPLE[person];
+      if (phase === "setup") return "Who are you?";
       if (phase === "upload") return "You upload · placed privately";
       if (phase === "cohort") return "8:04 am · your ten arrive";
       if (phase === "profile") return "#" + (person + 1) + " · " + p.name + " · sealed";
@@ -720,11 +766,15 @@
         dots[i].className = "dot" + (i <= di ? " on" : "") + (green && i <= di ? " green" : "");
       }
 
+      var ready = !!(myGender && wantMeet);
       if (phase === "choice") {
         nextBtn.style.display = "none";
       } else if (phase === "match") {
         nextBtn.style.display = ""; nextBtn.textContent = "That’s the whole idea";
         nextBtn.disabled = true; nextBtn.style.opacity = "0.5";
+      } else if (phase === "setup") {
+        nextBtn.style.display = ""; nextBtn.textContent = "Go further →";
+        nextBtn.disabled = !ready; nextBtn.style.opacity = ready ? "1" : "0.5";
       } else {
         nextBtn.style.display = ""; nextBtn.textContent = "Go further →";
         nextBtn.disabled = false; nextBtn.style.opacity = "1";
@@ -733,8 +783,20 @@
       var hint = document.getElementById("demo-hint");
       if (hint) {
         if (phase === "match") { hint.style.display = "none"; }
-        else { hint.style.display = ""; hint.textContent = phase === "choice" ? "Make your choice ↑" : "Tap the card to move through it →"; }
+        else {
+          hint.style.display = "";
+          hint.textContent = phase === "choice" ? "Make your choice ↑"
+            : (phase === "setup" && !ready) ? "Pick both to continue"
+            : "Tap the card to move through it →";
+        }
       }
+
+      Array.prototype.forEach.call(stageEl.querySelectorAll("[data-g]"), function (b) {
+        b.addEventListener("click", function (e) { e.stopPropagation(); myGender = b.getAttribute("data-g"); render(); });
+      });
+      Array.prototype.forEach.call(stageEl.querySelectorAll("[data-w]"), function (b) {
+        b.addEventListener("click", function (e) { e.stopPropagation(); wantMeet = b.getAttribute("data-w"); setPool(); render(); });
+      });
 
       var yes = document.getElementById("choice-yes");
       var no = document.getElementById("choice-no");
@@ -767,12 +829,17 @@
 
     function advance() {
       if (phase === "choice" || phase === "match") return;
+      if (phase === "setup" && !(myGender && wantMeet)) return;
       phase = PHASES[PHASES.indexOf(phase) + 1];
       render();
     }
 
     nextBtn.addEventListener("click", function (e) { e.stopPropagation(); advance(); });
-    resetBtn.addEventListener("click", function (e) { e.stopPropagation(); phase = "upload"; person = 0; render(); });
+    resetBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      phase = "setup"; person = 0; myGender = null; wantMeet = null; PEOPLE = WOMEN;
+      render();
+    });
     document.getElementById("demo").addEventListener("click", function (e) {
       if (e.target.closest("button")) return;
       if (phase === "choice" || phase === "match") return;
