@@ -160,9 +160,10 @@
     font-weight: 500;
     letter-spacing: -0.015em;
     line-height: 1.25;
-    color: var(--ink);
+    color: var(--ink-2);
   }
-  .nomore p span { color: var(--ink-3); }
+  /* only the repeated "No more" carries full weight — it is the name */
+  .nomore p .hl { color: var(--ink); font-weight: 600; }
 
   /* ── Reveal ladder ────────────────────────────────────────────── */
   .ladder { display: flex; flex-direction: column; gap: 30px; margin-top: 40px; }
@@ -346,10 +347,10 @@
     <section class="fx">
       <p class="eyebrow">Why Nomo</p>
       <div class="nomore">
-        <p>No more faces you judge in <span>a tenth of a second.</span></p>
-        <p>No more matches that <span>never say a word.</span></p>
-        <p>No more talk that <span>goes nowhere.</span></p>
-        <p>No more apps designed to <span>keep you single.</span></p>
+        <p><span class="hl">No more</span> faces you judge in a tenth of a second.</p>
+        <p><span class="hl">No more</span> matches that never say a word.</p>
+        <p><span class="hl">No more</span> talk that goes nowhere.</p>
+        <p><span class="hl">No more</span> apps designed to keep you single.</p>
       </div>
     </section>
 
