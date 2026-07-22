@@ -278,6 +278,20 @@
   .foot-brand { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-3); }
   .foot-note { font-size: 0.8rem; color: var(--ink-3); }
 
+  /* Mobile: fuller width, and a bigger interactive card */
+  @media (max-width: 640px) {
+    .wrap { padding: 0 18px; }
+    .demo { padding: 22px 16px; border-radius: 14px; margin-top: 30px; }
+    .demo-stage { min-height: 220px; padding: 24px 2px; }
+    .stage-a { font-size: 1.22rem; }
+    .stage-caption { font-size: 1.02rem; }
+    .stage-name { font-size: 1.45rem; }
+    .pfp { width: 100px; height: 100px; }
+    .cohort-row { font-size: 0.94rem; }
+    .cohort { gap: 8px 14px; }
+    .demo-label { font-size: 0.72rem; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .fx { opacity: 1; transform: none; transition: none; }
     * { animation: none !important; }
