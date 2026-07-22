@@ -30,8 +30,13 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     line-height: 1.5;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
+
+  /* Each section settles into view as you scroll, so they read as
+     distinct panels instead of one continuous wall. */
+  html { scroll-snap-type: y proximity; scroll-padding-top: 0; }
+  section { scroll-snap-align: start; scroll-snap-stop: normal; }
 
   .wrap {
     max-width: 620px;
@@ -39,8 +44,10 @@
     padding: 0 26px;
   }
 
-  section { border-top: 1px solid var(--line); padding: 80px 0; }
+  section { border-top: 1px solid var(--line); padding: 104px 0; }
   section:first-of-type { border-top: none; }
+  /* the interactive section gets extra air above it so it reads apart */
+  section.demo-section { padding-top: 120px; }
 
   .eyebrow {
     font-family: var(--mono);
@@ -216,7 +223,29 @@
   .choice .yes { background: var(--white); color: #000; border: none; font-weight: 600; }
   .choice .no { background: transparent; color: var(--ink-2); border: 1px solid var(--line-strong); }
 
+  /* interactive cue */
+  .badge-interactive {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--reveal);
+    border: 1px solid rgba(31,174,130,0.45); border-radius: 999px;
+    padding: 6px 13px 6px 11px;
+  }
+  .pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--reveal); animation: pulseDot 1.5s ease-in-out infinite; }
+  @keyframes pulseDot { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.6); } }
+  .tap-through {
+    font-weight: 700; color: var(--ink);
+    text-decoration: underline; text-decoration-color: var(--reveal);
+    text-decoration-thickness: 3px; text-underline-offset: 5px;
+  }
+  .demo { cursor: pointer; }
+  .demo-hint { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--reveal); }
+
   .demo-controls { display: flex; gap: 10px; margin-top: 6px; }
+  /* primary control filled + gently breathing so it clearly invites a tap */
+  .demo-cta { background: var(--white); color: #000; border-color: var(--white); font-weight: 600; animation: breathe 2.4s ease-in-out infinite; }
+  .demo-cta:hover { border-color: var(--white); opacity: 0.9; }
+  @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
   .demo-btn {
     background: transparent;
     border: 1px solid var(--line-strong);
@@ -347,9 +376,9 @@
     </section>
 
     <!-- INTERACTIVE DEMO -->
-    <section class="fx">
-      <p class="eyebrow">Watch it happen</p>
-      <h2>From sealed to seen. Tap through it.</h2>
+    <section class="fx demo-section">
+      <span class="badge-interactive"><span class="pulse-dot"></span>Interactive</span>
+      <h2 style="margin-top:16px">From sealed to seen. <span class="tap-through">Tap through it.</span></h2>
       <div class="demo" id="demo">
         <div class="demo-head">
           <span class="demo-label" id="demo-stagelabel">Anonymous</span>
@@ -359,9 +388,10 @@
         </div>
         <div class="demo-stage" id="demo-stage"><!-- filled by JS --></div>
         <div class="demo-controls">
-          <button class="demo-btn full" id="demo-next">Go further &rarr;</button>
+          <button class="demo-btn full demo-cta" id="demo-next">Go further &rarr;</button>
           <button class="demo-btn ghost" id="demo-reset">Start over</button>
         </div>
+        <p class="demo-hint" id="demo-hint" style="margin-top:12px">Tap the card to move through it &rarr;</p>
       </div>
     </section>
 
@@ -663,6 +693,15 @@
       nextBtn.disabled = idx >= STAGES.length - 1;
       nextBtn.style.opacity = idx >= STAGES.length - 1 ? "0.5" : "1";
 
+      var hint = document.getElementById("demo-hint");
+      if (hint) {
+        if (idx >= STAGES.length - 1) { hint.style.display = "none"; }
+        else {
+          hint.style.display = "";
+          hint.textContent = st.choice ? "Make your choice ↑" : "Tap the card to move through it →";
+        }
+      }
+
       var yes = document.getElementById("choice-yes");
       var no = document.getElementById("choice-no");
       if (yes) yes.addEventListener("click", function () { idx++; renderDemo(); });
@@ -686,10 +725,17 @@
         render(0);
       }
     }
-    nextBtn.addEventListener("click", function () {
+    nextBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
       if (idx < STAGES.length - 1) { idx++; renderDemo(); }
     });
-    resetBtn.addEventListener("click", function () { idx = 0; renderDemo(); });
+    resetBtn.addEventListener("click", function (e) { e.stopPropagation(); idx = 0; renderDemo(); });
+    // Whole card is tappable to advance — the most obvious "interact with me"
+    document.getElementById("demo").addEventListener("click", function (e) {
+      if (e.target.closest("button")) return;   // buttons handle themselves
+      if (STAGES[idx].choice) return;            // choice stage needs a pick
+      if (idx < STAGES.length - 1) { idx++; renderDemo(); }
+    });
     renderDemo();
   })();
 </script>
