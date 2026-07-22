@@ -1,4 +1,4 @@
-<title>Nomo: ten guaranteed matches a day, sealed until you talk</title>
+<title>Nomo: ten guaranteed matches a day, no photos until you talk</title>
 <style>
   /* ── Nomo — concept + waitlist ───────────────────────────────────
      Committed dark identity (the product is entirely dark by design).
@@ -360,7 +360,7 @@
     <!-- INTERACTIVE DEMO -->
     <section class="fx demo-section">
       <span class="badge-interactive"><span class="pulse-dot"></span>Interactive</span>
-      <h2 style="margin-top:16px">From sealed to seen. <span class="tap-through">Tap through it.</span></h2>
+      <h2 style="margin-top:16px">See exactly how it works. <span class="tap-through">Tap through it.</span></h2>
       <div class="demo" id="demo">
         <div class="demo-head">
           <span class="demo-label" id="demo-stagelabel">Anonymous</span>
@@ -740,7 +740,7 @@
           + '<div class="choice"><button class="yes" id="ask-yes">Reveal my photo</button><button class="no" id="ask-no">Not yet</button></div></div></div>';
       }
       if (phase === "reveal") {
-        return '<div class="stage-voice">' + pfp(p, false) + '<div><p class="stage-caption reveal">' + p.name + ' asked too. Sealed, then seen, for both of you at the same moment.</p></div></div>';
+        return '<div class="stage-voice">' + pfp(p, false) + '<div><p class="stage-caption reveal">' + p.name + ' asked too. Both photos unlock at the same moment.</p></div></div>';
       }
       if (phase === "choice") {
         var moveTo = person < PEOPLE.length - 1 ? "Move to #" + (person + 2) : "Back to the top";
@@ -756,7 +756,7 @@
       if (phase === "setup") return "Who are you?";
       if (phase === "upload") return "You upload · placed privately";
       if (phase === "cohort") return "8:04 am · your ten arrive";
-      if (phase === "profile") return "#" + (person + 1) + " · " + p.name + " · sealed";
+      if (phase === "profile") return "#" + (person + 1) + " · " + p.name + " · no photo yet";
       if (phase === "window") return "The window · voice or text";
       if (phase === "ask") return "Your move · two reveals a day";
       if (phase === "reveal") return "You both asked · the reveal";
