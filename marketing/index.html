@@ -733,11 +733,11 @@
           + '<p class="stage-caption" style="margin-top:6px">You call first. Or text, if that\'s what you both want. Whatever you decide together.</p></div></div>';
       }
       if (phase === "ask") {
-        return '<div class="stage-voice">' + pfp(p, true) + '<div><p class="stage-caption">The hour is going well. You can ask to see each other — but it only happens if you both ask.</p>'
+        return '<div class="stage-voice">' + pfp(p, true) + '<div><p class="stage-caption">The hour is going well. You can ask to see each other. It only happens if you both ask.</p>'
           + '<div class="choice"><button class="yes" id="ask-yes">Reveal my photo</button><button class="no" id="ask-no">Not yet</button></div></div></div>';
       }
       if (phase === "reveal") {
-        return '<div class="stage-voice">' + pfp(p, false) + '<div><p class="stage-caption reveal">' + p.name + ' asked too. Sealed, then seen — for both of you, at the same moment.</p></div></div>';
+        return '<div class="stage-voice">' + pfp(p, false) + '<div><p class="stage-caption reveal">' + p.name + ' asked too. Sealed, then seen, for both of you at the same moment.</p></div></div>';
       }
       if (phase === "choice") {
         var moveTo = person < PEOPLE.length - 1 ? "Move to #" + (person + 2) : "Back to the top";
@@ -791,7 +791,7 @@
         if (phase === "match") { hint.style.display = "none"; }
         else {
           hint.style.display = "";
-          hint.textContent = phase === "ask" ? "Your call — tap to reveal ↑"
+          hint.textContent = phase === "ask" ? "Your call. Tap to reveal ↑"
             : phase === "choice" ? "Make your choice ↑"
             : (phase === "setup" && !ready) ? "Pick both to continue"
             : "Tap the card to move through it →";
