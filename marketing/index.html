@@ -686,7 +686,7 @@
       person = 0;
     }
 
-    var PHASES = ["setup","upload","cohort","profile","window","reveal","choice","match"];
+    var PHASES = ["setup","upload","cohort","profile","window","ask","reveal","choice","match"];
     var phase = "setup";
     var person = 0;
 
@@ -732,8 +732,12 @@
         return '<div class="stage-voice"><div class="stage-disc">&#9679;</div><div><canvas id="demo-wave" width="200" height="40" style="display:block;width:170px;height:40px"></canvas>'
           + '<p class="stage-caption" style="margin-top:6px">You call first. Or text, if that\'s what you both want. Whatever you decide together.</p></div></div>';
       }
+      if (phase === "ask") {
+        return '<div class="stage-voice">' + pfp(p, true) + '<div><p class="stage-caption">The hour is going well. You can ask to see each other — but it only happens if you both ask.</p>'
+          + '<div class="choice"><button class="yes" id="ask-yes">Reveal my photo</button><button class="no" id="ask-no">Not yet</button></div></div></div>';
+      }
       if (phase === "reveal") {
-        return '<div class="stage-voice">' + pfp(p, false) + '<div><p class="stage-caption reveal">Sealed, then seen. For both of you, at the same moment.</p></div></div>';
+        return '<div class="stage-voice">' + pfp(p, false) + '<div><p class="stage-caption reveal">' + p.name + ' asked too. Sealed, then seen — for both of you, at the same moment.</p></div></div>';
       }
       if (phase === "choice") {
         var moveTo = person < PEOPLE.length - 1 ? "Move to #" + (person + 2) : "Back to the top";
@@ -751,6 +755,7 @@
       if (phase === "cohort") return "8:04 am · your ten arrive";
       if (phase === "profile") return "#" + (person + 1) + " · " + p.name + " · sealed";
       if (phase === "window") return "The window · voice or text";
+      if (phase === "ask") return "Your move · two reveals a day";
       if (phase === "reveal") return "You both asked · the reveal";
       if (phase === "choice") return "One more yes";
       return "Match № " + (person + 1);
@@ -768,7 +773,7 @@
       }
 
       var ready = !!(myGender && wantMeet);
-      if (phase === "choice") {
+      if (phase === "choice" || phase === "ask") {
         nextBtn.style.display = "none";
       } else if (phase === "match") {
         nextBtn.style.display = ""; nextBtn.textContent = "That’s the whole idea";
@@ -786,7 +791,8 @@
         if (phase === "match") { hint.style.display = "none"; }
         else {
           hint.style.display = "";
-          hint.textContent = phase === "choice" ? "Make your choice ↑"
+          hint.textContent = phase === "ask" ? "Your call — tap to reveal ↑"
+            : phase === "choice" ? "Make your choice ↑"
             : (phase === "setup" && !ready) ? "Pick both to continue"
             : "Tap the card to move through it →";
         }
@@ -797,6 +803,16 @@
       });
       Array.prototype.forEach.call(stageEl.querySelectorAll("[data-w]"), function (b) {
         b.addEventListener("click", function (e) { e.stopPropagation(); wantMeet = b.getAttribute("data-w"); setPool(); render(); });
+      });
+
+      var askYes = document.getElementById("ask-yes");
+      var askNo = document.getElementById("ask-no");
+      if (askYes) askYes.addEventListener("click", function (e) { e.stopPropagation(); phase = "reveal"; render(); });
+      if (askNo) askNo.addEventListener("click", function (e) {
+        e.stopPropagation();
+        person = person < PEOPLE.length - 1 ? person + 1 : 0;
+        phase = "profile";          // no reveal, move down the list
+        render();
       });
 
       var yes = document.getElementById("choice-yes");
@@ -829,7 +845,7 @@
     }
 
     function advance() {
-      if (phase === "choice" || phase === "match") return;
+      if (phase === "choice" || phase === "ask" || phase === "match") return;
       if (phase === "setup" && !(myGender && wantMeet)) return;
       phase = PHASES[PHASES.indexOf(phase) + 1];
       render();
@@ -843,7 +859,7 @@
     });
     document.getElementById("demo").addEventListener("click", function (e) {
       if (e.target.closest("button")) return;
-      if (phase === "choice" || phase === "match") return;
+      if (phase === "choice" || phase === "ask" || phase === "match") return;
       advance();
     });
     render();
