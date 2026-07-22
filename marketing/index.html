@@ -354,48 +354,6 @@
       </div>
     </section>
 
-    <!-- HOW / LADDER -->
-    <section class="fx">
-      <p class="eyebrow">How a connection happens</p>
-      <div class="ladder">
-        <div class="step">
-          <span class="step-index">01</span>
-          <div>
-            <p class="step-title">You're placed, privately</p>
-            <p class="step-body">Upload your photos and our AI places you in a bracket. You see your placement exactly once. Nobody else ever does, and neither do you again. You only ever meet people in your own bracket.</p>
-          </div>
-        </div>
-        <div class="step">
-          <span class="step-index">02</span>
-          <div>
-            <p class="step-title">Ten people a day</p>
-            <p class="step-body">Every morning: ten people, ranked one to ten by how much your vibe overlaps: ideas, mentality, music. Their name, their music, their hobbies, their honest answers. Everything except their face. Read them all. Mark who you'd talk to.</p>
-          </div>
-        </div>
-        <div class="step">
-          <span class="step-index">03</span>
-          <div>
-            <p class="step-title">One window. One hour.</p>
-            <p class="step-body">At a random moment each day, everyone's phone lights up at once. The window is open for one hour. Mutual picks connect live. Voice first, text if you'd rather. Start with your number one, and if the vibe isn't there, move down the list. If the hour ends and you both want more, you keep each other: a real match you can talk to every day.</p>
-          </div>
-        </div>
-        <div class="step">
-          <span class="step-index">04</span>
-          <div>
-            <p class="step-title">Two reveals a day</p>
-            <p class="step-body">When a call feels like something, ask for the reveal. If they ask too, photos appear for both of you at once. You get two reveals a day. Spend them like they matter, because they do.</p>
-          </div>
-        </div>
-        <div class="step">
-          <span class="step-index">05</span>
-          <div>
-            <p class="step-title">One more yes</p>
-            <p class="step-body">You've seen each other. One last question: still them? Yes makes it your first match, with chat and socials shared on your terms. No, and you move down your list to whoever's next.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- INTERACTIVE DEMO -->
     <section class="fx demo-section">
       <span class="badge-interactive"><span class="pulse-dot"></span>Interactive</span>
@@ -413,6 +371,48 @@
           <button class="demo-btn ghost" id="demo-reset">Start over</button>
         </div>
         <p class="demo-hint" id="demo-hint" style="margin-top:12px">Tap the card to move through it &rarr;</p>
+      </div>
+    </section>
+
+    <!-- HOW / LADDER -->
+    <section class="fx">
+      <p class="eyebrow">How a connection happens</p>
+      <div class="ladder">
+        <div class="step">
+          <span class="step-index">01</span>
+          <div>
+            <p class="step-title">You're placed, privately</p>
+            <p class="step-body">AI places you in a bracket you see exactly once. Nobody else ever does. You only meet people in your own.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-index">02</span>
+          <div>
+            <p class="step-title">Ten people a day</p>
+            <p class="step-body">Ten people, ranked by how much of your world they share. Their name, music, hobbies, answers. Everything except their face.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-index">03</span>
+          <div>
+            <p class="step-title">One window. One hour.</p>
+            <p class="step-body">At a random moment, everyone's phone lights up at once. One hour to talk, voice or text. Start at your number one and move down if it isn't there.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-index">04</span>
+          <div>
+            <p class="step-title">Two reveals a day</p>
+            <p class="step-body">Ask for the reveal. If they ask too, photos appear for both of you at once. Two a day. Spend them like they matter.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-index">05</span>
+          <div>
+            <p class="step-title">One more yes</p>
+            <p class="step-body">Still them? Yes makes it a match, with chat and socials on your terms. No, and you move down your list.</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -709,7 +709,7 @@
         return '<div>'
           + '<p class="stage-caption">First, so we show you the right people.</p>'
           + '<p class="setup-q">I\'m a…</p>'
-          + '<div class="setup-row">' + opt("g","guy",myGender,"Guy") + opt("g","girl",myGender,"Girl") + '</div>'
+          + '<div class="setup-row">' + opt("g","guy",myGender,"Guy") + opt("g","girl",myGender,"Girl") + opt("g","nb",myGender,"Nonbinary") + '</div>'
           + '<p class="setup-q">I want to meet…</p>'
           + '<div class="setup-row">' + opt("w","girls",wantMeet,"Girls") + opt("w","guys",wantMeet,"Guys") + opt("w","everyone",wantMeet,"Everyone") + '</div>'
           + '</div>';
