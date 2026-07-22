@@ -1,4 +1,4 @@
-<title>Nomo: ten people a day, sealed until you talk</title>
+<title>Nomo: ten matches a day, sealed until you talk</title>
 <style>
   /* ── Nomo — concept + waitlist ───────────────────────────────────
      Committed dark identity (the product is entirely dark by design).
@@ -332,9 +332,9 @@
         <circle cx="248" cy="66" r="7" fill="#8B6355"/>
         <circle cx="424" cy="66" r="7" fill="#C98B8B"/>
       </svg>
-        <h1 class="display">Ten people. Every day.<br><span class="muted">One hour to open them.</span></h1>
+        <h1 class="display">Ten matches. Every day.<br><span class="muted">One hour to open them.</span></h1>
         <canvas class="wave" id="wave" aria-hidden="true"></canvas>
-        <p class="lead">Every day, AI hand-picks ten people on your level and ranks them by how much of your world they share. You'll know their minds, their music, their 2am thoughts. Not their faces. Then, at a moment nobody knows in advance, a window opens for one hour and you finally talk. Two reveals a day. Spend them on someone real.</p>
+        <p class="lead">Every day, AI hand-picks ten matches on your level and ranks them by how much of your world they share. You'll know their minds, their music, their 2am thoughts. Not their faces. Then, at a moment nobody knows in advance, a window opens for one hour and you finally talk. Two reveals a day. Spend them on someone real.</p>
 
         <form class="cta" id="cta-hero" novalidate>
           <div class="cta-row" id="row-hero">
@@ -391,8 +391,8 @@
         <div class="step">
           <span class="step-index">02</span>
           <div>
-            <p class="step-title">Ten people a day</p>
-            <p class="step-body">Ten people, ranked by how much of your world they share. Their name, music, hobbies, answers. Everything except their face.</p>
+            <p class="step-title">Ten matches a day</p>
+            <p class="step-body">Ten matches, ranked by how much of your world they share. Their name, music, hobbies, answers. Everything except their face.</p>
           </div>
         </div>
         <div class="step">
@@ -427,7 +427,7 @@
         <span class="window-clock" id="clock">60:00</span>
         <span class="window-cap">One hour, once a day, at a moment nobody knows in advance.</span>
       </div>
-      <p class="lead">No infinite feed. No endless swiping. Ten people, one window, two reveals. Scarcity is the point. It makes every window worth showing up for.</p>
+      <p class="lead">No infinite feed. No endless swiping. Ten matches, one window, two reveals. Scarcity is the point. It makes every window worth showing up for.</p>
     </section>
 
     <!-- QUOTE -->
@@ -725,7 +725,7 @@
         var rows = PEOPLE.map(function (q, i) {
           return '<span class="cohort-row' + (i === person ? " hot" : "") + '"><span class="cohort-rank">' + (i + 1) + '</span>' + q.name + '<span class="cohort-tag">' + q.tag + '</span></span>';
         }).join("");
-        return '<div><div class="cohort">' + rows + '</div><p class="stage-caption" style="margin-top:12px">Ten people in your bracket, ranked by shared vibe. #1 shares the most of your world.</p></div>';
+        return '<div><div class="cohort">' + rows + '</div><p class="stage-caption" style="margin-top:12px">Ten matches in your bracket, ranked by shared vibe. #1 shares the most of your world.</p></div>';
       }
       if (phase === "profile") {
         return '<div class="stage-voice">' + pfp(p, true) + '<div><p class="stage-name">' + p.name + ', ' + p.age + '</p><div class="chiprow">' + p.chips.map(chip).join("") + '</div>'

@@ -11,9 +11,9 @@ head = '''<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
-<title>Nomo: ten people a day, sealed until you talk</title>
-<meta name="description" content="Ten people a day, chosen by AI and ranked by your vibe. You know their minds, not their faces. One hour to talk. Two reveals. Join the waitlist.">
-<meta property="og:title" content="Nomo: ten people a day, sealed until you talk">
+<title>Nomo: ten matches a day, sealed until you talk</title>
+<meta name="description" content="Ten matches a day, chosen by AI and ranked by your vibe. You know their minds, not their faces. One hour to talk. Two reveals. Join the waitlist.">
+<meta property="og:title" content="Nomo: ten matches a day, sealed until you talk">
 <meta property="og:description" content="No more fake connections. No more talk that goes nowhere.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://jayj221.github.io/nomo-waitlist/">
