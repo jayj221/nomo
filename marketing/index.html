@@ -34,12 +34,12 @@
   }
 
   .wrap {
-    max-width: 600px;
+    max-width: 620px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 26px;
   }
 
-  section { border-top: 1px solid var(--line); padding: 72px 0; }
+  section { border-top: 1px solid var(--line); padding: 80px 0; }
   section:first-of-type { border-top: none; }
 
   .eyebrow {
@@ -52,12 +52,12 @@
   }
 
   h1.display {
-    font-size: clamp(2.5rem, 9.5vw, 3.7rem);
+    font-size: clamp(3rem, 12.5vw, 4.6rem);
     font-weight: 600;
-    letter-spacing: -0.035em;
-    line-height: 1.03;
+    letter-spacing: -0.038em;
+    line-height: 1.0;
     text-wrap: balance;
-    margin: 22px 0 0;
+    margin: 26px 0 0;
   }
   h1.display .muted { color: var(--ink-2); }
 
@@ -71,19 +71,32 @@
   }
 
   .lead {
-    font-size: 1.08rem;
-    line-height: 1.62;
+    font-size: clamp(1.08rem, 4.2vw, 1.2rem);
+    line-height: 1.6;
     color: var(--ink-2);
-    margin: 22px 0 0;
-    max-width: 42ch;
+    margin: 24px 0 0;
+    max-width: 40ch;
   }
 
   p { margin: 0; }
 
   /* ── Hero ─────────────────────────────────────────────────────── */
-  .hero { min-height: 92vh; display: flex; flex-direction: column; justify-content: center; padding: 96px 0 72px; }
+  /* Fills one full screen on any device. svh/dvh account for the mobile
+     browser bar so nothing hides behind it and there's no dead gap. */
+  .hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 34px 0 56px;
+    border-top: none;
+  }
+  /* Logo sits at the top; the headline block centers in the space below,
+     so the hero fills the screen without a floating gap. */
+  .hero-body { display: flex; flex-direction: column; margin: auto 0; }
 
-  .wave { width: 100%; height: 56px; display: block; margin: 34px 0 4px; opacity: 0.9; }
+  .wave { width: 100%; height: 62px; display: block; margin: 36px 0 6px; opacity: 0.9; }
 
   /* ── CTA / waitlist ───────────────────────────────────────────── */
   .cta { margin-top: 32px; }
@@ -265,17 +278,19 @@
         <circle cx="248" cy="66" r="7" fill="#8B6355"/>
         <circle cx="424" cy="66" r="7" fill="#C98B8B"/>
       </svg>
-      <h1 class="display">Ten people.<br>Sealed.<br><span class="muted">One hour a day to open them.</span></h1>
-      <canvas class="wave" id="wave" aria-hidden="true"></canvas>
-      <p class="lead">Every day, AI hand-picks ten people on your level and ranks them by how much of your world they share. You'll know their minds, their music, their 2am thoughts. Not their faces. Then, at a moment nobody knows in advance, a window opens for one hour and you finally talk. Two reveals a day. Spend them on someone real.</p>
+      <div class="hero-body">
+        <h1 class="display">Ten people.<br>Sealed.<br><span class="muted">One hour a day to open them.</span></h1>
+        <canvas class="wave" id="wave" aria-hidden="true"></canvas>
+        <p class="lead">Every day, AI hand-picks ten people on your level and ranks them by how much of your world they share. You'll know their minds, their music, their 2am thoughts. Not their faces. Then, at a moment nobody knows in advance, a window opens for one hour and you finally talk. Two reveals a day. Spend them on someone real.</p>
 
-      <form class="cta" id="cta-hero" novalidate>
-        <div class="cta-row" id="row-hero">
-          <input type="email" id="email-hero" placeholder="you@email.com" autocomplete="email" aria-label="Your email" required>
-          <button class="primary" type="submit">Request an invite</button>
-        </div>
-        <p class="cta-note" id="note-hero">Early access opens in small waves. No spam, just one message when your window opens.</p>
-      </form>
+        <form class="cta" id="cta-hero" novalidate>
+          <div class="cta-row" id="row-hero">
+            <input type="email" id="email-hero" placeholder="you@email.com" autocomplete="email" aria-label="Your email" required>
+            <button class="primary" type="submit">Request an invite</button>
+          </div>
+          <p class="cta-note" id="note-hero">Early access opens in small waves. No spam, just one message when your window opens.</p>
+        </form>
+      </div>
     </section>
 
     <!-- THE NO MORE -->
