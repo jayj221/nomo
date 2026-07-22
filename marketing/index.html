@@ -740,7 +740,7 @@
           + '<div class="choice"><button class="yes" id="ask-yes">Reveal my photo</button><button class="no" id="ask-no">Not yet</button></div></div></div>';
       }
       if (phase === "reveal") {
-        return '<div class="stage-voice">' + pfp(p, false) + '<div><p class="stage-caption reveal">' + p.name + ' asked too. Both photos unlock at the same moment.</p></div></div>';
+        return '<div class="stage-voice">' + pfp(p, false) + '<div><p class="stage-caption reveal">' + p.name + ' asked too. You both said yes, so you can see each other\'s photos.</p></div></div>';
       }
       if (phase === "choice") {
         var moveTo = person < PEOPLE.length - 1 ? "Move to #" + (person + 2) : "Back to the top";
