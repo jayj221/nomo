@@ -1,0 +1,194 @@
+<title>Nomo — idea to launch roadmap</title>
+<style>
+  :root{
+    --ground:#0a0b0d;--card:#101216;--card2:#16191e;
+    --line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.16);
+    --ink:rgba(255,255,255,.92);--ink2:rgba(255,255,255,.58);--ink3:rgba(255,255,255,.32);
+    --white:#fff;--green:#1fae82;--amber:#d9a441;--red:#E24B4A;--blush:#C98B8B;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --serif:"Iowan Old Style",Palatino,Georgia,serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  .doc{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:56px 22px 100px}
+  .eyebrow{font-family:var(--mono);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink3);margin:0}
+  h1{font-size:clamp(2rem,6vw,2.9rem);font-weight:600;letter-spacing:-.03em;line-height:1.05;margin:16px 0 0;text-wrap:balance}
+  h2{font-size:1.5rem;font-weight:600;letter-spacing:-.02em;margin:0;text-wrap:balance}
+  h3{font-size:1.05rem;font-weight:600;margin:0 0 4px}
+  p{margin:12px 0 0;color:var(--ink2)}
+  .lead{font-size:1.12rem;color:var(--ink);margin-top:20px;max-width:60ch}
+  a{color:var(--ink)}
+  section{border-top:1px solid var(--line);margin-top:56px;padding-top:44px}
+  .phase-head{display:flex;align-items:baseline;gap:14px}
+  .pnum{font-family:var(--mono);font-size:.85rem;color:var(--green);flex:none}
+  .meta{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-top:6px}
+  ul{margin:14px 0 0;padding-left:0;list-style:none}
+  li{position:relative;padding-left:22px;margin:9px 0;color:var(--ink2)}
+  li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;border-radius:50%;background:var(--line2)}
+  li b{color:var(--ink);font-weight:600}
+  .box{border:1px solid var(--line2);border-radius:12px;padding:18px 20px;margin-top:22px;background:var(--card)}
+  .box.warn{border-color:rgba(217,164,65,.4)}
+  .box.stop{border-color:rgba(226,75,74,.45)}
+  .box.good{border-color:rgba(31,174,130,.4)}
+  .box .tag{font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase}
+  .warn .tag{color:var(--amber)}.stop .tag{color:var(--red)}.good .tag{color:var(--green)}
+  .box h3{margin-top:8px}
+  table{width:100%;border-collapse:collapse;margin-top:18px;font-size:.9rem;display:block;overflow-x:auto}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:400}
+  td{color:var(--ink2)}td b{color:var(--ink)}
+  .pill{display:inline-block;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:5px;border:1px solid var(--line2);color:var(--ink2)}
+  .pill.must{border-color:rgba(226,75,74,.5);color:#e88}
+  .pill.soon{border-color:rgba(217,164,65,.5);color:var(--amber)}
+  .pill.later{color:var(--ink3)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .mini{border:1px solid var(--line);border-radius:10px;padding:14px}
+  .mini .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+  .foot{margin-top:60px;border-top:1px solid var(--line);padding-top:22px;font-size:.82rem;color:var(--ink3)}
+  strong.hl{color:var(--ink)}
+</style>
+
+<div class="doc"><div class="wrap">
+
+  <p class="eyebrow">Nomo · founder playbook</p>
+  <h1>From idea to launched product, without stepping on a legal landmine.</h1>
+  <p class="lead">A step-by-step path for building Nomo into something real people use — and turning the build itself into an admissions story worth telling. Written for a solo student founder on a small budget.</p>
+
+  <div class="box good">
+    <span class="tag">Read this first</span>
+    <h3>The honest truth about the Stanford / Berkeley goal</h3>
+    <p>"I founded a startup" is not what gets you in — admissions officers read that on thousands of applications. What stands out is <strong class="hl">a real thing you shipped, real people who used it, and a story of what you learned</strong> — especially about the hard parts (ethics, law, rejection, a pivot). Your strongest material may end up being the moment you had to redesign a feature because it was legally or ethically indefensible. Build honestly, document everything, and let the narrative be earned. Inflated "10,000 users" claims are easy to see through and can backfire in interviews.</p>
+  </div>
+
+  <!-- TIMELINE -->
+  <section>
+    <p class="eyebrow">The shape of it</p>
+    <h2>Seven phases, roughly six to nine months</h2>
+    <p>You've already done Phase 0 and most of Phase 1. Don't rush to "launch" — the validation and legal phases are where most student founders skip steps and get hurt.</p>
+    <table>
+      <tr><th>Phase</th><th>What it is</th><th>Rough time</th></tr>
+      <tr><td><b>0 · Idea</b></td><td>Concept, name, brand, landing page, waitlist</td><td>Done ✓</td></tr>
+      <tr><td><b>1 · Prototype</b></td><td>Clickable design, the core loop made tangible</td><td>Done ✓</td></tr>
+      <tr><td><b>2 · Validate</b></td><td>Talk to 30+ real potential users before building more</td><td>2–3 weeks</td></tr>
+      <tr><td><b>3 · Build MVP</b></td><td>Smallest real version people can actually use</td><td>6–10 weeks</td></tr>
+      <tr><td><b>4 · Legal &amp; setup</b></td><td>Entity, policies, consent, age-gating</td><td>Overlaps 3</td></tr>
+      <tr><td><b>5 · Closed launch</b></td><td>A single city / campus, 50–200 real users</td><td>4–6 weeks</td></tr>
+      <tr><td><b>6 · Learn &amp; grow</b></td><td>Iterate, measure, decide if it has legs</td><td>Ongoing</td></tr>
+    </table>
+  </section>
+
+  <!-- PHASE 2 -->
+  <section>
+    <div class="phase-head"><span class="pnum">02</span><h2>Validate before you build more</h2></div>
+    <p class="meta">2–3 weeks · costs nothing · the step everyone skips</p>
+    <p>You have a prototype. Do <strong class="hl">not</strong> build the full app next. First prove people actually want this, or you'll spend three months building something nobody uses.</p>
+    <ul>
+      <li><b>Talk to 30+ people</b> in your target group (young single people in one city). Show them the prototype. Watch them use it silently — where do they get confused?</li>
+      <li><b>Ask about the problem, not your solution.</b> "Tell me about the last time a dating app frustrated you." Not "would you use this?" (everyone politely says yes).</li>
+      <li><b>Watch the waitlist.</b> Real signups from your LinkedIn/Instagram push are your first signal. A landing page that converts 20%+ of visitors is strong.</li>
+      <li><b>Pressure-test the risky bit.</b> Ask directly: "How would you feel knowing an AI ranked your photos by attractiveness, even privately?" Their reaction tells you if that feature helps or poisons the brand.</li>
+      <li><b>Kill criteria.</b> Decide now what result would make you change direction. Founders who can't imagine being wrong build the wrong thing for years.</li>
+    </ul>
+    <div class="box"><span class="tag" style="color:var(--ink3)">Deliverable</span><h3>A one-page findings memo</h3><p>What you heard, what surprised you, what you're changing. This document is gold for an application essay later — it shows you think like a scientist, not a fanboy.</p></div>
+  </section>
+
+  <!-- PHASE 3 -->
+  <section>
+    <div class="phase-head"><span class="pnum">03</span><h2>Build the smallest real version</h2></div>
+    <p class="meta">6–10 weeks · you already have most of the code</p>
+    <p>You have a working Next.js codebase already. The MVP is not "every feature" — it's the single loop that proves the magic: <strong class="hl">get matched → talk → reveal → connect.</strong></p>
+    <ul>
+      <li><b>Cut ruthlessly for v1.</b> Ship: signup, prompts, the daily ten, the window, voice/text, the mutual reveal, chat. Delay: the AI attractiveness scoring, voice biometrics, liveness. (These are also your biggest legal risks — see Phase 4.)</li>
+      <li><b>Connect the backend.</b> Finish the Supabase setup you started — restore the project, run the schema, wire real auth. That's your last blocker to a working app.</li>
+      <li><b>Manual over magic.</b> For your first 50 users you can hand-curate matches yourself instead of trusting an algorithm. "Do things that don't scale" is the classic early-startup move.</li>
+      <li><b>Instrument it.</b> Add basic analytics (PostHog is free) so you can see where people drop off. You cannot improve what you can't measure.</li>
+      <li><b>Test on real phones</b> with 5 friends before anyone else. Every bug a stranger hits is a user you lose forever.</li>
+    </ul>
+  </section>
+
+  <!-- PHASE 4: LEGAL -->
+  <section>
+    <div class="phase-head"><span class="pnum">04</span><h2>Legal, regulatory &amp; paperwork</h2></div>
+    <p class="meta">the part that can actually end you · do it before real users, not after</p>
+    <p>A dating app that touches faces, voices, and "attractiveness" is one of the most regulated things a solo founder can build. Here's the map. This is orientation, <strong class="hl">not legal advice</strong> — for anything involving biometrics or a real launch, pay a lawyer for an hour. It's cheaper than a lawsuit by orders of magnitude.</p>
+
+    <div class="box stop">
+      <span class="tag">Stop — the two features that need a lawyer before they touch a real user</span>
+      <h3>AI attractiveness scoring &amp; voice/face biometrics</h3>
+      <p><b>Facial-geometry scoring and voice fingerprints are "biometric data"</b> under laws with real teeth. Illinois BIPA requires written, informed consent <em>before</em> you collect it and carries statutory damages of $1,000–5,000 <em>per person</em> with a private right of action — a few hundred users in the wrong state is a company-ending lawsuit. Texas, Washington, the EU (GDPR Art. 9), and India's DPDP Act all regulate it too. <b>My strong recommendation: launch v1 without these features.</b> Add them later only with (a) an explicit consent screen, (b) a retention/deletion policy, and (c) an actual lawyer's sign-off. The attractiveness-ranking idea also carries reputational and discrimination risk that's worth thinking hard about regardless of the law.</p>
+    </div>
+
+    <h3 style="margin-top:34px">The paperwork checklist</h3>
+    <table>
+      <tr><th>Item</th><th>What &amp; why</th><th>When</th></tr>
+      <tr><td><b>Privacy Policy</b></td><td>Legally required the moment you collect an email. Must say what you collect, why, how long, who you share with, and how users delete their data.</td><td><span class="pill must">Before launch</span></td></tr>
+      <tr><td><b>Terms of Service</b></td><td>The contract with your users. Sets rules, limits your liability, defines banned behaviour.</td><td><span class="pill must">Before launch</span></td></tr>
+      <tr><td><b>Age gate (18+)</b></td><td>Dating apps must keep out minors. A checkbox isn't enough long-term; you need a real date-of-birth gate and a plan for verification. App stores require a 17+ rating.</td><td><span class="pill must">Before launch</span></td></tr>
+      <tr><td><b>Consent flows</b></td><td>Clear, specific opt-in for anything sensitive (location, notifications, and — if ever — biometrics). Pre-ticked boxes are illegal in the EU.</td><td><span class="pill must">Before launch</span></td></tr>
+      <tr><td><b>Content moderation + reporting</b></td><td>A way to report/block users, and a process to act on it. Apple &amp; Google <em>reject</em> social apps without this. Also your duty of care.</td><td><span class="pill must">Before launch</span></td></tr>
+      <tr><td><b>Business entity</b></td><td>An LLC or company to separate your personal assets from the business. Protects your family's savings if something goes wrong.</td><td><span class="pill soon">Before taking money / real scale</span></td></tr>
+      <tr><td><b>Data processing setup</b></td><td>Know where user data lives (your Supabase region), sign the provider's data agreement, enable encryption/backups.</td><td><span class="pill soon">During build</span></td></tr>
+      <tr><td><b>Trademark the name</b></td><td>Check "Nomo" isn't taken in your class; file when you have traction. Domains + social handles first (cheap insurance).</td><td><span class="pill later">When it has legs</span></td></tr>
+      <tr><td><b>Insurance</b></td><td>Basic tech/general-liability cover once you have real users and revenue.</td><td><span class="pill later">Post-traction</span></td></tr>
+    </table>
+
+    <div class="grid">
+      <div class="mini"><div class="k">If you're in India</div><p style="margin-top:8px;font-size:.9rem">Register a <b>Private Limited company</b> (MCA) or start as a sole proprietor; the <b>DPDP Act 2023</b> governs personal data (consent, a Data Protection Officer at scale). If you'll target US users or raise VC later, many founders form a <b>US Delaware C-corp</b> with an Indian subsidiary — but that's a lawyer/CA conversation, not a DIY one.</p></div>
+      <div class="mini"><div class="k">If you're in the US</div><p style="margin-top:8px;font-size:.9rem">An <b>LLC</b> is fine to start and cheap. Switch to a <b>Delaware C-corp</b> only if you raise venture money. State biometric laws (esp. <b>Illinois BIPA</b>) are the sharp edge. <b>Section 230</b> gives some protection for user content, but not for your own conduct.</p></div>
+    </div>
+
+    <div class="box warn">
+      <span class="tag">Practical shortcut</span>
+      <h3>You can start policies from good templates</h3>
+      <p>Tools like Termly, iubenda, or Firstbase generate a starter Privacy Policy + ToS cheaply, and Stripe Atlas / Firstbase / Clerky handle US incorporation for a few hundred dollars. Use them for v1, then have a lawyer review before you scale or take money. What you must <em>not</em> template away is the biometric consent — that's bespoke.</p>
+    </div>
+  </section>
+
+  <!-- PHASE 5 -->
+  <section>
+    <div class="phase-head"><span class="pnum">05</span><h2>Launch small and on purpose</h2></div>
+    <p class="meta">4–6 weeks · one city or one campus</p>
+    <p>A dating app with 40 users spread across the world is dead — nobody has anyone to match with. <strong class="hl">Density beats reach.</strong> Win one small community completely.</p>
+    <ul>
+      <li><b>Pick one campus or one city neighbourhood.</b> Your own university is perfect — you have distribution and trust there.</li>
+      <li><b>Solve the "empty room" problem.</b> Onboard a batch of real people <em>the same week</em> so the first users actually have matches. Consider a "launch day" where everyone joins at once (fits your window mechanic beautifully).</li>
+      <li><b>Be your own first support + moderator.</b> Message every early user. Their feedback is your roadmap.</li>
+      <li><b>Safety first, always.</b> Have blocking, reporting, and a way to reach you live. One bad safety incident ends a dating app's reputation permanently.</li>
+      <li><b>Measure the one number that matters:</b> do two people who match actually end up talking, and come back the next day? That "week-1 retention" is the whole ballgame.</li>
+    </ul>
+  </section>
+
+  <!-- PHASE 6 -->
+  <section>
+    <div class="phase-head"><span class="pnum">06</span><h2>Get customers &amp; decide if it has legs</h2></div>
+    <p class="meta">ongoing</p>
+    <ul>
+      <li><b>Growth that fits the product:</b> campus ambassadors, a referral loop ("skip the waitlist"), and content — filming real reactions to the "reveal" moment is genuinely shareable on TikTok/Instagram Reels.</li>
+      <li><b>The story sells it.</b> "An app where you can't see anyone until you've actually talked" is a press hook. Pitch student papers, local tech newsletters, Product Hunt.</li>
+      <li><b>Money, later.</b> Don't charge until people love it. When you do: a subscription for extra reveals/windows. Note Apple/Google take ~15–30% and you'll owe tax — register properly first.</li>
+      <li><b>Know when to stop or pivot.</b> If week-1 retention stays low after honest iteration, that's data, not failure. Pivoting intelligently is a <em>stronger</em> story than stubbornly pushing a dead idea.</li>
+    </ul>
+  </section>
+
+  <!-- ADMISSIONS -->
+  <section>
+    <p class="eyebrow">The application angle</p>
+    <h2>Turning this into a Stanford / Berkeley story</h2>
+    <ul>
+      <li><b>Document the whole journey now.</b> Screenshots, decisions, the moment you cut a feature for legal reasons, user quotes. This becomes essay material and interview substance you can't fake later.</li>
+      <li><b>Lead with the learning, not the launch.</b> The essay that lands isn't "I built an app," it's "I set out to fix shallow dating and discovered the hardest problem was my own feature was ethically wrong — here's what I did."</li>
+      <li><b>Show the spike.</b> Selective schools want someone genuinely exceptional at one thing. "I taught myself full-stack dev and shipped a real product with N real users while in school" is a spike.</li>
+      <li><b>Quantify honestly.</b> Real numbers, however small, beat vague grandeur. "38 users, 61% came back day two, one couple went on a real date" is more impressive than "thousands of users."</li>
+      <li><b>Get a recommender who watched you build it</b> — a mentor, a professor, an early user who's a professional. Specific beats glowing-but-generic.</li>
+      <li><b>The ethics maturity is your edge.</b> Grappling openly with the attractiveness-scoring question shows judgment beyond your years. That reads as Stanford/Berkeley material more than any user count.</li>
+    </ul>
+  </section>
+
+  <div class="foot">
+    <p><strong class="hl">Not legal advice.</strong> This is a founder's orientation map, not a substitute for a lawyer or chartered accountant. Laws (especially around biometrics, minors, and data) vary by country and change often — confirm specifics for your jurisdiction before you launch to real people. The biometric and attractiveness-scoring features in particular should not go live without professional review.</p>
+    <p style="margin-top:14px">Built alongside the Nomo prototype and landing page. Next concrete step: talk to 30 people, then finish the Supabase backend.</p>
+  </div>
+
+</div></div>

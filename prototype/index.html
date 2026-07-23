@@ -1,0 +1,280 @@
+<title>Nomo — interactive prototype</title>
+<style>
+  :root{
+    --ground:#0a0b0d; --card:#101216; --card2:#16191e;
+    --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.17);
+    --ink:rgba(255,255,255,.93); --ink2:rgba(255,255,255,.56); --ink3:rgba(255,255,255,.30);
+    --white:#fff; --green:#1fae82; --blush:#C98B8B;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --serif:"Iowan Old Style",Palatino,Georgia,serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  .stage{background:#000;color:var(--ink);font-family:var(--sans);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px 12px;overflow-x:hidden}
+  .cap{font-family:var(--mono);font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink3);text-align:center}
+  /* device */
+  .phone{width:100%;max-width:390px;aspect-ratio:390/844;background:var(--ground);border:10px solid #1c1f24;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:26px;background:#1c1f24;border-radius:0 0 16px 16px;z-index:40}
+  .statusbar{display:flex;justify-content:space-between;align-items:center;padding:12px 22px 4px;font-size:.72rem;color:var(--ink2);font-weight:600}
+  .screen{flex:1;overflow-y:auto;overflow-x:hidden;padding:6px 20px 84px;display:none;flex-direction:column}
+  .screen.on{display:flex;animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .screen::-webkit-scrollbar{width:0}
+  h1{font-size:1.7rem;font-weight:600;letter-spacing:-.03em;line-height:1.05;margin:0}
+  h2{font-size:1.15rem;font-weight:600;letter-spacing:-.02em;margin:0}
+  .sub{color:var(--ink2);font-size:.92rem;line-height:1.5;margin:8px 0 0}
+  .btn{width:100%;border:none;border-radius:8px;background:var(--white);color:#000;font:inherit;font-weight:600;font-size:.95rem;padding:14px;cursor:pointer;transition:opacity .15s}
+  .btn:active{opacity:.8}
+  .btn.sec{background:transparent;color:var(--ink);border:1px solid var(--line2)}
+  .btn.ghost{background:transparent;color:var(--ink3);border:none}
+  .btn:disabled{opacity:.4}
+  .row{display:flex;gap:10px}
+  .spacer{flex:1}
+  .chip{display:inline-block;font-size:.72rem;color:var(--ink2);border:1px solid var(--line);border-radius:6px;padding:5px 9px;cursor:pointer;user-select:none}
+  .chip.sel{color:#000;background:var(--white);border-color:var(--white);font-weight:600}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .ans{font-family:var(--serif);font-style:italic;font-size:1.05rem;line-height:1.35;color:var(--ink);margin-top:6px}
+  .q{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+  .pfp{width:100%;aspect-ratio:1;border-radius:16px;overflow:hidden;border:1px solid var(--line2)}
+  .pfp.sm{width:52px;height:52px;border-radius:50%;flex:none}
+  .pfp.blur svg{filter:blur(11px) saturate(.8);transform:scale(1.2)}
+  .pfp svg{display:block;width:100%;height:100%}
+  .nav{position:absolute;bottom:0;left:0;right:0;display:flex;border-top:1px solid var(--line);background:rgba(10,11,13,.92);backdrop-filter:blur(8px);z-index:30}
+  .nav button{flex:1;background:none;border:none;color:var(--ink3);font:inherit;font-size:.72rem;padding:14px 0 22px;cursor:pointer}
+  .nav button.on{color:var(--ink)}
+  .toast{position:absolute;top:54px;left:16px;right:16px;background:var(--card2);border:1px solid var(--line2);border-radius:12px;padding:12px 14px;z-index:50;animation:drop .4s ease;cursor:pointer}
+  @keyframes drop{from{transform:translateY(-20px);opacity:0}to{transform:none;opacity:1}}
+  .lineup-row{display:flex;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer}
+  .rank{font-family:var(--mono);font-size:.72rem;color:var(--ink3);width:20px;flex:none}
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18)}
+  .dot.on{background:#fff}.dot.on.g{background:var(--green)}
+  .strip{display:flex;gap:6px;justify-content:center}
+  .wave{width:100%;height:52px;display:block;opacity:.9}
+  .badge{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--green);border:1px solid rgba(31,174,130,.4);border-radius:999px;padding:5px 11px}
+  .pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pl 1.5s infinite}
+  @keyframes pl{50%{opacity:.3;transform:scale(.6)}}
+  .center{align-items:center;text-align:center}
+  .bubble{background:var(--card2);border:1px solid var(--line);border-radius:12px 12px 12px 3px;padding:9px 12px;font-size:.88rem;max-width:78%}
+  .bubble.me{border-radius:12px 12px 3px 12px;background:rgba(255,255,255,.1);margin-left:auto}
+  .reset{margin-top:6px;background:none;border:1px solid var(--line);color:var(--ink2);border-radius:999px;padding:8px 16px;font:inherit;font-size:.82rem;cursor:pointer}
+  a.credit{color:var(--ink3);font-size:.72rem;text-decoration:none}
+</style>
+
+<div class="stage">
+  <p class="cap">Nomo · interactive prototype · tap to explore</p>
+
+  <div class="phone" id="phone">
+    <div class="notch"></div>
+    <div class="statusbar"><span>9:41</span><span>Nomo</span></div>
+    <div id="views"></div>
+
+    <!-- WELCOME -->
+    <div class="screen on center" data-s="welcome" style="justify-content:center;gap:0">
+      <div class="spacer"></div>
+      <svg viewBox="0 0 470 120" style="height:46px;width:auto" aria-label="Nomo">
+        <g transform="translate(0,20)"><path d="M60,18 A26,26 0 0,1 60,62 A26,26 0 0,1 60,18Z" fill="#C98B8B" fill-opacity=".3"/><circle cx="46" cy="40" r="26" stroke="#F5F2EF" stroke-opacity=".92" stroke-width="4.5" fill="none"/><circle cx="74" cy="40" r="26" stroke="#F5F2EF" stroke-opacity=".92" stroke-width="4.5" fill="none"/></g>
+        <g transform="translate(130,0)" stroke="#F5F2EF" stroke-width="11" stroke-linecap="round" fill="none"><path d="M22,92 L22,44"/><path d="M22,66 C22,40 74,40 74,66 L74,92"/><circle cx="118" cy="66" r="26"/><path d="M160,92 L160,44"/><path d="M160,66 C160,40 206,40 206,66 L206,92"/><path d="M206,66 C206,40 252,40 252,66 L252,92"/><circle cx="294" cy="66" r="26"/></g>
+        <circle cx="248" cy="66" r="7" fill="#8B6355"/><circle cx="424" cy="66" r="7" fill="#C98B8B"/>
+      </svg>
+      <p class="sub" style="max-width:260px">Ten guaranteed matches a day. No photos until you talk.</p>
+      <div class="spacer"></div>
+      <button class="btn" onclick="go('ob1')">Create account</button>
+      <button class="btn ghost" style="margin-top:8px" onclick="go('ob1')">I have an invite</button>
+    </div>
+
+    <!-- ONBOARDING 1: photos -->
+    <div class="screen" data-s="ob1">
+      <div style="height:8px"></div>
+      <div class="strip" style="justify-content:flex-start;gap:5px;margin-bottom:20px"><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      <h2>Your photos</h2>
+      <p class="sub">Analysed on your device, then kept private. Nobody sees them until you both choose a reveal.</p>
+      <div class="row" style="margin-top:18px;flex-wrap:wrap;gap:8px">
+        <div class="pfp" style="width:31%;aspect-ratio:1;background:#1a1d22;display:flex;align-items:center;justify-content:center;color:var(--ink3);font-size:1.6rem">＋</div>
+        <div class="pfp" style="width:31%;aspect-ratio:1;background:#1a1d22;display:flex;align-items:center;justify-content:center;color:var(--ink3);font-size:1.6rem">＋</div>
+        <div class="pfp" style="width:31%;aspect-ratio:1;border-style:dashed;display:flex;align-items:center;justify-content:center;color:var(--ink3);font-size:1.6rem">＋</div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn" onclick="go('ob2')">Continue</button>
+    </div>
+
+    <!-- ONBOARDING 2: placement (the wow) -->
+    <div class="screen center" data-s="ob2" style="justify-content:center">
+      <p class="cap" style="margin-bottom:16px">Your placement · shown once, only to you</p>
+      <div class="card center" style="padding:32px 20px;width:100%">
+        <div style="font-size:4rem;font-weight:300">7</div>
+        <div class="sub" style="margin-top:2px">of 10 brackets</div>
+        <p class="sub" style="max-width:250px;margin-top:18px">Everyone in your daily ten is in this same bracket. Nobody, including them, ever sees this number. After this screen, neither do you.</p>
+        <p class="q" style="margin-top:14px;text-transform:none;letter-spacing:0;font-size:.7rem;color:var(--ink3)">A geometry heuristic, not a truth about you.</p>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn" onclick="go('ob3')">Understood, continue</button>
+    </div>
+
+    <!-- ONBOARDING 3: prompts + tags -->
+    <div class="screen" data-s="ob3">
+      <div style="height:8px"></div>
+      <div class="strip" style="justify-content:flex-start;gap:5px;margin-bottom:20px"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></div>
+      <h2>Say something real</h2>
+      <p class="sub">Two or three answers. This is all anyone sees at first.</p>
+      <div class="card" style="margin-top:16px"><div class="q">What I'm really like when I'm comfortable</div><div class="ans">I'll reorganise your bookshelf by colour and defend it as a personality trait.</div></div>
+      <p class="q" style="margin-top:22px;letter-spacing:.12em">Your vibe · pick a few</p>
+      <div class="row" style="flex-wrap:wrap;gap:7px;margin-top:8px">
+        <span class="chip sel">indie</span><span class="chip sel">deep talks</span><span class="chip">techno</span><span class="chip sel">film nerd</span><span class="chip">gym</span><span class="chip">foodie</span><span class="chip">night owl</span>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn" onclick="go('home');bump('home')">Enter Nomo</button>
+    </div>
+
+    <!-- HOME: today's ten -->
+    <div class="screen" data-s="home">
+      <div style="height:10px"></div>
+      <p class="cap" style="text-align:left">Today's ten · ranked by shared vibe · anonymous</p>
+      <div id="lineup" style="margin-top:8px"></div>
+      <p class="cap" style="margin-top:18px;text-align:center;letter-spacing:.1em">Ten a day. One window. Two reveals.</p>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="screen" data-s="profile">
+      <div style="height:10px"></div>
+      <button class="btn ghost" style="width:auto;padding:0;text-align:left;font-size:.85rem" onclick="go('home')">← Today's ten</button>
+      <div id="profileBody" style="margin-top:10px"></div>
+    </div>
+
+    <!-- WINDOW -->
+    <div class="screen center" data-s="window" style="justify-content:flex-start">
+      <div style="height:20px"></div>
+      <p class="cap" style="color:var(--green)">window open</p>
+      <div id="clock" style="font-size:3.4rem;font-weight:300;font-variant-numeric:tabular-nums;margin-top:6px">59:48</div>
+      <p class="sub" style="text-align:left;width:100%;margin-top:20px">Available now, start with your #1</p>
+      <div style="width:100%;margin-top:10px">
+        <div class="card" style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="pfp sm">%A1%</div><div style="flex:1;font-size:.9rem">#1 · today's ten</div><button class="btn" style="width:auto;padding:9px 14px" onclick="go('call')">Talk</button><button class="btn sec" style="width:auto;padding:9px 12px" onclick="go('call')">Text</button></div>
+      </div>
+    </div>
+
+    <!-- CALL + reveal -->
+    <div class="screen center" data-s="call" style="justify-content:flex-start">
+      <div style="height:14px"></div>
+      <div style="display:flex;justify-content:space-between;width:100%;font-size:.66rem;letter-spacing:.1em;color:var(--ink3);font-family:var(--mono)"><span id="callState">LIVE · ANONYMOUS</span><span id="callTimer">0:14</span></div>
+      <div style="height:26px"></div>
+      <div class="pfp blur" id="callPfp" style="width:120px;height:120px;border-radius:50%">%A1%</div>
+      <div style="height:20px"></div>
+      <canvas class="wave" id="wave" width="300" height="52"></canvas>
+      <div style="height:8px"></div>
+      <div class="strip" id="callStrip"><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      <div class="spacer"></div>
+      <div id="callAction" style="width:100%">
+        <div class="card center" style="margin-bottom:12px"><div class="sub" style="margin:0">The hour is going well. Ask to see each other? It only happens if you both ask.</div>
+        <div class="row" style="margin-top:12px"><button class="btn sec" onclick="go('home')">Not yet</button><button class="btn" onclick="reveal()">Reveal my photo</button></div></div>
+      </div>
+    </div>
+
+    <!-- MATCH -->
+    <div class="screen center" data-s="match" style="justify-content:center">
+      <div class="pfp" id="matchPfp" style="width:120px;height:120px;border-radius:50%">%A1%</div>
+      <h2 style="margin-top:16px">Aanya, 26</h2>
+      <p class="sub" style="color:var(--green);margin-top:2px">Your match. She said yes too.</p>
+      <div class="bubble" style="margin-top:16px">so… same time tomorrow?</div>
+      <div class="row" style="margin-top:10px;gap:8px"><span class="chip">Instagram</span><span class="chip">Spotify</span></div>
+      <div class="spacer"></div>
+      <button class="btn" onclick="go('chat')">Open chat</button>
+      <button class="reset" onclick="go('welcome')">↺ Restart prototype</button>
+    </div>
+
+    <!-- CHAT -->
+    <div class="screen" data-s="chat">
+      <div style="height:10px"></div>
+      <div style="display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--line)"><div class="pfp sm">%A1%</div><div><div style="font-weight:600">Aanya</div><div class="sub" style="margin:0;font-size:.78rem">talking daily · matched today</div></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;padding-top:14px">
+        <div class="bubble">so… same time tomorrow?</div>
+        <div class="bubble me">only if you promise to defend the bookshelf thing again</div>
+        <div class="bubble">deal.</div>
+      </div>
+      <div class="card" style="display:flex;gap:8px;align-items:center;padding:10px"><span class="sub" style="margin:0;flex:1">Say something…</span><button class="btn" style="width:auto;padding:8px 14px">Send</button></div>
+      <button class="reset" onclick="go('welcome')" style="margin-top:10px">↺ Restart prototype</button>
+    </div>
+
+    <!-- bottom nav -->
+    <div class="nav" id="nav" style="display:none">
+      <button data-n="home" onclick="go('home')">Today</button>
+      <button data-n="window" onclick="go('window')">Window</button>
+      <button data-n="chat" onclick="go('chat')">Chats</button>
+    </div>
+  </div>
+
+  <p class="cap" style="max-width:340px;opacity:.7">A design prototype with sample data — no real people, no backend. Faces are abstract gradient avatars.</p>
+</div>
+
+<script>
+  // gradient avatar
+  function av(a,b){return '<svg viewBox="0 0 120 120"><defs><radialGradient id="g'+a.replace("#","")+'" cx="36%" cy="24%" r="90%"><stop offset="0%" stop-color="'+a+'"/><stop offset="100%" stop-color="'+b+'"/></radialGradient></defs><rect width="120" height="120" fill="url(#g'+a.replace("#","")+')"/><circle cx="60" cy="46" r="31" fill="rgba(0,0,0,.16)"/><circle cx="60" cy="50" r="20" fill="rgba(255,255,255,.93)"/><path d="M40,46 C40,25 80,25 80,46 C80,35 72,31 60,31 C48,31 40,35 40,46Z" fill="rgba(0,0,0,.16)"/><path d="M25,120 C27,93 43,83 60,83 C77,83 93,93 95,120Z" fill="rgba(255,255,255,.93)"/></svg>';}
+  var A1=av("#8fcbb3","#264a3d");
+  var _ph=document.getElementById("phone");
+  _ph.innerHTML=_ph.innerHTML.split("%A1%").join(A1);
+
+  var PEOPLE=[
+    {n:"Aanya",a:26,t:"techno",q:"A small thing that makes my day",ans:"A song dropping exactly as the metro doors open."},
+    {n:"Maya",a:24,t:"indie",q:"What I'm really like at 2am",ans:"Reorganising a playlist I'll never finish."},
+    {n:"Kavya",a:25,t:"film nerd",q:"My controversial take",ans:"Every good story is people dodging one honest talk."},
+    {n:"Sonam",a:23,t:"bookworm",q:"Never admit on a first date",ans:"I've already imagined how this ends. Twice."},
+    {n:"Nia",a:27,t:"artist",q:"I care about this more than I should",ans:"The exact temperature of my coffee."},
+    {n:"Tara",a:24,t:"night owl",q:"Perfect day",ans:"No plans, a playlist, somewhere new to get lost."},
+    {n:"Sara",a:28,t:"jazz",q:"People get this wrong",ans:"Quiet isn't shy. I'm listening harder than you."},
+    {n:"Ira",a:23,t:"traveller",q:"Nothing to lose, I'd…",ans:"Book the one-way ticket in my cart."},
+    {n:"Jasleen",a:25,t:"gym",q:"Way to my heart",ans:"Match my energy at 7am and midnight."},
+    {n:"Fatima",a:26,t:"foodie",q:"Small joy",ans:"The first bite before anyone else is served."}
+  ];
+  function lineup(){
+    document.getElementById("lineup").innerHTML=PEOPLE.map(function(p,i){
+      return '<div class="lineup-row" onclick="openP('+i+')"><span class="rank">#'+(i+1)+'</span><span class="ans" style="flex:1;font-size:.98rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.ans+'</span><span class="chip" style="pointer-events:none">'+p.t+'</span></div>';
+    }).join("");
+  }
+  window.openP=function(i){
+    var p=PEOPLE[i];
+    document.getElementById("profileBody").innerHTML=
+      '<div style="display:flex;align-items:center;gap:12px;margin:6px 0 14px"><div class="pfp sm">'+av("#9aa7d7","#2b3550")+'</div><div><div style="font-weight:600;font-size:1.1rem">'+p.n+', '+p.a+'</div><div class="sub" style="margin:0;font-size:.8rem">#'+(i+1)+' in your ten · no photo yet</div></div></div>'+
+      '<div class="row" style="flex-wrap:wrap;gap:6px;margin-bottom:14px"><span class="chip">'+p.t+'</span><span class="chip">deep talks</span><span class="chip">coffee</span></div>'+
+      '<div class="card"><div class="q">'+p.q+'</div><div class="ans">'+p.ans+'</div></div>'+
+      '<div class="card" style="margin-top:10px"><div class="q">The way to my heart</div><div class="ans">Show me the thing you nerd out about.</div></div>'+
+      '<div style="height:16px"></div><button class="btn" onclick="go(\'home\');bump(\'home\')">I\'d talk to them</button>'+
+      '<p class="cap" style="margin-top:12px;letter-spacing:.08em">If they mark you too, you connect at the next window</p>';
+    go("profile");
+  };
+
+  var views={};
+  document.querySelectorAll(".screen").forEach(function(s){views[s.dataset.s]=s;});
+  window.go=function(s){
+    document.querySelectorAll(".screen").forEach(function(x){x.classList.remove("on");});
+    views[s].classList.add("on"); views[s].scrollTop=0;
+    var main=["home","window","chat","profile"].indexOf(s)>=0;
+    document.getElementById("nav").style.display=main?"flex":"none";
+    document.querySelectorAll("#nav button").forEach(function(b){b.classList.toggle("on",b.dataset.n===s);});
+    if(s==="home") lineup();
+    if(s==="window") runClock();
+    if(s==="call") runCall();
+  };
+  window.bump=function(){};
+
+  // window countdown
+  var clockT;
+  function runClock(){clearInterval(clockT);var s=3588;var el=document.getElementById("clock");clockT=setInterval(function(){s--;if(s<0)s=3588;el.textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");},1000);}
+
+  // call: waveform + timer
+  var callT,waveR,cs;
+  function runCall(){
+    document.getElementById("callPfp").classList.add("blur");
+    document.getElementById("callPfp").innerHTML=A1;
+    document.getElementById("callState").textContent="LIVE · ANONYMOUS";
+    clearInterval(callT);cs=14;var tel=document.getElementById("callTimer");
+    callT=setInterval(function(){cs++;tel.textContent=Math.floor(cs/60)+":"+String(cs%60).padStart(2,"0");},1000);
+    var c=document.getElementById("wave"),x=c.getContext("2d");cancelAnimationFrame(waveR);
+    (function draw(t){x.clearRect(0,0,c.width,c.height);var n=26,g=4,bw=(c.width-g*(n-1))/n;for(var i=0;i<n;i++){var a=.5+.5*Math.sin(t*.006+i*.5);var h=Math.max(2,a*c.height*.9);x.fillStyle="rgba(255,255,255,.55)";x.fillRect(i*(bw+g),(c.height-h)/2,bw,h);}waveR=requestAnimationFrame(draw);})(0);
+  }
+  window.reveal=function(){
+    document.getElementById("callPfp").classList.remove("blur");
+    document.getElementById("callState").textContent="YOU BOTH ASKED · REVEALED";
+    document.getElementById("callStrip").innerHTML='<span class="dot on g"></span><span class="dot on g"></span><span class="dot on g"></span><span class="dot on g"></span><span class="dot"></span>';
+    document.getElementById("callAction").innerHTML='<div class="card center"><div class="sub" style="margin:0;color:var(--green)">Aanya asked too. You both said yes, so you can see each other\'s photos.</div><button class="btn" style="margin-top:12px" onclick="go(\'match\')">Keep going →</button></div>';
+  };
+
+  go("welcome"); // deterministic entry point
+</script>
