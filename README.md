@@ -2,7 +2,7 @@
 
 No more fake connections. A voice-first, anonymous-first connection app. You write three prompts. People
 in your bracket read them. If you both like each other, a live voice call
-opens at the next window — a 15-minute period that fires for everyone at once.
+opens at the next window, a 15-minute period that fires for everyone at once.
 Identity reveals step by step, only when both people choose it.
 
 Vocabulary: connect, talk, vibe, skip, window, reveal. Never "match", "swipe",
@@ -10,14 +10,14 @@ or "dating" in any UI string.
 
 ## Stack
 
-- Next.js 14 (App Router, TypeScript) + Tailwind — dark only
-- Supabase — Postgres, Auth, RLS, Realtime, private Storage
-- Daily.co — private voice-only WebRTC rooms
-- Replicate — server-side photo scoring (never exposed to clients)
-- OpenAI Moderation — prompt answers checked before going live
-- OneSignal — web push for window notifications
-- MediaPipe FaceLandmarker (WASM) — client-side liveness check
-- @vladmandic/human — client-side face-presence check on photo upload
+- Next.js 14 (App Router, TypeScript) + Tailwind, dark only
+- Supabase, Postgres, Auth, RLS, Realtime, private Storage
+- Daily.co, private voice-only WebRTC rooms
+- Replicate, server-side photo scoring (never exposed to clients)
+- OpenAI Moderation, prompt answers checked before going live
+- OneSignal, web push for window notifications
+- MediaPipe FaceLandmarker (WASM), client-side liveness check
+- @vladmandic/human, client-side face-presence check on photo upload
 
 ## Setup
 
@@ -58,9 +58,9 @@ npm run dev
 ### 4. Deploy (Vercel)
 
 - `vercel.json` schedules the crons: daily curation at 7:50am, anchor windows
-  at 9:00 and 20:00, and an hourly 11:00–19:00 tick that fires the third
+  at 9:00 and 20:00, and an hourly 11:00-19:00 tick that fires the third
   window exactly once per day at a uniformly random hour.
-- Set the `CRON_SECRET` env var in Vercel — Vercel sends it as a bearer token
+- Set the `CRON_SECRET` env var in Vercel, Vercel sends it as a bearer token
   on cron invocations and the cron routes verify it.
 - OneSignal requires the deployed HTTPS URL; configure the web push origin in
   the OneSignal dashboard after the first deploy, and set
@@ -84,7 +84,7 @@ before those flags flip.
 learn of it via a Realtime subscription (`WindowListener`) and are routed to
 the window screen. Calls are created against a window and rate-limited to 3
 per window; likes to 10 per day; the browse queue to 10 profiles per day.
-These limits are product decisions — do not raise them.
+These limits are product decisions, do not raise them.
 
 **Anti-bias scoring.** Ending a call within 5 seconds costs the skipper
 behavioral score; completed calls and step unlocks add to it. The browse
@@ -92,12 +92,12 @@ queue ranks by behavioral-score proximity within the bracket.
 
 ## Not yet implemented
 
-- **Voice fingerprinting** — the `voice_fingerprints` table exists (service-
+- **Voice fingerprinting**, the `voice_fingerprints` table exists (service-
   role access only), but the resemblyzer embedding service is a separate
   Python/FastAPI microservice that isn't part of this repo. Wire it by
   recording 10s of mic audio on first call, POSTing to the service, and
   storing the embedding; verify on subsequent calls and flag mismatches.
-- **Admin review queue** — reports land in the `reports` table; there's no
+- **Admin review queue**, reports land in the `reports` table; there's no
   moderation UI yet.
 
 ## A note before launch
