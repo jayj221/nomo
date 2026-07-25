@@ -34,3 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Planning docs & prototype — kept on disk, out of the repo
+/docs/
+/prototype/
