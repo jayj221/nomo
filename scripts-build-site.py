@@ -16,7 +16,7 @@ head = '''<!doctype html>
 <meta property="og:title" content="Nomo: ten guaranteed matches a day, no photos until you talk">
 <meta property="og:description" content="No more fake connections. No more talk that goes nowhere.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://jayj221.github.io/nomo-waitlist/">
+<meta property="og:url" content="https://nomosingle.com/">
 <meta name="twitter:card" content="summary_large_image">
 <style>html,body{margin:0;padding:0;background:#0a0b0d}</style>
 </head>
