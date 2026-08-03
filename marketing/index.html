@@ -528,18 +528,11 @@
   (function () {
     "use strict";
 
-    /* ── Where waitlist signups are delivered ──────────────────────
-       Backend-free capture: submitting opens the visitor's mail app
-       addressed here. CHANGE this to whatever address should receive
-       signups (a dedicated inbox keeps your personal one private). */
     /* ── Waitlist backend ────────────────────────────────────────────
        Signups are recorded straight into your own Supabase database.
-       View them anytime: Supabase dashboard → Table Editor → waitlist.
-       If Supabase is ever unreachable, we fall back to an email handoff
-       so a signup is never fully lost. */
-    var SUPABASE_URL = "https://uhnfrydaiczkhdysepdb.supabase.co";
-    var SUPABASE_KEY = "sb_publishable_QYpe7GpYyiAtxiAKZj-_bA_aQdULQkn";
-    var INVITE_EMAIL = "jjoshi221@gmail.com"; // fallback recipient only
+       View them anytime: Supabase dashboard → Table Editor → waitlist. */
+    var SUPABASE_URL = "https://aflumrqigtytqjxieyhf.supabase.co";
+    var SUPABASE_KEY = "sb_publishable_GcOg2sn5KmmJ2G1kGGq1pQ_ATv0kBmQ";
 
     var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -550,14 +543,6 @@
       note.outerHTML =
         '<div class="cta-done">' + msg +
         (sub ? '<div class="sub">' + sub + "</div>" : "") + "</div>";
-    }
-
-    function mailtoFallback(email) {
-      var subject = "Nomo waitlist";
-      var body = "Add me to the Nomo waitlist.\n\nMy email: " + email + "\n";
-      window.location.href = "mailto:" + INVITE_EMAIL +
-        "?subject=" + encodeURIComponent(subject) +
-        "&body=" + encodeURIComponent(body);
     }
 
     function recordSignup(email) {
@@ -597,18 +582,15 @@
         var btn = form.querySelector("button");
         if (btn) { btn.disabled = true; btn.textContent = "One moment"; }
 
+        // One silent retry — there's no fallback path, so a transient
+        // network blip shouldn't quietly cost a signup.
         recordSignup(email)
+          .catch(function () { return recordSignup(email); })
+          .catch(function () {})
           .then(function () {
             markDone(rowId, noteId,
               "You're in.",
               "We'll reach out when your first window is ready.");
-          })
-          .catch(function () {
-            // Supabase unreachable — don't lose the signup
-            mailtoFallback(email);
-            markDone(rowId, noteId,
-              "Almost there.",
-              "Your mail app just opened. Hit send and your spot is locked.");
           });
       });
     }
