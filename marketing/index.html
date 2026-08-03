@@ -256,6 +256,7 @@
   .demo-btn.demo-cta { background: var(--white); color: #000; border-color: var(--white); font-weight: 600; animation: breathe 2.4s ease-in-out infinite; }
   .demo-btn.demo-cta:hover { border-color: var(--white); opacity: 0.9; }
   @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+  @keyframes giftPop { from { opacity: 0; transform: scale(0.8) rotate(-2deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
   .demo-btn {
     background: transparent;
     border: 1px solid var(--line-strong);
@@ -708,29 +709,50 @@
       { id:7,  name:"Nia",     age:24, tag:"artist",    hue:["#c39ad7","#3b2650"], chips:["artist","poetry","rain"],            q:"What I'm actually like at 2am",            a:"Either fixing the world or repainting my room. No in-between." },
       { id:8,  name:"Tara",    age:26, tag:"night owl", hue:["#d7a99a","#4a3126"], chips:["night owl","street food","travel"],  q:"My idea of a perfect day",                 a:"No plans, a good playlist, and somewhere new to get lost in." },
       { id:9,  name:"Fatima",  age:25, tag:"foodie",    hue:["#9ad7a7","#264a30"], chips:["foodie","history","warm"],           q:"The thing people get wrong about me",       a:"Quiet doesn't mean shy. I'm just listening harder than you." },
-      { id:10, name:"Ira",     age:23, tag:"traveller", hue:["#d7d19a","#4a4626"], chips:["traveller","techno","stray cats"],   q:"What I'd do with nothing to lose",          a:"Book the one-way ticket I keep leaving in my cart." }
+      { id:10, name:"Ira",     age:23, tag:"traveller", hue:["#d7d19a","#4a4626"], chips:["traveller","techno","stray cats"],   q:"What I'd do with nothing to lose",          a:"Book the one-way ticket I keep leaving in my cart." },
+      { id:11, name:"Meera",   age:25, tag:"yoga",        hue:["#9ad2b0","#264a3a"], chips:["yoga","sunrise walks","chai"],       q:"How I recharge",                           a:"Twenty minutes of silence before anyone's allowed to talk to me." },
+      { id:12, name:"Ananya",  age:26, tag:"coding",      hue:["#a0a8d8","#2b3050"], chips:["coding","sci-fi","long walks"],      q:"What I'd never admit on a first date",      a:"I've debugged code in my sleep and woken up smug about it." },
+      { id:13, name:"Riya",    age:24, tag:"hiking",      hue:["#c9a97e","#4a3a20"], chips:["hiking","maps","cold brew"],         q:"Perfect Sunday",                           a:"Up before the city is, down before it notices." },
+      { id:14, name:"Simran",  age:27, tag:"baking",      hue:["#d7a0b0","#4a2635"], chips:["baking","true crime","naps"],        q:"Something I care about more than I should", a:"Whether the bread proofed long enough. Always." },
+      { id:15, name:"Priyanka",age:23, tag:"comedy",      hue:["#9ad7c0","#264a3c"], chips:["comedy","karaoke","street food"],    q:"My controversial take",                    a:"A bad pun beats a good joke, every single time." },
+      { id:16, name:"Ishita",  age:28, tag:"chess",       hue:["#b0a0d7","#332650"], chips:["chess","tea ceremonies","quiet bars"],q:"What people get wrong about me",           a:"I'm not overthinking the move. I'm just enjoying it." },
+      { id:17, name:"Diya",    age:25, tag:"cricket",     hue:["#d7c0a0","#4a3d26"], chips:["cricket","biryani debates","road trips"],q:"The way to my heart",                   a:"Show up for the last over. Every time." },
+      { id:18, name:"Naina",   age:24, tag:"photography", hue:["#a0d7d2","#264946"], chips:["photography","golden hour","old cameras"],q:"What I'm actually like at 2am",         a:"Editing photos nobody asked to see, one more time." },
+      { id:19, name:"Kritika", age:26, tag:"dance",       hue:["#d7a0a0","#4a2626"], chips:["dance","thunderstorms","spicy food"], q:"Nothing to lose, I'd…",                    a:"Sign up for the class I've been too scared to try." },
+      { id:20, name:"Vidya",   age:27, tag:"vinyl",       hue:["#a0c9d7","#26404a"], chips:["vinyl","poetry","late trains"],      q:"A small thing that makes my day",          a:"Needle drop, first crackle, gone." }
     ];
 
     var MEN = [
-      { id:11, name:"Arjun",   age:27, masc:true, tag:"indie",      hue:["#8fb0d7","#26374f"], chips:["indie","trekking","vinyl"],        q:"What I'm really like when I'm comfortable", a:"I'll make you a four-hour playlist and narrate every transition." },
-      { id:12, name:"Kabir",   age:25, masc:true, tag:"hip-hop",    hue:["#c9a98b","#4a3a26"], chips:["hip-hop","basketball","street food"], q:"My most controversial take",             a:"Pineapple belongs on pizza and on the aux." },
-      { id:13, name:"Rohan",   age:28, masc:true, tag:"film nerd",  hue:["#a99ad7","#332650"], chips:["film","chai","late drives"],       q:"A small thing that makes my day",          a:"Finding parking on the first try. Unreasonable joy." },
-      { id:14, name:"Dev",     age:24, masc:true, tag:"gym rat",    hue:["#8fd7b6","#264a37"], chips:["gym","cooking","dogs"],            q:"The way to my heart",                      a:"Steal food off my plate. I'll pretend to mind." },
-      { id:15, name:"Ishaan",  age:26, masc:true, tag:"deep talks", hue:["#d79aa9","#4a2733"], chips:["deep talks","poetry","coffee"],    q:"What I'm actually like at 2am",            a:"Texting you a theory about time I'll be embarrassed about by noon." },
-      { id:16, name:"Aryan",   age:23, masc:true, tag:"techno",     hue:["#9ad2d7","#264649"], chips:["techno","bikes","travel"],         q:"What I'd do with nothing to lose",          a:"Ride to the coast tonight and figure the rest out there." },
-      { id:17, name:"Vivaan",  age:27, masc:true, tag:"foodie",     hue:["#d7c08f","#4a3d26"], chips:["foodie","football","history"],     q:"The thing people get wrong about me",       a:"Loud doesn't mean I'm not paying attention. I catch everything." },
-      { id:18, name:"Reyansh", age:25, masc:true, tag:"artist",     hue:["#b78fd7","#3a2650"], chips:["artist","sketching","rain"],       q:"Something I care about more than I should", a:"The one pen that writes exactly right." },
-      { id:19, name:"Faiz",    age:26, masc:true, tag:"jazz",       hue:["#8fd79a","#264a30"], chips:["jazz","books","slow mornings"],    q:"What I'd never admit on a first date",      a:"I already know which song I'd want playing." },
-      { id:20, name:"Neil",    age:24, masc:true, tag:"night owl",  hue:["#d79a8f","#4a2d26"], chips:["night owl","gaming","stray cats"], q:"My idea of a perfect day",                 a:"Nowhere to be, good food, and someone who laughs at my worst jokes." }
+      { id:21, name:"Arjun",   age:27, masc:true, tag:"indie",      hue:["#8fb0d7","#26374f"], chips:["indie","trekking","vinyl"],        q:"What I'm really like when I'm comfortable", a:"I'll make you a four-hour playlist and narrate every transition." },
+      { id:22, name:"Kabir",   age:25, masc:true, tag:"hip-hop",    hue:["#c9a98b","#4a3a26"], chips:["hip-hop","basketball","street food"], q:"My most controversial take",             a:"Pineapple belongs on pizza and on the aux." },
+      { id:23, name:"Rohan",   age:28, masc:true, tag:"film nerd",  hue:["#a99ad7","#332650"], chips:["film","chai","late drives"],       q:"A small thing that makes my day",          a:"Finding parking on the first try. Unreasonable joy." },
+      { id:24, name:"Dev",     age:24, masc:true, tag:"gym rat",    hue:["#8fd7b6","#264a37"], chips:["gym","cooking","dogs"],            q:"The way to my heart",                      a:"Steal food off my plate. I'll pretend to mind." },
+      { id:25, name:"Ishaan",  age:26, masc:true, tag:"deep talks", hue:["#d79aa9","#4a2733"], chips:["deep talks","poetry","coffee"],    q:"What I'm actually like at 2am",            a:"Texting you a theory about time I'll be embarrassed about by noon." },
+      { id:26, name:"Aryan",   age:23, masc:true, tag:"techno",     hue:["#9ad2d7","#264649"], chips:["techno","bikes","travel"],         q:"What I'd do with nothing to lose",          a:"Ride to the coast tonight and figure the rest out there." },
+      { id:27, name:"Vivaan",  age:27, masc:true, tag:"foodie",     hue:["#d7c08f","#4a3d26"], chips:["foodie","football","history"],     q:"The thing people get wrong about me",       a:"Loud doesn't mean I'm not paying attention. I catch everything." },
+      { id:28, name:"Reyansh", age:25, masc:true, tag:"artist",     hue:["#b78fd7","#3a2650"], chips:["artist","sketching","rain"],       q:"Something I care about more than I should", a:"The one pen that writes exactly right." },
+      { id:29, name:"Faiz",    age:26, masc:true, tag:"jazz",       hue:["#8fd79a","#264a30"], chips:["jazz","books","slow mornings"],    q:"What I'd never admit on a first date",      a:"I already know which song I'd want playing." },
+      { id:30, name:"Neil",    age:24, masc:true, tag:"night owl",  hue:["#d79a8f","#4a2d26"], chips:["night owl","gaming","stray cats"], q:"My idea of a perfect day",                 a:"Nowhere to be, good food, and someone who laughs at my worst jokes." },
+      { id:31, name:"Aditya",   age:27, masc:true, tag:"cricket",     hue:["#8fa9d7","#26324f"], chips:["cricket","street food","late drives"], q:"How I recharge",                      a:"Nets practice, headphones in, nobody talking to me." },
+      { id:32, name:"Yash",     age:25, masc:true, tag:"coding",      hue:["#a9d78f","#324f26"], chips:["coding","chess","instant noodles"],    q:"What I'd never admit on a first date", a:"I have opinions about tabs versus spaces and I will share them." },
+      { id:33, name:"Karan",    age:26, masc:true, tag:"comedy",      hue:["#d7c08f","#4a3d26"], chips:["comedy","road trips","cold coffee"],   q:"My controversial take",               a:"Every group chat needs exactly one person who never replies. That's me." },
+      { id:34, name:"Rahul",    age:28, masc:true, tag:"hiking",      hue:["#8fd7c9","#264a44"], chips:["hiking","old maps","bad selfies"],     q:"Perfect Sunday",                      a:"Somewhere with no signal and a good reason to walk back late." },
+      { id:35, name:"Siddharth",age:24, masc:true, tag:"chess",       hue:["#c98fd7","#3a264a"], chips:["chess","vinyl","quiet bars"],          q:"What people get wrong about me",      a:"Slow doesn't mean losing. Ask me in twelve moves." },
+      { id:36, name:"Rohit",    age:27, masc:true, tag:"photography", hue:["#d78fa9","#4a2632"], chips:["photography","golden hour","street food"],q:"The way to my heart",              a:"Let me take one more photo. I promise it's the last one." },
+      { id:37, name:"Ansh",     age:25, masc:true, tag:"cooking",     hue:["#8fc9d7","#264449"], chips:["cooking","cricket","late nights"],     q:"What I'm actually like at 2am",       a:"Making a snack I'll regret and enjoying every bite." },
+      { id:38, name:"Manav",    age:26, masc:true, tag:"biking",      hue:["#c9d78f","#404a26"], chips:["biking","sunrise runs","black coffee"],q:"Nothing to lose, I'd…",                a:"Ride until the tank's empty and figure out the way back later." },
+      { id:39, name:"Devansh",  age:24, masc:true, tag:"gaming",      hue:["#d7a98f","#4a3226"], chips:["gaming","spicy food","late calls"],    q:"A small thing that makes my day",     a:"Winning the round nobody thought I'd win." },
+      { id:40, name:"Aryaman",  age:28, masc:true, tag:"trekking",    hue:["#a98fd7","#32264a"], chips:["trekking","jazz","old books"],         q:"Something I care about more than I should", a:"Whether my playlist actually matches the mood of the room." }
     ];
 
-    var MIXED = [];
-    for (var mi = 0; mi < 5; mi++) { MIXED.push(WOMEN[mi]); MIXED.push(MEN[mi]); }
+    var MIXED = WOMEN.concat(MEN);
 
     var PEOPLE = WOMEN;
     var myGender = null;   // "guy" | "girl"
     var wantMeet = null;   // "guys" | "girls" | "everyone"
     var myName = "";
+    var myAge = null;
+    var topRevealed = false;
 
     function seedFromString(s) {
       var h = 0;
@@ -740,21 +762,62 @@
     function escapeName(s) {
       return s.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
-    function setPool() {
-      PEOPLE = wantMeet === "guys" ? MEN.slice() : wantMeet === "girls" ? WOMEN.slice() : MIXED.slice();
-      // Deterministic per-visitor "#1": same name + same day always
-      // lands on the same person, so it feels chosen, not random on
-      // every refresh — and rotates tomorrow, like the real product.
-      if (myName.trim()) {
-        var today = new Date().toISOString().slice(0, 10);
-        var idx = seedFromString(myName.trim().toLowerCase() + today) % PEOPLE.length;
-        var picked = PEOPLE.splice(idx, 1)[0];
-        PEOPLE.unshift(picked);
+    // The brand mark, reused as the "seal" on the unopened #1 card.
+    var MARK_SVG = '<svg viewBox="0 0 120 80" width="34" height="23" fill="none">'
+      + '<path d="M60,18.1 A26,26 0 0,1 60,61.9 A26,26 0 0,1 60,18.1 Z" fill="#C98B8B" fill-opacity="0.30"/>'
+      + '<circle cx="46" cy="40" r="26" stroke="#F5F2EF" stroke-opacity="0.92" stroke-width="4.5"/>'
+      + '<circle cx="74" cy="40" r="26" stroke="#F5F2EF" stroke-opacity="0.92" stroke-width="4.5"/>'
+      + '</svg>';
+    // Small seeded PRNG (mulberry32) so the shuffle below is
+    // deterministic per name+day, not Math.random().
+    function seededRandom(seed) {
+      return function () {
+        seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+        var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+    function seededShuffle(arr, seed) {
+      var a = arr.slice();
+      var rand = seededRandom(seed);
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(rand() * (i + 1));
+        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
       }
+      return a;
+    }
+    // Guy visitors see girls 1-2 years younger; girl visitors see guys
+    // 1-2 years older. No rule was given for nonbinary, so it defaults
+    // to a small symmetric window. Never goes below 18.
+    function ageFor(idx) {
+      var base = myAge || 24;
+      var offset = (idx % 2 === 0) ? 1 : 2;
+      var age;
+      if (myGender === "guy") age = base - offset;
+      else if (myGender === "girl") age = base + offset;
+      else age = (idx % 2 === 0) ? base - 1 : base + 1;
+      return Math.max(18, age);
+    }
+    function setPool() {
+      var full = wantMeet === "guys" ? MEN : wantMeet === "girls" ? WOMEN : MIXED;
+      // Deterministic per-visitor set: same name + same day always picks
+      // the same ten people, in the same order, so it feels chosen, not
+      // random on every refresh — and both the set AND the #1 rotate
+      // tomorrow, like the real "ten new people every day" product.
+      var seedBase = (myName.trim() || "guest").toLowerCase() + "|" + (myAge || 24) + "|" + new Date().toISOString().slice(0, 10);
+      var seed = seedFromString(seedBase);
+      var shuffled = seededShuffle(full, seed);
+      PEOPLE = shuffled.slice(0, 10).map(function (orig, idx) {
+        var c = Object.assign({}, orig);
+        c.age = ageFor(idx);
+        return c;
+      });
       person = 0;
+      topRevealed = false;
     }
 
-    var PHASES = ["name","setup","upload","cohort","profile","window","ask","reveal","choice","match"];
+    var PHASES = ["name","setup","upload","top","cohort","profile","window","ask","reveal","choice","match"];
     var phase = "name";
     var person = 0;
 
@@ -774,10 +837,13 @@
     function stageHTML() {
       var p = PEOPLE[person];
       if (phase === "name") {
+        var inputStyle = "width:100%;padding:12px 14px;font:inherit;font-size:1rem;background:var(--ground-2);border:1px solid var(--line-strong);border-radius:8px;color:var(--ink)";
         return '<div>'
-          + '<p class="stage-caption">Curious who your #1 would be? Type your name and find out.</p>'
-          + '<input id="name-input" type="text" maxlength="24" placeholder="Your first name" autocomplete="off" value="' + escapeName(myName) + '" '
-          + 'style="width:100%;margin-top:14px;padding:12px 14px;font:inherit;font-size:1rem;background:var(--ground-2);border:1px solid var(--line-strong);border-radius:8px;color:var(--ink)">'
+          + '<p class="stage-caption">Curious who your #1 would be? Tell us a little about you.</p>'
+          + '<p class="setup-q first">Your name</p>'
+          + '<input id="name-input" type="text" maxlength="24" placeholder="First name" autocomplete="off" value="' + escapeName(myName) + '" style="' + inputStyle + '">'
+          + '<p class="setup-q">Your age</p>'
+          + '<input id="age-input" type="number" min="18" max="75" placeholder="Age" autocomplete="off" value="' + (myAge || "") + '" style="' + inputStyle + '">'
           + '</div>';
       }
       if (phase === "setup") {
@@ -792,6 +858,24 @@
       if (phase === "upload") {
         return '<div><div class="photo-grid"><span class="ph">' + SIL("#2c3038") + '</span><span class="ph">' + SIL("#33302c") + '</span><span class="ph">' + SIL("#2c3330") + '</span></div>'
           + '<p class="stage-caption" style="margin-top:12px">Your photos go in. AI places you in a bracket, privately. Nobody sees them yet, including your ten.</p></div>';
+      }
+      if (phase === "top") {
+        var top1 = PEOPLE[0];
+        if (!topRevealed) {
+          return '<div class="stage-voice" style="justify-content:center;flex-direction:column;text-align:center;gap:14px">'
+            + '<span class="pfp" style="display:flex;align-items:center;justify-content:center;background:var(--ground-2)">' + MARK_SVG + '</span>'
+            + '<p class="stage-caption">Your #1 for today is already picked.</p>'
+            + '<div class="choice" style="justify-content:center"><button class="yes" id="top-reveal">Reveal my #1</button></div>'
+            + '</div>';
+        }
+        return '<div class="stage-voice" style="justify-content:center;flex-direction:column;text-align:center;gap:6px">'
+          + '<div style="animation:giftPop .5s cubic-bezier(.2,.8,.2,1) both">'
+          + '<p class="stage-name">' + top1.name + ', ' + top1.age + '</p>'
+          + '<p class="stage-caption reveal" style="margin-top:4px">Your #1 today' + (myName.trim() ? ', ' + escapeName(myName.trim()) : '') + '.</p>'
+          + '<div class="chiprow" style="margin-top:10px;justify-content:center">' + top1.chips.map(chip).join('') + '</div>'
+          + '</div>'
+          + '<div class="choice" style="justify-content:center;margin-top:10px"><button class="yes" id="top-continue">See your ten →</button></div>'
+          + '</div>';
       }
       if (phase === "cohort") {
         var rows = PEOPLE.map(function (q, i) {
@@ -826,9 +910,10 @@
 
     function labelText() {
       var p = PEOPLE[person];
-      if (phase === "name") return "First, a name";
+      if (phase === "name") return "First, a little about you";
       if (phase === "setup") return "Who are you?";
       if (phase === "upload") return "You upload · placed privately";
+      if (phase === "top") return "Your #1 · unwrap it";
       if (phase === "cohort") return "8:04 am · your ten arrive";
       if (phase === "profile") return "#" + (person + 1) + " · " + p.name + " · no photo yet";
       if (phase === "window") return "The window · voice or text";
@@ -850,8 +935,8 @@
       }
 
       var ready = !!(myGender && wantMeet);
-      var nameReady = !!myName.trim();
-      if (phase === "choice" || phase === "ask") {
+      var nameReady = !!myName.trim() && !!myAge && myAge >= 18;
+      if (phase === "choice" || phase === "ask" || phase === "top") {
         nextBtn.style.display = "none";
       } else if (phase === "match") {
         nextBtn.style.display = ""; nextBtn.textContent = "That’s the whole idea";
@@ -868,31 +953,45 @@
       }
 
       var hint = document.getElementById("demo-hint");
-      if (hint) {
-        if (phase === "match") { hint.style.display = "none"; }
-        else {
-          hint.style.display = "";
-          hint.textContent = phase === "ask" ? "Your call. Tap to reveal ↑"
-            : phase === "choice" ? "Make your choice ↑"
-            : (phase === "name" && !nameReady) ? "Type your name to continue"
-            : (phase === "setup" && !ready) ? "Pick both to continue"
-            : "Tap the card to move through it →";
-        }
+      function updateHint() {
+        if (!hint) return;
+        if (phase === "match") { hint.style.display = "none"; return; }
+        hint.style.display = "";
+        hint.textContent = phase === "ask" ? "Your call. Tap to reveal ↑"
+          : phase === "choice" ? "Make your choice ↑"
+          : phase === "top" ? "Tap the button to open it ↑"
+          : (phase === "name" && !nameReady) ? "Enter your name and age (18+) to continue"
+          : (phase === "setup" && !ready) ? "Pick both to continue"
+          : "Tap the card to move through it →";
       }
+      updateHint();
 
       var nameInput = document.getElementById("name-input");
+      var ageInput = document.getElementById("age-input");
+      function syncNameGate() {
+        myName = nameInput ? nameInput.value : myName;
+        myAge = ageInput && ageInput.value ? parseInt(ageInput.value, 10) : null;
+        var r = !!myName.trim() && !!myAge && myAge >= 18;
+        nextBtn.disabled = !r;
+        nextBtn.style.opacity = r ? "1" : "0.5";
+        updateHint();
+      }
       if (nameInput) {
-        nameInput.addEventListener("input", function () {
-          myName = nameInput.value;
-          nextBtn.disabled = !myName.trim();
-          nextBtn.style.opacity = myName.trim() ? "1" : "0.5";
-          hint.textContent = myName.trim() ? "Tap the card to move through it →" : "Type your name to continue";
-        });
-        nameInput.addEventListener("keydown", function (e) {
-          if (e.key === "Enter" && myName.trim()) { e.preventDefault(); advance(); }
-        });
+        nameInput.addEventListener("input", syncNameGate);
         nameInput.addEventListener("click", function (e) { e.stopPropagation(); });
       }
+      if (ageInput) {
+        ageInput.addEventListener("input", syncNameGate);
+        ageInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") { syncNameGate(); if (!nextBtn.disabled) { e.preventDefault(); advance(); } }
+        });
+        ageInput.addEventListener("click", function (e) { e.stopPropagation(); });
+      }
+
+      var topReveal = document.getElementById("top-reveal");
+      if (topReveal) topReveal.addEventListener("click", function (e) { e.stopPropagation(); topRevealed = true; render(); });
+      var topContinue = document.getElementById("top-continue");
+      if (topContinue) topContinue.addEventListener("click", function (e) { e.stopPropagation(); advance(); });
 
       Array.prototype.forEach.call(stageEl.querySelectorAll("[data-g]"), function (b) {
         b.addEventListener("click", function (e) { e.stopPropagation(); myGender = b.getAttribute("data-g"); render(); });
@@ -942,7 +1041,8 @@
 
     function advance() {
       if (phase === "choice" || phase === "ask" || phase === "match") return;
-      if (phase === "name" && !myName.trim()) return;
+      if (phase === "top" && !topRevealed) return;
+      if (phase === "name" && !(myName.trim() && myAge && myAge >= 18)) return;
       if (phase === "setup" && !(myGender && wantMeet)) return;
       phase = PHASES[PHASES.indexOf(phase) + 1];
       render();
@@ -951,12 +1051,12 @@
     nextBtn.addEventListener("click", function (e) { e.stopPropagation(); advance(); });
     resetBtn.addEventListener("click", function (e) {
       e.stopPropagation();
-      phase = "name"; person = 0; myGender = null; wantMeet = null; myName = ""; PEOPLE = WOMEN;
+      phase = "name"; person = 0; myGender = null; wantMeet = null; myName = ""; myAge = null; topRevealed = false; PEOPLE = WOMEN;
       render();
     });
     document.getElementById("demo").addEventListener("click", function (e) {
       if (e.target.closest("button")) return;
-      if (phase === "choice" || phase === "ask" || phase === "match") return;
+      if (phase === "choice" || phase === "ask" || phase === "match" || phase === "top") return;
       advance();
     });
     render();
