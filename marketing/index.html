@@ -713,7 +713,7 @@
       { id:26, name:"Aryan",   age:23, masc:true, tag:"techno",     hue:["#9ad2d7","#264649"], chips:["techno","bikes","travel"],         q:"What I'd do with nothing to lose",          a:"Ride to the coast tonight and figure the rest out there." },
       { id:27, name:"Vivaan",  age:27, masc:true, tag:"foodie",     hue:["#d7c08f","#4a3d26"], chips:["foodie","football","history"],     q:"The thing people get wrong about me",       a:"Loud doesn't mean I'm not paying attention. I catch everything." },
       { id:28, name:"Reyansh", age:25, masc:true, tag:"artist",     hue:["#b78fd7","#3a2650"], chips:["artist","sketching","rain"],       q:"Something I care about more than I should", a:"The one pen that writes exactly right." },
-      { id:29, name:"Faiz",    age:26, masc:true, tag:"jazz",       hue:["#8fd79a","#264a30"], chips:["jazz","books","slow mornings"],    q:"What I'd never admit on a first date",      a:"I already know which song I'd want playing." },
+      { id:29, name:"Faiz",    age:26, masc:true, noTop:true, tag:"jazz", hue:["#8fd79a","#264a30"], chips:["jazz","books","slow mornings"], q:"What I'd never admit on a first date",   a:"I already know which song I'd want playing." },
       { id:30, name:"Neil",    age:24, masc:true, tag:"night owl",  hue:["#d79a8f","#4a2d26"], chips:["night owl","gaming","stray cats"], q:"My idea of a perfect day",                 a:"Nowhere to be, good food, and someone who laughs at my worst jokes." },
       { id:31, name:"Aditya",   age:27, masc:true, tag:"cricket",     hue:["#8fa9d7","#26324f"], chips:["cricket","street food","late drives"], q:"How I recharge",                      a:"Nets practice, headphones in, nobody talking to me." },
       { id:32, name:"Yash",     age:25, masc:true, tag:"coding",      hue:["#a9d78f","#324f26"], chips:["coding","chess","instant noodles"],    q:"What I'd never admit on a first date", a:"I have opinions about tabs versus spaces and I will share them." },
@@ -790,7 +790,18 @@
       var seedBase = (myName.trim() || "guest").toLowerCase() + "|" + (myAge || 24) + "|" + new Date().toISOString().slice(0, 10);
       var seed = seedFromString(seedBase);
       var shuffled = seededShuffle(full, seed);
-      PEOPLE = shuffled.slice(0, 10).map(function (orig, idx) {
+      var ten = shuffled.slice(0, 10);
+      // Entries flagged noTop still appear in the ten, just never as the
+      // #1 reveal — swap the first eligible one up into the top slot.
+      if (ten[0] && ten[0].noTop) {
+        for (var t = 1; t < ten.length; t++) {
+          if (!ten[t].noTop) {
+            var swap = ten[0]; ten[0] = ten[t]; ten[t] = swap;
+            break;
+          }
+        }
+      }
+      PEOPLE = ten.map(function (orig, idx) {
         var c = Object.assign({}, orig);
         c.age = ageFor(idx);
         return c;
