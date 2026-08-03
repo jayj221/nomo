@@ -730,13 +730,32 @@
     var PEOPLE = WOMEN;
     var myGender = null;   // "guy" | "girl"
     var wantMeet = null;   // "guys" | "girls" | "everyone"
+    var myName = "";
+
+    function seedFromString(s) {
+      var h = 0;
+      for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+      return h;
+    }
+    function escapeName(s) {
+      return s.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
     function setPool() {
-      PEOPLE = wantMeet === "guys" ? MEN : wantMeet === "girls" ? WOMEN : MIXED;
+      PEOPLE = wantMeet === "guys" ? MEN.slice() : wantMeet === "girls" ? WOMEN.slice() : MIXED.slice();
+      // Deterministic per-visitor "#1": same name + same day always
+      // lands on the same person, so it feels chosen, not random on
+      // every refresh — and rotates tomorrow, like the real product.
+      if (myName.trim()) {
+        var today = new Date().toISOString().slice(0, 10);
+        var idx = seedFromString(myName.trim().toLowerCase() + today) % PEOPLE.length;
+        var picked = PEOPLE.splice(idx, 1)[0];
+        PEOPLE.unshift(picked);
+      }
       person = 0;
     }
 
-    var PHASES = ["setup","upload","cohort","profile","window","ask","reveal","choice","match"];
-    var phase = "setup";
+    var PHASES = ["name","setup","upload","cohort","profile","window","ask","reveal","choice","match"];
+    var phase = "name";
     var person = 0;
 
     var stageEl = document.getElementById("demo-stage");
@@ -754,6 +773,13 @@
 
     function stageHTML() {
       var p = PEOPLE[person];
+      if (phase === "name") {
+        return '<div>'
+          + '<p class="stage-caption">Curious who your #1 would be? Type your name and find out.</p>'
+          + '<input id="name-input" type="text" maxlength="24" placeholder="Your first name" autocomplete="off" value="' + escapeName(myName) + '" '
+          + 'style="width:100%;margin-top:14px;padding:12px 14px;font:inherit;font-size:1rem;background:var(--ground-2);border:1px solid var(--line-strong);border-radius:8px;color:var(--ink)">'
+          + '</div>';
+      }
       if (phase === "setup") {
         return '<div>'
           + '<p class="stage-caption">First, so we show you the right people.</p>'
@@ -771,7 +797,8 @@
         var rows = PEOPLE.map(function (q, i) {
           return '<span class="cohort-row' + (i === person ? " hot" : "") + '"><span class="cohort-rank">' + (i + 1) + '</span>' + q.name + '<span class="cohort-tag">' + q.tag + '</span></span>';
         }).join("");
-        return '<div><div class="cohort">' + rows + '</div><p class="stage-caption" style="margin-top:12px">Ten matches in your bracket, ranked by shared vibe. #1 shares the most of your world.</p></div>';
+        var hey = myName.trim() ? "Hey " + escapeName(myName.trim()) + ", " : "";
+        return '<div><div class="cohort">' + rows + '</div><p class="stage-caption" style="margin-top:12px">' + hey + 'ten matches in your bracket, ranked by shared vibe. #1 shares the most of your world.</p></div>';
       }
       if (phase === "profile") {
         return '<div class="stage-voice">' + pfp(p, true) + '<div><p class="stage-name">' + p.name + ', ' + p.age + '</p><div class="chiprow">' + p.chips.map(chip).join("") + '</div>'
@@ -799,6 +826,7 @@
 
     function labelText() {
       var p = PEOPLE[person];
+      if (phase === "name") return "First, a name";
       if (phase === "setup") return "Who are you?";
       if (phase === "upload") return "You upload · placed privately";
       if (phase === "cohort") return "8:04 am · your ten arrive";
@@ -822,11 +850,15 @@
       }
 
       var ready = !!(myGender && wantMeet);
+      var nameReady = !!myName.trim();
       if (phase === "choice" || phase === "ask") {
         nextBtn.style.display = "none";
       } else if (phase === "match") {
         nextBtn.style.display = ""; nextBtn.textContent = "That’s the whole idea";
         nextBtn.disabled = true; nextBtn.style.opacity = "0.5";
+      } else if (phase === "name") {
+        nextBtn.style.display = ""; nextBtn.textContent = "Go further →";
+        nextBtn.disabled = !nameReady; nextBtn.style.opacity = nameReady ? "1" : "0.5";
       } else if (phase === "setup") {
         nextBtn.style.display = ""; nextBtn.textContent = "Go further →";
         nextBtn.disabled = !ready; nextBtn.style.opacity = ready ? "1" : "0.5";
@@ -842,9 +874,24 @@
           hint.style.display = "";
           hint.textContent = phase === "ask" ? "Your call. Tap to reveal ↑"
             : phase === "choice" ? "Make your choice ↑"
+            : (phase === "name" && !nameReady) ? "Type your name to continue"
             : (phase === "setup" && !ready) ? "Pick both to continue"
             : "Tap the card to move through it →";
         }
+      }
+
+      var nameInput = document.getElementById("name-input");
+      if (nameInput) {
+        nameInput.addEventListener("input", function () {
+          myName = nameInput.value;
+          nextBtn.disabled = !myName.trim();
+          nextBtn.style.opacity = myName.trim() ? "1" : "0.5";
+          hint.textContent = myName.trim() ? "Tap the card to move through it →" : "Type your name to continue";
+        });
+        nameInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" && myName.trim()) { e.preventDefault(); advance(); }
+        });
+        nameInput.addEventListener("click", function (e) { e.stopPropagation(); });
       }
 
       Array.prototype.forEach.call(stageEl.querySelectorAll("[data-g]"), function (b) {
@@ -895,6 +942,7 @@
 
     function advance() {
       if (phase === "choice" || phase === "ask" || phase === "match") return;
+      if (phase === "name" && !myName.trim()) return;
       if (phase === "setup" && !(myGender && wantMeet)) return;
       phase = PHASES[PHASES.indexOf(phase) + 1];
       render();
@@ -903,7 +951,7 @@
     nextBtn.addEventListener("click", function (e) { e.stopPropagation(); advance(); });
     resetBtn.addEventListener("click", function (e) {
       e.stopPropagation();
-      phase = "setup"; person = 0; myGender = null; wantMeet = null; PEOPLE = WOMEN;
+      phase = "name"; person = 0; myGender = null; wantMeet = null; myName = ""; PEOPLE = WOMEN;
       render();
     });
     document.getElementById("demo").addEventListener("click", function (e) {
