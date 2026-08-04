@@ -211,8 +211,8 @@
 
   /* walkthrough pieces */
   .pfp { width: 84px; height: 84px; border-radius: 50%; overflow: hidden; flex: none; border: 1px solid var(--line-strong); background: #23262c; }
-  .pfp svg { display: block; width: 100%; height: 100%; }
-  .pfp.sealed svg { filter: blur(9px) saturate(0.75); transform: scale(1.18); }
+  .pfp svg, .pfp img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .pfp.sealed svg, .pfp.sealed img { filter: blur(9px) saturate(0.75); transform: scale(1.18); }
   .photo-grid { display: flex; gap: 8px; }
   .ph { width: 62px; height: 78px; border-radius: 8px; border: 1px solid var(--line); overflow: hidden; background: #1a1d22; }
   .ph svg { display: block; width: 100%; height: 100%; filter: blur(1.5px); opacity: 0.85; }
@@ -735,6 +735,11 @@
     var myName = "";
     var myAge = null;
     var topRevealed = false;
+    /* Two reveals a day. Spending one unlocks a face without talking
+       first; the mutual reveal after the window costs nothing. */
+    var REVEALS_PER_DAY = 2;
+    var revealsLeft = REVEALS_PER_DAY;
+    var unlocked = {};
 
     function seedFromString(s) {
       var h = 0;
@@ -878,8 +883,14 @@
         return '<div><div class="cohort">' + rows + '</div><p class="stage-caption" style="margin-top:12px">' + hey + 'ten matches in your bracket, ranked by shared vibe. #1 shares the most of your world.</p></div>';
       }
       if (phase === "profile") {
-        return '<div class="stage-voice">' + pfp(p, true) + '<div><p class="stage-name">' + p.name + ', ' + p.age + '</p><div class="chiprow">' + p.chips.map(chip).join("") + '</div>'
-          + '<p class="stage-q" style="margin-top:10px">' + p.q + '</p><p class="stage-a" style="font-size:1.05rem">' + p.a + '</p></div></div>';
+        var isOpen = !!unlocked[p.id];
+        var tail = isOpen
+          ? '<p class="stage-caption reveal" style="margin-top:10px">Face unlocked. That spent one of today\'s two reveals.</p>'
+          : '<div class="choice" style="margin-top:10px"><button class="yes" id="spend-reveal"' + (revealsLeft > 0 ? '' : ' disabled')
+            + '>' + (revealsLeft > 0 ? 'Use 1 reveal &middot; see now' : 'No reveals left today') + '</button></div>'
+            + '<p class="stage-caption" style="margin-top:8px">Or talk first. If you both ask during the window, seeing each other costs nothing.</p>';
+        return '<div class="stage-voice">' + pfp(p, !isOpen) + '<div><p class="stage-name">' + p.name + ', ' + p.age + '</p><div class="chiprow">' + p.chips.map(chip).join("") + '</div>'
+          + '<p class="stage-q" style="margin-top:10px">' + p.q + '</p><p class="stage-a" style="font-size:1.05rem">' + p.a + '</p>' + tail + '</div></div>';
       }
       if (phase === "window") {
         return '<div class="stage-voice"><div class="stage-disc">&#9679;</div><div><canvas id="demo-wave" width="200" height="40" style="display:block;width:170px;height:40px"></canvas>'
@@ -890,7 +901,8 @@
           + '<div class="choice"><button class="yes" id="ask-yes">Reveal my photo</button><button class="no" id="ask-no">Not yet</button></div></div></div>';
       }
       if (phase === "reveal") {
-        return '<div class="stage-voice">' + pfp(p, false) + '<div><p class="stage-caption reveal">' + p.name + ' asked too. You both said yes, so you can see each other\'s photos.</p></div></div>';
+        return '<div class="stage-voice">' + pfp(p, false) + '<div><p class="stage-caption reveal">' + p.name + ' asked too. You both said yes, so you can see each other\'s photos &mdash; and it cost neither of you a reveal.</p>'
+          + '<p class="stage-caption" style="margin-top:6px">Still ' + revealsLeft + ' of ' + REVEALS_PER_DAY + ' today.</p></div></div>';
       }
       if (phase === "choice") {
         var moveTo = person < PEOPLE.length - 1 ? "Move to #" + (person + 2) : "Back to the top";
@@ -908,7 +920,7 @@
       if (phase === "upload") return "You upload · placed privately";
       if (phase === "top") return "Your #1 · unwrap it";
       if (phase === "cohort") return "8:04 am · your ten arrive";
-      if (phase === "profile") return "#" + (person + 1) + " · " + p.name + " · no photo yet";
+      if (phase === "profile") return "#" + (person + 1) + " · " + p.name + " · " + revealsLeft + " of " + REVEALS_PER_DAY + " reveals left";
       if (phase === "window") return "The window · voice or text";
       if (phase === "ask") return "Your move · two reveals a day";
       if (phase === "reveal") return "You both asked · the reveal";
@@ -993,9 +1005,23 @@
         b.addEventListener("click", function (e) { e.stopPropagation(); wantMeet = b.getAttribute("data-w"); setPool(); render(); });
       });
 
+      var spendBtn = document.getElementById("spend-reveal");
+      if (spendBtn) spendBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (revealsLeft <= 0) return;
+        revealsLeft--;
+        unlocked[PEOPLE[person].id] = true;
+        render();
+      });
+
       var askYes = document.getElementById("ask-yes");
       var askNo = document.getElementById("ask-no");
-      if (askYes) askYes.addEventListener("click", function (e) { e.stopPropagation(); phase = "reveal"; render(); });
+      if (askYes) askYes.addEventListener("click", function (e) {
+        e.stopPropagation();
+        unlocked[PEOPLE[person].id] = true;   // mutual reveal after talking — free
+        phase = "reveal";
+        render();
+      });
       if (askNo) askNo.addEventListener("click", function (e) {
         e.stopPropagation();
         person = person < PEOPLE.length - 1 ? person + 1 : 0;
@@ -1045,6 +1071,7 @@
     resetBtn.addEventListener("click", function (e) {
       e.stopPropagation();
       phase = "name"; person = 0; myGender = null; wantMeet = null; myName = ""; myAge = null; topRevealed = false; PEOPLE = WOMEN;
+      revealsLeft = REVEALS_PER_DAY; unlocked = {};
       render();
     });
     document.getElementById("demo").addEventListener("click", function (e) {
