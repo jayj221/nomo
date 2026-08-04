@@ -964,15 +964,24 @@
         c.age = ageFor(idx);
         return c;
       });
-      // One name always gets one person. Set after the age pass above so
-      // her age stays 21 instead of being derived from the visitor's.
-      if ((myName || "").trim().toLowerCase() === "jayant" && wantMeet !== "guys") {
+      // Two names always get each other. Set after the age pass above so
+      // these ages stay fixed instead of being derived from the visitor's.
+      var egg = (myName || "").trim().toLowerCase();
+      if (egg === "jayant" && wantMeet !== "guys") {
         PEOPLE[0] = {
           id: 99, name: "Naisha", age: 21, tag: "the exception",
           hue: ["#f0b7c2", "#4a2634"],
           chips: ["not in the algorithm", "no window needed", "already yours"],
           q: "What the matching got right",
           a: "Nothing. It never had to. She was already there."
+        };
+      } else if (egg === "naisha" && wantMeet !== "girls") {
+        PEOPLE[0] = {
+          id: 98, name: "Jayant", age: 26, masc: true, tag: "the exception",
+          hue: ["#a7bdf0", "#26304a"],
+          chips: ["not in the algorithm", "no window needed", "already yours"],
+          q: "What the matching got right",
+          a: "Nothing. It never had to. He was already there."
         };
       }
       person = 0;
