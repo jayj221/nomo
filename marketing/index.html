@@ -832,9 +832,19 @@
     // Abstract gradient avatars, not real people, each a distinct hue.
     function avatar(p) {
       var id = "av" + p.id;
-      var hair = p.masc
-        ? '<path d="M39,41 C42,29 78,29 81,41 C81,34 73,30 60,30 C47,30 39,34 39,41 Z" fill="rgba(0,0,0,0.16)"/>'
-        : '<path d="M40,46 C40,25 80,25 80,46 C80,35 72,31 60,31 C48,31 40,35 40,46 Z" fill="rgba(0,0,0,0.16)"/>';
+      // Hair is drawn over the shoulders, not under them, so the long
+      // version actually reads as long instead of vanishing behind them.
+      var ink = "rgba(0,0,0,0.30)";
+      var body, hair;
+      if (p.masc) {
+        body = '<path d="M20,120 C22,91 40,81 60,81 C80,81 98,91 100,120 Z" fill="rgba(255,255,255,0.93)"/>';
+        hair = '<path d="M38,50 C38,29 82,29 82,50 C82,38 74,32 60,32 C46,32 38,38 38,50 Z" fill="' + ink + '"/>';
+      } else {
+        body = '<path d="M31,120 C33,95 45,85 60,85 C75,85 87,95 89,120 Z" fill="rgba(255,255,255,0.93)"/>';
+        hair = '<path d="M39,53 C39,28 81,28 81,53 C81,41 73,35 60,35 C47,35 39,41 39,53 Z" fill="' + ink + '"/>'
+             + '<path d="M39,52 C37,72 36,92 35,113 L46,113 C46,92 45,72 45,56 Z" fill="' + ink + '"/>'
+             + '<path d="M81,52 C83,72 84,92 85,113 L74,113 C74,92 75,72 75,56 Z" fill="' + ink + '"/>';
+      }
       return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">'
         + '<defs><radialGradient id="' + id + '" cx="36%" cy="24%" r="90%">'
         + '<stop offset="0%" stop-color="' + p.hue[0] + '"/>'
@@ -843,8 +853,8 @@
         + '<rect width="120" height="120" fill="url(#' + id + ')"/>'
         + '<circle cx="60" cy="46" r="31" fill="rgba(0,0,0,0.14)"/>'
         + '<circle cx="60" cy="50" r="20" fill="rgba(255,255,255,0.93)"/>'
+        + body
         + hair
-        + '<path d="M25,120 C27,93 43,83 60,83 C77,83 93,93 95,120 Z" fill="rgba(255,255,255,0.93)"/>'
         + '</svg>';
     }
     function pfp(p, sealed) {
