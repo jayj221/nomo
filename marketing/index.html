@@ -243,7 +243,8 @@
   .chip { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); border: 1px solid var(--line); border-radius: 5px; padding: 5px 8px; }
 
   /* walkthrough pieces */
-  .pfp { width: 84px; height: 84px; border-radius: 50%; overflow: hidden; flex: none; border: 1px solid var(--line-strong); background: #23262c; }
+  /* inline-block so width/height still apply outside a flex parent */
+  .pfp { display: inline-block; width: 84px; height: 84px; border-radius: 50%; overflow: hidden; flex: none; border: 1px solid var(--line-strong); background: #23262c; }
   .pfp svg, .pfp img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .pfp.sealed svg, .pfp.sealed img { filter: blur(9px) saturate(0.75); transform: scale(1.18); }
   .photo-grid { display: flex; gap: 8px; }
@@ -337,6 +338,26 @@
     border: 1px solid rgba(255,214,196,0.32);
     animation: sealBreathe 2.1s ease-in-out infinite; }
   .seal.opening { animation: chestRattle 1.15s cubic-bezier(.3,.1,.5,1) both; }
+  /* The reveal happens inside the conversation: both sides get the same
+     prompt, and neither sees anything until both have answered. */
+  .chatwrap { display: flex; flex-direction: column; gap: 8px; }
+  .msg { max-width: 80%; padding: 9px 13px; border-radius: 15px; font-size: 0.92rem; line-height: 1.4; }
+  .msg.them { align-self: flex-start; border-bottom-left-radius: 5px; color: var(--ink);
+    background: rgba(255,255,255,0.07); border: 1px solid var(--line); }
+  .msg.me { align-self: flex-end; border-bottom-right-radius: 5px; color: #2a1520;
+    background: linear-gradient(135deg, #ffd9c8, #f0aa9c); }
+  .syscard { align-self: center; width: 100%; max-width: 310px; margin-top: 8px; padding: 15px 16px;
+    border-radius: 15px; text-align: center;
+    background: rgba(255,255,255,0.07); border: 1px solid var(--line-strong);
+    animation: notifIn .5s cubic-bezier(.2,.9,.2,1) both; }
+  .syscard-title { margin: 0; font-size: 0.94rem; font-weight: 600; color: var(--ink); }
+  .syscard-sub { margin: 5px 0 0; font-size: 0.82rem; color: var(--ink-2); line-height: 1.42; }
+  .typing { display: inline-flex; gap: 4px; align-items: center; margin-left: 3px; }
+  .typing i { width: 5px; height: 5px; border-radius: 50%; background: var(--ink-3);
+    animation: typingDot 1.1s ease-in-out infinite; }
+  @keyframes typingDot { 0%,100% { opacity: 0.25; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+  .openwrap { position: relative; display: inline-block; }
+  .pfp.opening { animation: chestRattle 1.15s cubic-bezier(.3,.1,.5,1) both; }
   .seal-burst { position: absolute; inset: -26px; border-radius: 50%; pointer-events: none;
     background: radial-gradient(circle, rgba(255,192,164,0.55), rgba(255,192,164,0) 66%);
     animation: burstGlow .78s ease-out .52s both; }
@@ -345,7 +366,6 @@
      animation-delay so a list visibly arrives one item at a time. */
   @keyframes riseIn { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: none; } }
   @keyframes lockDrop { from { opacity: 0; transform: translateY(-9px) scale(0.72); } to { opacity: 1; transform: none; } }
-  @keyframes unblurIn { from { filter: blur(9px) saturate(0.75); transform: scale(1.18); } to { filter: blur(0) saturate(1); transform: none; } }
   @keyframes notifIn {
     0% { opacity: 0; transform: translateY(-26px) scale(0.94); }
     62% { opacity: 1; transform: translateY(3px) scale(1.012); }
@@ -894,12 +914,12 @@
     var topOpening = false;   // mid-rattle, before the prize springs out
     /* Two reveals a day. Spending one unlocks a face without talking
        first; the mutual reveal after the window costs nothing. */
-    var REVEALS_PER_DAY = 2;
-    var revealsLeft = REVEALS_PER_DAY;
-    var unlocked = {};
     /* The window opens once, at an hour nobody knows in advance.
        Reveals are spendable all day right up until it does. */
     var alertSeen = false;
+    var askStage = "ask";        // ask | waiting, while the other side decides
+    var revealOpening = false;
+    var revealOpened = false;
     var windowTime = "7:12 pm";
 
     function seedFromString(s) {
@@ -1132,42 +1152,57 @@
           +   '</div>'
           + '</div>'
           + '<p class="stage-caption" style="margin-top:16px">' + windowTime + ', and you had no idea it was coming. That\'s the point.</p>'
-          + '<p class="stage-caption" style="margin-top:6px;color:var(--ink-3)">Reveals close. From here, it\'s mutual.</p>'
           + '</div>';
       }
       if (phase === "profile") {
-        var isOpen = !!unlocked[p.id];
-        var tail;
-        if (isOpen) {
-          tail = '<p class="stage-caption reveal" style="margin-top:10px">Unlocked. That was one of your two.</p>';
-        } else if (alertSeen) {
-          // The window is open, so reveals were the before-the-window move.
-          tail = '<div class="choice" style="margin-top:10px"><button class="yes" id="spend-reveal" disabled>Reveals closed &middot; window is open</button></div>'
-            + '<p class="stage-caption" style="margin-top:8px">Now you talk. If you both ask, seeing each other is free.</p>';
-        } else if (revealsLeft > 0) {
-          tail = '<div class="choice" style="margin-top:10px"><button class="yes" id="spend-reveal">Use 1 reveal &middot; see now</button></div>'
-            + '<p class="stage-caption" style="margin-top:8px">Two a day, spend them any time before your window opens. Or wait. After you talk, a mutual reveal is free.</p>';
-        } else {
-          tail = '<div class="choice" style="margin-top:10px"><button class="yes" id="spend-reveal" disabled>No reveals left today</button></div>'
-            + '<p class="stage-caption" style="margin-top:8px">Both spent. Seeing anyone else means talking first.</p>';
-        }
-        var pf = isOpen
-          ? '<span class="pfp"><span style="display:block;width:100%;height:100%;animation:unblurIn .55s cubic-bezier(.2,.8,.2,1) both">' + avatar(p) + '</span></span>'
-          : pfp(p, true);
-        return '<div class="stage-voice">' + pf + '<div><p class="stage-name">' + p.name + ', ' + p.age + '</p><div class="chiprow">' + p.chips.map(chip).join("") + '</div>'
-          + '<p class="stage-q" style="margin-top:10px">' + p.q + '</p><p class="stage-a" style="font-size:1.05rem">' + p.a + '</p>' + tail + '</div></div>';
+        return '<div class="stage-voice">' + pfp(p, true) + '<div><p class="stage-name">' + p.name + ', ' + p.age + '</p><div class="chiprow">' + p.chips.map(chip).join("") + '</div>'
+          + '<p class="stage-q" style="margin-top:10px">' + p.q + '</p><p class="stage-a" style="font-size:1.05rem">' + p.a + '</p></div></div>';
       }
       if (phase === "window") {
         return '<div class="stage-voice"><div class="stage-disc">&#9679;</div><div><canvas id="demo-wave" width="200" height="40" style="display:block;width:170px;height:40px"></canvas>'
           + '<p class="stage-caption" style="margin-top:6px">You call first. Or text, if that\'s what you both want. Whatever you decide together.</p></div></div>';
       }
       if (phase === "ask") {
-        return '<div class="stage-voice">' + pfp(p, true) + '<div><p class="stage-caption">The hour is going well. You can ask to see each other. It only happens if you both ask.</p>'
-          + '<div class="choice"><button class="yes" id="ask-yes">Reveal my photo</button><button class="no" id="ask-no">Not yet</button></div></div></div>';
+        var thread = '<div class="msg them">I wasn\'t expecting this to be the best part of my day.</div>'
+          + '<div class="msg me">Same, honestly.</div>';
+        if (askStage === "waiting") {
+          return '<div class="chatwrap">' + thread
+            + '<div class="syscard">'
+            +   '<p class="syscard-title">You said yes</p>'
+            +   '<p class="syscard-sub">' + p.name + ' is still deciding'
+            +     '<span class="typing"><i></i><i style="animation-delay:.15s"></i><i style="animation-delay:.3s"></i></span></p>'
+            + '</div></div>';
+        }
+        return '<div class="chatwrap">' + thread
+          + '<div class="syscard">'
+          +   '<span class="notif-mark" style="margin:0 auto 10px">' + MARK_SVG + '</span>'
+          +   '<p class="syscard-title">Show each other?</p>'
+          +   '<p class="syscard-sub">You have both been asked. Photos only appear if you both say yes.</p>'
+          +   '<div class="choice" style="justify-content:center;margin-top:12px">'
+          +     '<button class="yes" id="ask-yes">Yes</button><button class="no" id="ask-no">Not yet</button>'
+          +   '</div>'
+          + '</div></div>';
       }
       if (phase === "reveal") {
-        return '<div class="stage-voice">' + pfp(p, false) + '<div><p class="stage-caption reveal">' + p.name + ' asked too. You both said yes, so you can see each other\'s photos, and it cost neither of you a reveal.</p>'
-          + '<p class="stage-caption" style="margin-top:6px">Still ' + revealsLeft + ' of ' + REVEALS_PER_DAY + ' today.</p></div></div>';
+        if (!revealOpened) {
+          return '<div style="text-align:center">'
+            + '<div class="openwrap">'
+            +   (revealOpening ? '<span class="seal-burst"></span>' : '')
+            +   '<span class="pfp sealed' + (revealOpening ? " opening" : "") + '">' + avatar(p) + '</span>'
+            + '</div>'
+            + '<p class="stage-caption reveal" style="margin-top:16px">'
+            +   (revealOpening ? 'Opening&hellip;' : p.name + ' said yes too. You both asked, so here it is.')
+            + '</p>'
+            + (revealOpening ? ''
+                : '<div class="choice" style="justify-content:center"><button class="yes" id="reveal-open">Open it</button></div>')
+            + '</div>';
+        }
+        return '<div style="text-align:center">'
+          + '<div style="animation:treasurePop .72s cubic-bezier(.2,.9,.3,1.2) both">'
+          + '<span class="pfp">' + avatar(p) + '</span>'
+          + '<p class="stage-name" style="margin-top:11px">' + p.name + ', ' + p.age + '</p>'
+          + '<p class="stage-caption reveal" style="margin-top:4px">' + (p.masc ? 'There he is.' : 'There she is.') + '</p>'
+          + '</div></div>';
       }
       if (phase === "choice") {
         var moveTo = person < PEOPLE.length - 1 ? "Move to #" + (person + 2) : "Back to the top";
@@ -1187,9 +1222,9 @@
       if (phase === "upload") return "You upload · placed privately";
       if (phase === "top") return "Your #1 · unwrap it";
       if (phase === "cohort") return "8:04 am · your ten arrive";
-      if (phase === "profile") return "#" + (person + 1) + " · " + p.name + " · " + revealsLeft + " of " + REVEALS_PER_DAY + " reveals left";
+      if (phase === "profile") return "#" + (person + 1) + " · " + p.name + " · no photo yet";
       if (phase === "window") return "The window · voice or text";
-      if (phase === "ask") return "Your move · two reveals a day";
+      if (phase === "ask") return "Your move · both or neither";
       if (phase === "reveal") return "You both asked · the reveal";
       if (phase === "choice") return "One more yes";
       return "Match № " + (person + 1);
@@ -1208,7 +1243,7 @@
 
       var ready = !!(myGender && wantMeet);
       var nameReady = !!myName.trim() && !!myAge && myAge >= 18;
-      if (phase === "choice" || phase === "ask" || phase === "top") {
+      if (phase === "choice" || phase === "ask" || phase === "top" || (phase === "reveal" && !revealOpened)) {
         nextBtn.style.display = "none";
       } else if (phase === "match") {
         nextBtn.style.display = ""; nextBtn.textContent = "That’s the whole idea";
@@ -1236,7 +1271,8 @@
         if (!hint) return;
         if (phase === "match") { hint.style.display = "none"; return; }
         hint.style.display = "";
-        hint.textContent = phase === "ask" ? "Your call. Tap to reveal ↑"
+        hint.textContent = phase === "ask" ? (askStage === "waiting" ? "Waiting on her…" : "Your call. Both have to say yes ↑")
+          : (phase === "reveal" && !revealOpened) ? (revealOpening ? "Opening…" : "Tap to open it ↑")
           : phase === "choice" ? "Make your choice ↑"
           : phase === "top" ? (topOpening ? "Opening…" : topRevealed ? "Now see the rest of your ten ↑" : "Tap the button to open it ↑")
           : (phase === "name" && !nameReady) ? "Enter your name and age (18+) to continue"
@@ -1290,26 +1326,37 @@
         b.addEventListener("click", function (e) { e.stopPropagation(); wantMeet = b.getAttribute("data-w"); setPool(); render(); });
       });
 
-      var spendBtn = document.getElementById("spend-reveal");
-      if (spendBtn) spendBtn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        if (revealsLeft <= 0) return;
-        revealsLeft--;
-        unlocked[PEOPLE[person].id] = true;
-        render();
-      });
-
       var askYes = document.getElementById("ask-yes");
       var askNo = document.getElementById("ask-no");
       if (askYes) askYes.addEventListener("click", function (e) {
         e.stopPropagation();
-        unlocked[PEOPLE[person].id] = true;   // mutual reveal after talking, free
-        phase = "reveal";
+        if (reduce) { askStage = "ask"; phase = "reveal"; render(); return; }
+        askStage = "waiting";           // she hasn't answered yet
         render();
+        setTimeout(function () {
+          askStage = "ask";
+          phase = "reveal";
+          render();
+        }, 1900);
+      });
+
+      var revealOpen = document.getElementById("reveal-open");
+      if (revealOpen) revealOpen.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (revealOpening) return;
+        if (reduce) { revealOpened = true; render(); return; }
+        revealOpening = true;
+        render();
+        setTimeout(function () {
+          revealOpening = false;
+          revealOpened = true;
+          render();
+        }, 1150);
       });
       if (askNo) askNo.addEventListener("click", function (e) {
         e.stopPropagation();
         person = person < PEOPLE.length - 1 ? person + 1 : 0;
+        revealOpened = false; revealOpening = false;
         phase = "profile";          // no reveal, move down the list
         render();
       });
@@ -1320,6 +1367,7 @@
       if (no) no.addEventListener("click", function (e) {
         e.stopPropagation();
         person = person < PEOPLE.length - 1 ? person + 1 : 0;
+        revealOpened = false; revealOpening = false;
         phase = "profile";           // walk the next match through the same flow
         render();
       });
@@ -1346,6 +1394,7 @@
     function advance() {
       if (phase === "choice" || phase === "ask" || phase === "match") return;
       if (phase === "top" && !topRevealed) return;
+      if (phase === "reveal" && !revealOpened) return;
       if (phase === "name" && !(myName.trim() && myAge && myAge >= 18)) return;
       if (phase === "setup" && !(myGender && wantMeet)) return;
       // Someone can go back and edit their name or age, which changes the
@@ -1374,7 +1423,7 @@
     resetBtn.addEventListener("click", function (e) {
       e.stopPropagation();
       phase = "name"; person = 0; myGender = null; wantMeet = null; myName = ""; myAge = null; topRevealed = false; topOpening = false; PEOPLE = WOMEN;
-      revealsLeft = REVEALS_PER_DAY; unlocked = {}; alertSeen = false;
+      alertSeen = false; askStage = "ask"; revealOpened = false; revealOpening = false;
       render();
     });
     render();
