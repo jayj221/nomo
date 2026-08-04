@@ -356,6 +356,9 @@
   .typing i { width: 5px; height: 5px; border-radius: 50%; background: var(--ink-3);
     animation: typingDot 1.1s ease-in-out infinite; }
   @keyframes typingDot { 0%,100% { opacity: 0.25; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+  /* a slow idle float so the avatars feel alive rather than stamped on */
+  @keyframes avFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.6px); } }
+  .av-head { animation: avFloat 3.6s ease-in-out infinite; }
   .openwrap { position: relative; display: inline-block; }
   .pfp.opening { animation: chestRattle 1.15s cubic-bezier(.3,.1,.5,1) both; }
   .seal-burst { position: absolute; inset: -26px; border-radius: 50%; pointer-events: none;
@@ -424,7 +427,7 @@
     font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
     animation: lockDrop .45s cubic-bezier(.2,.8,.2,1) .3s both; }
   @media (prefers-reduced-motion: reduce) {
-    .notif, .pcard, .lockpill, .cohort-row, .ph, .pfp svg, .pfp img { animation: none !important; }
+    .notif, .pcard, .lockpill, .cohort-row, .ph, .pfp svg, .pfp img, .av-head { animation: none !important; }
   }
   .demo-btn {
     background: transparent;
@@ -830,31 +833,63 @@
 
     /* ── Interactive walkthrough: sealed → seen ─────────────────── */
     // Abstract gradient avatars, not real people, each a distinct hue.
+    var AV_SKIN = ["#f7d5b5", "#efc29a", "#e2ab7e", "#d09466", "#ba7d51"];
+    var AV_HAIR = ["#26190f", "#35241a", "#1c1410", "#46301f", "#2f2018"];
+    var AV_TOP  = ["#ece7e1", "#dcd3c9", "#cfd8dc", "#e6dcd2", "#d6dae3"];
     function avatar(p) {
       var id = "av" + p.id;
-      // Hair is drawn over the shoulders, not under them, so the long
-      // version actually reads as long instead of vanishing behind them.
-      var ink = "rgba(0,0,0,0.30)";
-      var body, hair;
+      var n = p.id;
+      var skin = AV_SKIN[n % AV_SKIN.length];
+      var hairc = AV_HAIR[(n * 3) % AV_HAIR.length];
+      var garment = AV_TOP[(n * 2) % AV_TOP.length];
+      var v = n % 3;
+      var cap = '<path d="M36,57 C36,19 84,19 84,57 C84,45 76,40 60,40 C44,40 36,45 36,57 Z" fill="' + hairc + '"/>';
+      var back = "", front = "";
       if (p.masc) {
-        body = '<path d="M20,120 C22,91 40,81 60,81 C80,81 98,91 100,120 Z" fill="rgba(255,255,255,0.93)"/>';
-        hair = '<path d="M38,50 C38,29 82,29 82,50 C82,38 74,32 60,32 C46,32 38,38 38,50 Z" fill="' + ink + '"/>';
+        if (v === 0) {                                  // short crop
+          front = cap;
+        } else if (v === 1) {                           // quiff
+          front = cap + '<path d="M42,28 C48,15 68,14 76,22 C65,19 52,23 46,32 Z" fill="' + hairc + '"/>';
+        } else {                                        // curls
+          front = cap
+            + '<circle cx="44" cy="33" r="7" fill="' + hairc + '"/>'
+            + '<circle cx="54" cy="28" r="8" fill="' + hairc + '"/>'
+            + '<circle cx="66" cy="28" r="8" fill="' + hairc + '"/>'
+            + '<circle cx="76" cy="33" r="7" fill="' + hairc + '"/>';
+        }
       } else {
-        body = '<path d="M31,120 C33,95 45,85 60,85 C75,85 87,95 89,120 Z" fill="rgba(255,255,255,0.93)"/>';
-        hair = '<path d="M39,53 C39,28 81,28 81,53 C81,41 73,35 60,35 C47,35 39,41 39,53 Z" fill="' + ink + '"/>'
-             + '<path d="M39,52 C37,72 36,92 35,113 L46,113 C46,92 45,72 45,56 Z" fill="' + ink + '"/>'
-             + '<path d="M81,52 C83,72 84,92 85,113 L74,113 C74,92 75,72 75,56 Z" fill="' + ink + '"/>';
+        if (v === 0) {                                  // long, past the shoulders
+          back = '<path d="M35,52 C35,25 85,25 85,52 L85,96 Q85,102 79,102 L41,102 Q35,102 35,96 Z" fill="' + hairc + '"/>';
+          front = cap
+            + '<path d="M38,54 C36,72 35,88 35,102 L45,102 C45,88 44,72 44,58 Z" fill="' + hairc + '"/>'
+            + '<path d="M82,54 C84,72 85,88 85,102 L75,102 C75,88 76,72 76,58 Z" fill="' + hairc + '"/>';
+        } else if (v === 1) {                           // bob
+          back = '<path d="M36,52 C36,26 84,26 84,52 L84,74 Q84,81 77,81 L43,81 Q36,81 36,74 Z" fill="' + hairc + '"/>';
+          front = cap;
+        } else {                                        // bun
+          front = '<circle cx="60" cy="19" r="10" fill="' + hairc + '"/>' + cap;
+        }
       }
+      var face = '<ellipse cx="38.5" cy="53" rx="3.4" ry="4.4" fill="' + skin + '"/>'
+        + '<ellipse cx="81.5" cy="53" rx="3.4" ry="4.4" fill="' + skin + '"/>'
+        + '<ellipse cx="60" cy="50" rx="21" ry="23" fill="' + skin + '"/>'
+        + '<path d="M49,42.5 Q53,39.8 57,41.5" stroke="' + hairc + '" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-opacity="0.8"/>'
+        + '<path d="M63,41.5 Q67,39.8 71,42.5" stroke="' + hairc + '" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-opacity="0.8"/>'
+        + '<ellipse cx="52.5" cy="50" rx="2.7" ry="3.3" fill="#33241d"/>'
+        + '<ellipse cx="67.5" cy="50" rx="2.7" ry="3.3" fill="#33241d"/>'
+        + '<circle cx="53.5" cy="48.8" r="0.95" fill="#ffffff" fill-opacity="0.9"/>'
+        + '<circle cx="68.5" cy="48.8" r="0.95" fill="#ffffff" fill-opacity="0.9"/>'
+        + '<path d="M55,58.5 Q60,63.5 65,58.5" stroke="#a8664f" stroke-width="2" fill="none" stroke-linecap="round"/>';
       return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">'
-        + '<defs><radialGradient id="' + id + '" cx="36%" cy="24%" r="90%">'
+        + '<defs><radialGradient id="' + id + '" cx="34%" cy="22%" r="92%">'
         + '<stop offset="0%" stop-color="' + p.hue[0] + '"/>'
         + '<stop offset="100%" stop-color="' + p.hue[1] + '"/>'
         + '</radialGradient></defs>'
         + '<rect width="120" height="120" fill="url(#' + id + ')"/>'
-        + '<circle cx="60" cy="46" r="31" fill="rgba(0,0,0,0.14)"/>'
-        + '<circle cx="60" cy="50" r="20" fill="rgba(255,255,255,0.93)"/>'
-        + body
-        + hair
+        + back
+        + '<rect x="53.5" y="64" width="13" height="22" rx="6.5" fill="' + skin + '" fill-opacity="0.86"/>'
+        + '<path d="M26,120 C28,94 42,84 60,84 C78,84 92,94 94,120 Z" fill="' + garment + '"/>'
+        + '<g class="av-head">' + face + front + '</g>'
         + '</svg>';
     }
     function pfp(p, sealed) {
