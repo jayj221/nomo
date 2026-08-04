@@ -385,6 +385,21 @@
     background: var(--ground-2); animation: riseIn .45s cubic-bezier(.2,.8,.2,1) both; }
   .pcard .stage-q { margin: 0; }
   .pcard .stage-a { margin: 3px 0 0; }
+  /* Empty placeholders, not sample answers: this slide is showing what a
+     profile is made of, not offering anything to pick. */
+  .skel { height: 9px; border-radius: 5px;
+    background: linear-gradient(90deg, rgba(255,214,196,0.15), rgba(255,214,196,0.05)); }
+  .chip.ghost { border-style: dashed; background: transparent; height: 26px; padding: 0; }
+  /* Reads as a note about the slide, not as more body copy. */
+  .notepill { display: inline-flex; align-items: center; margin-top: 14px; padding: 7px 13px; border-radius: 999px;
+    border: 1px solid rgba(255,214,196,0.32); background: rgba(255,214,196,0.08);
+    font-family: var(--mono); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.17em;
+    text-transform: uppercase; color: rgba(255,240,232,0.88);
+    animation: riseIn .4s cubic-bezier(.2,.8,.2,1) .52s both; }
+  .svcrow { display: flex; flex-wrap: wrap; gap: 8px; }
+  .svc { display: inline-flex; align-items: center; gap: 7px; padding: 7px 11px; border-radius: 8px;
+    border: 1px solid var(--line-strong); background: var(--ground-2);
+    font-size: 0.78rem; color: var(--ink-2); }
   .lockpill { display: inline-flex; align-items: center; gap: 7px; margin-top: 11px; padding: 5px 11px; border-radius: 999px;
     border: 1px solid var(--line-strong); background: var(--ground-2); color: var(--ink-2);
     font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
@@ -897,7 +912,9 @@
       return s.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
     // The brand mark, reused as the "seal" on the unopened #1 card.
-    var LOCK_SVG = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">'
+    var NOTE_SVG = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+      + '<path d="M9 18V5l10-2v13"/><circle cx="6.4" cy="18" r="2.6"/><circle cx="16.4" cy="16" r="2.6"/></svg>';
+    var LOCK_SVG ='<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">'
       + '<rect x="4" y="10.5" width="16" height="10" rx="2.6"/><path d="M8,10.5 V7.4 a4,4 0 0,1 8,0 V10.5"/></svg>';
     var MARK_SVG ='<svg viewBox="0 0 120 80" width="34" height="23" fill="none">'
       + '<path d="M60,18.1 A26,26 0 0,1 60,61.9 A26,26 0 0,1 60,18.1 Z" fill="#C98B8B" fill-opacity="0.30"/>'
@@ -972,19 +989,19 @@
       var egg = (myName || "").trim().toLowerCase();
       if (egg === "jayant" && wantMeet !== "guys") {
         PEOPLE[0] = {
-          id: 99, name: "Naisha", age: 21, tag: "the exception",
+          id: 99, name: "Naisha", age: 21, tag: "sings",
           hue: ["#f0b7c2", "#4a2634"],
-          chips: ["not in the algorithm", "no window needed", "already yours"],
-          q: "What the matching got right",
-          a: "Nothing. It never had to. She was already there."
+          chips: ["singing", "ukulele", "long naps"],
+          q: "The thing you notice first",
+          a: "She smiles like a dream. The algorithm never had to work for this one."
         };
       } else if (egg === "naisha" && wantMeet !== "girls") {
         PEOPLE[0] = {
-          id: 98, name: "Jayant", age: 22, masc: true, tag: "the exception",
+          id: 98, name: "Jayant", age: 22, masc: true, tag: "builds things",
           hue: ["#a7bdf0", "#26304a"],
-          chips: ["not in the algorithm", "no window needed", "already yours"],
-          q: "What the matching got right",
-          a: "Nothing. It never had to. He was already there."
+          chips: ["building things", "late nights", "long drives"],
+          q: "The thing you notice first",
+          a: "He was already there. The algorithm never had to work for this one."
         };
       }
       person = 0;
@@ -1074,24 +1091,30 @@
         return '<div><div class="cohort">' + rows + '</div><p class="stage-caption" style="margin-top:12px">' + hey + 'your ten for today, ranked by how much of your world they share.</p></div>';
       }
       if (phase === "prompts") {
-        var eg = [
-          ["The way to my heart", "Argue with me about music. Lose gracefully."],
-          ["What I'm actually like at 2am", "Awake, overthinking, pretending I'm not."],
-          ["Something I care about more than I should", "Getting the playlist right before anyone arrives."]
+        var blocks = [
+          ["Three prompts",
+            '<div class="skel" style="width:86%"></div>'
+            + '<div class="skel" style="width:68%;margin-top:6px"></div>'
+            + '<div class="skel" style="width:77%;margin-top:6px"></div>'],
+          ["The things you\'re into",
+            '<div class="chiprow" style="margin-top:0">'
+            + [78, 96, 62, 84].map(function (w) {
+                return '<span class="chip ghost" style="width:' + w + 'px"></span>';
+              }).join("")
+            + '</div>'],
+          ["What you actually listen to",
+            '<div class="svcrow">'
+            + '<span class="svc">' + NOTE_SVG + 'Spotify</span>'
+            + '<span class="svc">' + NOTE_SVG + 'Apple Music</span>'
+            + '</div>']
         ];
-        var hob = ["indie music", "late drives", "street food", "bad puns"];
         return '<div>'
-          + '<p class="stage-caption">Three answers and a few things you\'re into. That\'s your whole profile.</p>'
-          + eg.map(function (row, i) {
-              return '<div class="pcard" style="animation-delay:' + (0.1 + i * 0.13).toFixed(2) + 's">'
-                + '<p class="stage-q">' + row[0] + '</p><p class="stage-a">' + row[1] + '</p></div>';
+          + '<p class="stage-caption">In the app, this is where you say who you are.</p>'
+          + blocks.map(function (row, i) {
+              return '<div class="pcard" style="animation-delay:' + (0.1 + i * 0.14).toFixed(2) + 's">'
+                + '<p class="stage-q" style="margin-bottom:9px">' + row[0] + '</p>' + row[1] + '</div>';
             }).join("")
-          + '<div class="chiprow" style="margin-top:13px">'
-          + hob.map(function (h, i) {
-              return '<span class="chip" style="animation:riseIn .38s cubic-bezier(.2,.8,.2,1) both;animation-delay:' + (0.5 + i * 0.07).toFixed(2) + 's">' + h + '</span>';
-            }).join("")
-          + '</div>'
-          + '<p class="stage-caption" style="margin-top:13px;color:var(--ink-3)">Filled in for you. Nothing to type here.</p>'
+          + '<div class="notepill">Preview only &middot; nothing to fill in</div>'
           + '</div>';
       }
       if (phase === "alert") {
@@ -1160,7 +1183,7 @@
       var p = PEOPLE[person];
       if (phase === "name") return "First, a little about you";
       if (phase === "setup") return "Who are you?";
-      if (phase === "prompts") return "Your profile · three answers";
+      if (phase === "prompts") return "Your profile · what goes in it";
       if (phase === "alert") return windowTime + " · window opens";
       if (phase === "upload") return "You upload · placed privately";
       if (phase === "top") return "Your #1 · unwrap it";
