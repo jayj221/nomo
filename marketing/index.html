@@ -1,6 +1,6 @@
 <title>Nomo: ten guaranteed matches a day, no photos until you talk</title>
 <style>
-  /* ── Nomo — concept + waitlist ───────────────────────────────────
+  /* ── Nomo: concept + waitlist ───────────────────────────────────
      Committed dark identity (the product is entirely dark by design).
      Three type voices: clinical sans (system), intimate italic serif
      (the human prompt voice), mono instrument face (labels, countdown). */
@@ -13,7 +13,7 @@
     --ink:         rgba(255,255,255,0.93);
     --ink-2:       rgba(255,255,255,0.56);
     --ink-3:       rgba(255,255,255,0.30);
-    --white:       #ffffff;   /* primary CTA — white on black */
+    --white:       #ffffff;   /* primary CTA, white on black */
     --reveal:      #1fae82;   /* earned green: the connection beat only */
 
     --sans:  -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -165,7 +165,7 @@
     line-height: 1.25;
     color: var(--ink-2);
   }
-  /* only the repeated "No more" carries full weight — it is the name */
+  /* only the repeated "No more" carries full weight, it is the name */
   .nomore p .hl { color: var(--ink); font-weight: 600; }
 
   /* ── Reveal ladder ────────────────────────────────────────────── */
@@ -184,7 +184,7 @@
      the dark page rather than in it. Palette vars are re-declared here
      and inherited by every descendant rule, which recolours the whole
      card without editing a single component. Glows are the existing
-     brand rose (#C98B8B) and --reveal green — no new hue. */
+     brand rose (#C98B8B) and --reveal green, no new hue. */
   .demo {
     --ink:         rgba(255,247,242,0.96);
     --ink-2:       rgba(255,240,232,0.68);
@@ -305,17 +305,31 @@
     0%, 100% { box-shadow: 0 0 0 0 rgba(31,174,130,0); }
     50% { box-shadow: 0 0 0 7px rgba(31,174,130,0.11); }
   }
-  .notif { display: flex; align-items: flex-start; gap: 11px; text-align: left; padding: 12px 14px; border-radius: 15px;
-    background: rgba(255,255,255,0.07); border: 1px solid var(--line-strong);
-    animation: notifIn .6s cubic-bezier(.2,.9,.2,1) both, notifGlow 2.4s ease-in-out .65s infinite; }
-  .notif-mark { flex: none; width: 38px; height: 38px; border-radius: 10px; background: var(--ground-2);
+  /* The alert lands on a phone lock screen, because that is where it would
+     actually reach someone. The frame does the explaining, not the copy. */
+  .phone { width: 254px; margin: 0 auto; border-radius: 32px; padding: 13px 12px 18px;
+    background: linear-gradient(168deg, #24202b, #17141c 62%, #121016);
+    border: 1px solid rgba(255,214,196,0.20);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 20px 44px -22px rgba(0,0,0,0.85);
+    animation: riseIn .5s cubic-bezier(.2,.8,.2,1) both; }
+  .phone-notch { width: 52px; height: 4px; border-radius: 3px; margin: 0 auto 12px;
+    background: rgba(255,255,255,0.20); }
+  .phone-time { font-family: var(--sans); font-size: 2.1rem; font-weight: 300; letter-spacing: -0.02em;
+    line-height: 1; text-align: center; color: rgba(255,247,242,0.95); }
+  .phone-date { font-family: var(--sans); font-size: 0.68rem; text-align: center; margin-top: 4px;
+    color: rgba(255,236,226,0.45); }
+  .notif { display: flex; align-items: flex-start; gap: 9px; text-align: left; margin-top: 14px;
+    padding: 9px 10px; border-radius: 13px;
+    background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.13);
+    animation: notifIn .62s cubic-bezier(.2,.9,.2,1) .34s both, notifGlow 2.4s ease-in-out 1s infinite; }
+  .notif-mark { flex: none; width: 26px; height: 26px; border-radius: 7px; background: rgba(0,0,0,0.34);
     display: flex; align-items: center; justify-content: center; }
-  .notif-mark svg { width: 24px; height: auto; }
+  .notif-mark svg { width: 17px; height: auto; }
   .notif-copy { min-width: 0; }
-  .notif-title { margin: 0; font-size: 0.95rem; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
-  .notif-sub { margin: 3px 0 0; font-size: 0.82rem; color: var(--ink-2); line-height: 1.42; }
-  .notif-time { margin-left: auto; flex: none; font-family: var(--mono); font-size: 0.62rem;
-    letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); }
+  .notif-title { margin: 0; font-size: 0.78rem; font-weight: 600; color: rgba(255,247,242,0.96); letter-spacing: -0.005em; }
+  .notif-sub { margin: 2px 0 0; font-size: 0.68rem; color: rgba(255,240,232,0.66); line-height: 1.38; }
+  .notif-time { margin-left: auto; flex: none; font-family: var(--mono); font-size: 0.52rem;
+    letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,236,226,0.42); }
   .pcard { border: 1px solid var(--line); border-radius: 11px; padding: 10px 12px; margin-top: 8px;
     background: var(--ground-2); animation: riseIn .45s cubic-bezier(.2,.8,.2,1) both; }
   .pcard .stage-q { margin: 0; }
@@ -371,7 +385,7 @@
     .cohort-row { font-size: 0.94rem; }
     .cohort { gap: 8px 14px; }
     .demo-label { font-size: 0.72rem; }
-    /* 13 phases of dots crowd the label on a phone — tighten them so the
+    /* 13 phases of dots crowd the label on a phone, so tighten them so the
        stage label keeps a single line instead of wrapping into them. */
     .demo-head { gap: 10px; }
     .demo-label { flex: 1; min-width: 0; }
@@ -380,7 +394,7 @@
   }
 
   /* ── Tablet ───────────────────────────────────────────────────── */
-  /* A wider reading column and a step up in scale — not a stretched
+  /* A wider reading column and a step up in scale, not a stretched
      phone layout, a deliberately tuned size for the device. */
   @media (min-width: 768px) and (max-width: 1023px) {
     .wrap { max-width: 700px; }
@@ -395,7 +409,7 @@
   }
 
   /* ── Desktop ──────────────────────────────────────────────────── */
-  /* Bigger canvas, bigger everything — this is the version someone
+  /* Bigger canvas, bigger everything. This is the version someone
      opens on a laptop from the LinkedIn post, so it needs to feel
      considered at that size, not like the phone page with margins. */
   @media (min-width: 1024px) {
@@ -658,7 +672,7 @@
         var btn = form.querySelector("button");
         if (btn) { btn.disabled = true; btn.textContent = "One moment"; }
 
-        // One silent retry — there's no fallback path, so a transient
+        // One silent retry, because there's no fallback path, so a transient
         // network blip shouldn't quietly cost a signup.
         recordSignup(email)
           .catch(function () { return recordSignup(email); })
@@ -729,7 +743,7 @@
     }
 
     /* ── Interactive walkthrough: sealed → seen ─────────────────── */
-    // Abstract gradient avatars — not real people, each a distinct hue.
+    // Abstract gradient avatars, not real people, each a distinct hue.
     function avatar(p) {
       var id = "av" + p.id;
       var hair = p.masc
@@ -872,7 +886,7 @@
       var full = wantMeet === "guys" ? MEN : wantMeet === "girls" ? WOMEN : MIXED;
       // Deterministic per-visitor set: same name + same day always picks
       // the same ten people, in the same order, so it feels chosen, not
-      // random on every refresh — and both the set AND the #1 rotate
+      // random on every refresh, and both the set AND the #1 rotate
       // tomorrow, like the real "ten new people every day" product.
       var seedBase = (myName.trim() || "guest").toLowerCase() + "|" + (myAge || 24) + "|" + new Date().toISOString().slice(0, 10);
       var seed = seedFromString(seedBase);
@@ -886,7 +900,7 @@
 
       var ten = shuffled.slice(0, 10);
       // Entries flagged noTop still appear in the ten, just never as the
-      // #1 reveal — swap the first eligible one up into the top slot.
+      // #1 reveal. Swap the first eligible one up into the top slot.
       if (ten[0] && ten[0].noTop) {
         for (var t = 1; t < ten.length; t++) {
           if (!ten[t].noTop) {
@@ -996,20 +1010,25 @@
               return '<span class="chip" style="animation:riseIn .38s cubic-bezier(.2,.8,.2,1) both;animation-delay:' + (0.5 + i * 0.07).toFixed(2) + 's">' + h + '</span>';
             }).join("")
           + '</div>'
-          + '<p class="stage-caption" style="margin-top:13px;color:var(--ink-3)">Filled in for you &mdash; nothing to type here.</p>'
+          + '<p class="stage-caption" style="margin-top:13px;color:var(--ink-3)">Filled in for you. Nothing to type here.</p>'
           + '</div>';
       }
       if (phase === "alert") {
         return '<div style="text-align:center">'
-          + '<div class="notif">'
-          +   '<span class="notif-mark">' + MARK_SVG + '</span>'
-          +   '<div class="notif-copy">'
-          +     '<p class="notif-title">Your window is open</p>'
-          +     '<p class="notif-sub">One hour, starting now. Call or text &mdash; whatever you both want.</p>'
+          + '<div class="phone">'
+          +   '<div class="phone-notch"></div>'
+          +   '<p class="phone-time">' + windowTime.replace(/ ?[ap]m$/, "") + '</p>'
+          +   '<p class="phone-date">Today</p>'
+          +   '<div class="notif">'
+          +     '<span class="notif-mark">' + MARK_SVG + '</span>'
+          +     '<div class="notif-copy">'
+          +       '<p class="notif-title">Your window is open</p>'
+          +       '<p class="notif-sub">One hour, starting now. Call or text, whatever you both want.</p>'
+          +     '</div>'
+          +     '<span class="notif-time">now</span>'
           +   '</div>'
-          +   '<span class="notif-time">now</span>'
           + '</div>'
-          + '<p class="stage-caption" style="margin-top:16px">' + windowTime + ' today. You didn\'t know it was coming &mdash; that\'s the point.</p>'
+          + '<p class="stage-caption" style="margin-top:16px">' + windowTime + ', and you had no idea it was coming. That\'s the point.</p>'
           + '<p class="stage-caption" style="margin-top:6px;color:var(--ink-3)">Reveals close. From here, it\'s mutual.</p>'
           + '</div>';
       }
@@ -1019,12 +1038,12 @@
         if (isOpen) {
           tail = '<p class="stage-caption reveal" style="margin-top:10px">Unlocked. That was one of your two.</p>';
         } else if (alertSeen) {
-          // The window is open — reveals were the before-the-window move.
+          // The window is open, so reveals were the before-the-window move.
           tail = '<div class="choice" style="margin-top:10px"><button class="yes" id="spend-reveal" disabled>Reveals closed &middot; window is open</button></div>'
             + '<p class="stage-caption" style="margin-top:8px">Now you talk. If you both ask, seeing each other is free.</p>';
         } else if (revealsLeft > 0) {
           tail = '<div class="choice" style="margin-top:10px"><button class="yes" id="spend-reveal">Use 1 reveal &middot; see now</button></div>'
-            + '<p class="stage-caption" style="margin-top:8px">Two a day, spend them any time before your window opens. Or wait &mdash; after you talk, a mutual reveal is free.</p>';
+            + '<p class="stage-caption" style="margin-top:8px">Two a day, spend them any time before your window opens. Or wait. After you talk, a mutual reveal is free.</p>';
         } else {
           tail = '<div class="choice" style="margin-top:10px"><button class="yes" id="spend-reveal" disabled>No reveals left today</button></div>'
             + '<p class="stage-caption" style="margin-top:8px">Both spent. Seeing anyone else means talking first.</p>';
@@ -1044,7 +1063,7 @@
           + '<div class="choice"><button class="yes" id="ask-yes">Reveal my photo</button><button class="no" id="ask-no">Not yet</button></div></div></div>';
       }
       if (phase === "reveal") {
-        return '<div class="stage-voice">' + pfp(p, false) + '<div><p class="stage-caption reveal">' + p.name + ' asked too. You both said yes, so you can see each other\'s photos &mdash; and it cost neither of you a reveal.</p>'
+        return '<div class="stage-voice">' + pfp(p, false) + '<div><p class="stage-caption reveal">' + p.name + ' asked too. You both said yes, so you can see each other\'s photos, and it cost neither of you a reveal.</p>'
           + '<p class="stage-caption" style="margin-top:6px">Still ' + revealsLeft + ' of ' + REVEALS_PER_DAY + ' today.</p></div></div>';
       }
       if (phase === "choice") {
@@ -1163,7 +1182,7 @@
       var askNo = document.getElementById("ask-no");
       if (askYes) askYes.addEventListener("click", function (e) {
         e.stopPropagation();
-        unlocked[PEOPLE[person].id] = true;   // mutual reveal after talking — free
+        unlocked[PEOPLE[person].id] = true;   // mutual reveal after talking, free
         phase = "reveal";
         render();
       });
@@ -1209,7 +1228,7 @@
       if (phase === "name" && !(myName.trim() && myAge && myAge >= 18)) return;
       if (phase === "setup" && !(myGender && wantMeet)) return;
       var next = PHASES[PHASES.indexOf(phase) + 1];
-      // One window a day — don't re-announce it for every match you walk.
+      // One window a day, so don't re-announce it for every match you walk.
       if (next === "alert" && alertSeen) next = "window";
       if (next === "alert") alertSeen = true;
       phase = next;
