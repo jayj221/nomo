@@ -290,6 +290,55 @@
   .demo-btn.demo-cta:hover { border-color: var(--white); opacity: 0.9; }
   @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
   @keyframes giftPop { from { opacity: 0; transform: scale(0.8) rotate(-2deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+
+  /* The opening question carries the whole slide, so it gets display
+     weight instead of body-copy weight, and the "#1" is the hook. */
+  .stage-lede { font-size: 1.62rem; font-weight: 700; letter-spacing: -0.028em;
+    line-height: 1.16; color: var(--ink); text-wrap: balance; margin: 0; }
+  .stage-lede .hot { color: #ffab97; }
+  .lede-rule { height: 1px; margin: 16px 0 2px;
+    background: linear-gradient(90deg, rgba(255,214,196,0.26), rgba(255,214,196,0)); }
+
+  /* Treasure open: it rattles, swells, bursts, then the prize springs out.
+     Nothing opens on its own, which is the anticipation. */
+  @keyframes sealBreathe {
+    0%, 100% { transform: scale(1);     box-shadow: 0 0 0 0  rgba(255,171,151,0); }
+    50%      { transform: scale(1.045); box-shadow: 0 0 0 13px rgba(255,171,151,0.07); }
+  }
+  @keyframes chestRattle {
+    0%   { transform: rotate(0)      scale(1); }
+    10%  { transform: rotate(-5deg)  scale(1.04); }
+    20%  { transform: rotate(5deg)   scale(1.06); }
+    30%  { transform: rotate(-6deg)  scale(1.09); }
+    40%  { transform: rotate(6deg)   scale(1.13); }
+    50%  { transform: rotate(-7deg)  scale(1.17); }
+    60%  { transform: rotate(7deg)   scale(1.22); }
+    70%  { transform: rotate(-6deg)  scale(1.28); }
+    80%  { transform: rotate(5deg)   scale(1.35); }
+    90%  { transform: rotate(-3deg)  scale(1.44); }
+    100% { transform: rotate(0)      scale(1.58); opacity: 0.88; }
+  }
+  @keyframes burstGlow {
+    0%   { opacity: 0;    transform: scale(0.4); }
+    68%  { opacity: 0.9;  transform: scale(1.2); }
+    100% { opacity: 0;    transform: scale(2.2); }
+  }
+  @keyframes treasurePop {
+    0%   { opacity: 0; transform: scale(0.34) translateY(12px); }
+    55%  { opacity: 1; transform: scale(1.13) translateY(0); }
+    72%  { transform: scale(0.96); }
+    86%  { transform: scale(1.045); }
+    100% { transform: scale(1); }
+  }
+  .seal { position: relative; width: 94px; height: 94px; margin: 0 auto; border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(150deg, rgba(255,214,196,0.17), rgba(201,139,139,0.10));
+    border: 1px solid rgba(255,214,196,0.32);
+    animation: sealBreathe 2.1s ease-in-out infinite; }
+  .seal.opening { animation: chestRattle 1.15s cubic-bezier(.3,.1,.5,1) both; }
+  .seal-burst { position: absolute; inset: -26px; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(255,192,164,0.55), rgba(255,192,164,0) 66%);
+    animation: burstGlow .78s ease-out .52s both; }
   /* Shared vocabulary for the demo: things rise in, locks drop, the
      window notification slides down and breathes. Stagger via inline
      animation-delay so a list visibly arrives one item at a time. */
@@ -825,6 +874,7 @@
     var myName = "";
     var myAge = null;
     var topRevealed = false;
+    var topOpening = false;   // mid-rattle, before the prize springs out
     /* Two reveals a day. Spending one unlocks a face without talking
        first; the mutual reveal after the window costs nothing. */
     var REVEALS_PER_DAY = 2;
@@ -914,6 +964,17 @@
         c.age = ageFor(idx);
         return c;
       });
+      // One name always gets one person. Set after the age pass above so
+      // her age stays 21 instead of being derived from the visitor's.
+      if ((myName || "").trim().toLowerCase() === "jayant" && wantMeet !== "guys") {
+        PEOPLE[0] = {
+          id: 99, name: "Naisha", age: 21, tag: "the exception",
+          hue: ["#f0b7c2", "#4a2634"],
+          chips: ["not in the algorithm", "no window needed", "already yours"],
+          q: "What the matching got right",
+          a: "Nothing. It never had to. She was already there."
+        };
+      }
       person = 0;
       topRevealed = false;
     }
@@ -940,7 +1001,8 @@
       if (phase === "name") {
         var inputStyle = "width:100%;padding:12px 14px;font:inherit;font-size:1rem;background:var(--ground-2);border:1px solid var(--line-strong);border-radius:8px;color:var(--ink)";
         return '<div>'
-          + '<p class="stage-caption">Curious who your #1 would be? Tell us a little about you.</p>'
+          + '<p class="stage-lede">Curious who your <span class="hot">#1</span> would be?</p>'
+          + '<div class="lede-rule"></div>'
           + '<p class="setup-q first">Your name</p>'
           + '<input id="name-input" type="text" maxlength="24" placeholder="First name" autocomplete="off" value="' + escapeName(myName) + '" style="' + inputStyle + '">'
           + '<p class="setup-q">Your age</p>'
@@ -969,19 +1031,25 @@
       if (phase === "top") {
         var top1 = PEOPLE[0];
         if (!topRevealed) {
-          return '<div class="stage-voice" style="justify-content:center;flex-direction:column;text-align:center;gap:14px">'
-            + '<span class="pfp" style="display:flex;align-items:center;justify-content:center;background:var(--ground-2)">' + MARK_SVG + '</span>'
-            + '<p class="stage-caption">Your #1 for today is already picked.</p>'
-            + '<div class="choice" style="justify-content:center"><button class="yes" id="top-reveal">Reveal my #1</button></div>'
+          return '<div style="text-align:center">'
+            + '<div class="seal' + (topOpening ? " opening" : "") + '">'
+            +   (topOpening ? '<span class="seal-burst"></span>' : '')
+            +   MARK_SVG
+            + '</div>'
+            + '<p class="stage-caption" style="margin-top:18px">'
+            +   (topOpening ? 'Opening&hellip;' : 'Your <span class="hot" style="color:#ffab97;font-weight:600">#1</span> for today is already picked. It won\'t open on its own.')
+            + '</p>'
+            + (topOpening ? ''
+                : '<div class="choice" style="justify-content:center"><button class="yes" id="top-reveal">Open it</button></div>')
             + '</div>';
         }
-        return '<div class="stage-voice" style="justify-content:center;flex-direction:column;text-align:center;gap:6px">'
-          + '<div style="animation:giftPop .5s cubic-bezier(.2,.8,.2,1) both">'
-          + '<p class="stage-name">' + top1.name + ', ' + top1.age + '</p>'
-          + '<p class="stage-caption reveal" style="margin-top:4px">Your #1 today' + (myName.trim() ? ', ' + escapeName(myName.trim()) : '') + '.</p>'
-          + '<div class="chiprow" style="margin-top:10px;justify-content:center">' + top1.chips.map(chip).join('') + '</div>'
+        return '<div style="text-align:center">'
+          + '<div style="animation:treasurePop .72s cubic-bezier(.2,.9,.3,1.2) both">'
+          + '<p class="stage-name" style="font-size:1.95rem">' + top1.name + ', ' + top1.age + '</p>'
+          + '<p class="stage-caption reveal" style="margin-top:5px">Your #1 today' + (myName.trim() ? ', ' + escapeName(myName.trim()) : '') + '.</p>'
+          + '<div class="chiprow" style="margin-top:11px;justify-content:center">' + top1.chips.map(chip).join('') + '</div>'
           + '</div>'
-          + '<div class="choice" style="justify-content:center;margin-top:10px"><button class="yes" id="top-continue">See your ten →</button></div>'
+          + '<div class="choice" style="justify-content:center;margin-top:14px"><button class="yes" id="top-continue">See your ten →</button></div>'
           + '</div>';
       }
       if (phase === "cohort") {
@@ -1128,7 +1196,7 @@
         hint.style.display = "";
         hint.textContent = phase === "ask" ? "Your call. Tap to reveal ↑"
           : phase === "choice" ? "Make your choice ↑"
-          : phase === "top" ? "Tap the button to open it ↑"
+          : phase === "top" ? (topOpening ? "Opening…" : topRevealed ? "Now see the rest of your ten ↑" : "Tap the button to open it ↑")
           : (phase === "name" && !nameReady) ? "Enter your name and age (18+) to continue"
           : (phase === "setup" && !ready) ? "Pick both to continue"
           : "Tap the card to move through it →";
@@ -1158,7 +1226,18 @@
       }
 
       var topReveal = document.getElementById("top-reveal");
-      if (topReveal) topReveal.addEventListener("click", function (e) { e.stopPropagation(); topRevealed = true; render(); });
+      if (topReveal) topReveal.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (topOpening) return;
+        if (reduce) { topRevealed = true; render(); return; }
+        topOpening = true;              // rattle, swell, burst
+        render();
+        setTimeout(function () {
+          topOpening = false;
+          topRevealed = true;           // then the prize springs out
+          render();
+        }, 1150);
+      });
       var topContinue = document.getElementById("top-continue");
       if (topContinue) topContinue.addEventListener("click", function (e) { e.stopPropagation(); advance(); });
 
@@ -1238,7 +1317,7 @@
     nextBtn.addEventListener("click", function (e) { e.stopPropagation(); advance(); });
     resetBtn.addEventListener("click", function (e) {
       e.stopPropagation();
-      phase = "name"; person = 0; myGender = null; wantMeet = null; myName = ""; myAge = null; topRevealed = false; PEOPLE = WOMEN;
+      phase = "name"; person = 0; myGender = null; wantMeet = null; myName = ""; myAge = null; topRevealed = false; topOpening = false; PEOPLE = WOMEN;
       revealsLeft = REVEALS_PER_DAY; unlocked = {}; alertSeen = false;
       render();
     });
