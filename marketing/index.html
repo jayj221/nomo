@@ -285,6 +285,8 @@
   .setup-row button.sel { color: #000; background: var(--white); border-color: var(--white); font-weight: 600; }
 
   .demo-controls { display: flex; gap: 10px; margin-top: 6px; }
+  /* Compact so it never squeezes the primary control on a phone. */
+  .demo-btn.back { flex: none; width: 46px; padding-left: 0; padding-right: 0; text-align: center; }
   /* primary control filled + gently breathing so it clearly invites a tap */
   .demo-btn.demo-cta { background: var(--white); color: #000; border-color: var(--white); font-weight: 600; animation: breathe 2.4s ease-in-out infinite; }
   .demo-btn.demo-cta:hover { border-color: var(--white); opacity: 0.9; }
@@ -553,6 +555,7 @@
         </div>
         <div class="demo-stage" id="demo-stage"><!-- filled by JS --></div>
         <div class="demo-controls">
+          <button class="demo-btn back" id="demo-back" aria-label="Go back one step">&larr;</button>
           <button class="demo-btn full demo-cta" id="demo-next">Go further &rarr;</button>
           <button class="demo-btn ghost" id="demo-reset">Start over</button>
         </div>
@@ -997,6 +1000,7 @@
     var dotsEl = document.getElementById("demo-dots");
     var nextBtn = document.getElementById("demo-next");
     var resetBtn = document.getElementById("demo-reset");
+    var backBtn = document.getElementById("demo-back");
     var demoWaveRAF = null;
 
     dotsEl.innerHTML = PHASES.map(function () { return '<span class="dot"></span>'; }).join("");
@@ -1198,6 +1202,13 @@
         nextBtn.disabled = false; nextBtn.style.opacity = "1";
       }
 
+      if (backBtn) {
+        var atStart = PHASES.indexOf(phase) === 0;
+        backBtn.style.display = atStart ? "none" : "";
+        backBtn.disabled = topOpening;
+        backBtn.style.opacity = topOpening ? "0.4" : "1";
+      }
+
       var hint = document.getElementById("demo-hint");
       function updateHint() {
         if (!hint) return;
@@ -1315,6 +1326,9 @@
       if (phase === "top" && !topRevealed) return;
       if (phase === "name" && !(myName.trim() && myAge && myAge >= 18)) return;
       if (phase === "setup" && !(myGender && wantMeet)) return;
+      // Someone can go back and edit their name or age, which changes the
+      // seed, so the ten and the #1 have to be rebuilt on the way forward.
+      if (phase === "name" && wantMeet) setPool();
       var next = PHASES[PHASES.indexOf(phase) + 1];
       // One window a day, so don't re-announce it for every match you walk.
       if (next === "alert" && alertSeen) next = "window";
@@ -1323,7 +1337,18 @@
       render();
     }
 
+    function goBack() {
+      if (topOpening) return;              // don't interrupt the opening
+      var i = PHASES.indexOf(phase);
+      if (i <= 0) return;
+      var prev = PHASES[i - 1];
+      if (prev === "alert") prev = PHASES[i - 2];   // one window a day
+      phase = prev;
+      render();
+    }
+
     nextBtn.addEventListener("click", function (e) { e.stopPropagation(); advance(); });
+    if (backBtn) backBtn.addEventListener("click", function (e) { e.stopPropagation(); goBack(); });
     resetBtn.addEventListener("click", function (e) {
       e.stopPropagation();
       phase = "name"; person = 0; myGender = null; wantMeet = null; myName = ""; myAge = null; topRevealed = false; topOpening = false; PEOPLE = WOMEN;
