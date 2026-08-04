@@ -179,13 +179,46 @@
   .fx { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
   .fx.in { opacity: 1; transform: none; }
 
-  /* ── Interactive demo card ────────────────────────────────────── */
+  /* ── Interactive demo card ──────────────────────────────────────
+     The one object on the page meant to be touched, so it sits above
+     the dark page rather than in it. Palette vars are re-declared here
+     and inherited by every descendant rule, which recolours the whole
+     card without editing a single component. Glows are the existing
+     brand rose (#C98B8B) and --reveal green — no new hue. */
   .demo {
-    background: var(--ground-2);
-    border: 1px solid var(--line);
+    --ink:         rgba(255,247,242,0.96);
+    --ink-2:       rgba(255,240,232,0.68);
+    --ink-3:       rgba(255,236,226,0.42);
+    --line:        rgba(255,214,196,0.14);
+    --line-strong: rgba(255,214,196,0.27);
+    --ground-2:    #1a1620;
+    background:
+      radial-gradient(120% 90% at 12% 0%,    rgba(201,139,139,0.17), transparent 55%),
+      radial-gradient(100% 80% at 100% 100%, rgba(31,174,130,0.09),  transparent 60%),
+      linear-gradient(168deg, #17131c, #131017 60%, #100e13);
+    border: 1px solid rgba(255,214,196,0.17);
     border-radius: 12px;
     padding: 22px;
     margin-top: 36px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06),
+                0 24px 60px -30px rgba(201,139,139,0.38);
+    transition: box-shadow 0.4s ease;
+  }
+  .demo:hover {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.09),
+                0 28px 70px -28px rgba(201,139,139,0.50);
+  }
+  .demo .choice .yes,
+  .demo .demo-btn.demo-cta {
+    background: linear-gradient(135deg, #ffd9c8, #f3b3a5 48%, #e2938f);
+    color: #2a1520;
+    border-color: transparent;
+  }
+  .demo .demo-btn.demo-cta:hover { border-color: transparent; opacity: 0.92; }
+  .demo .chip {
+    color: rgba(255,238,230,0.74);
+    border-color: rgba(255,214,196,0.22);
+    background: rgba(255,214,196,0.05);
   }
   .demo-head { display: flex; align-items: center; justify-content: space-between; }
   .demo-label { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-3); }
@@ -200,7 +233,7 @@
 
   .stage-voice { display: flex; align-items: center; gap: 14px; }
   .stage-disc { width: 60px; height: 60px; border-radius: 50%; background: #1a1d22; border: 1px solid var(--line-strong); display: flex; align-items: center; justify-content: center; color: var(--ink-3); font-size: 1.4rem; flex: none; }
-  .stage-name { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.015em; }
+  .stage-name { font-family: var(--serif); font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em; }
   .stage-meta { color: var(--ink-2); font-size: 0.92rem; margin-top: 3px; }
   .stage-caption { color: var(--ink-2); font-size: 0.95rem; }
   .stage-caption.reveal { color: var(--reveal); }
@@ -257,6 +290,43 @@
   .demo-btn.demo-cta:hover { border-color: var(--white); opacity: 0.9; }
   @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
   @keyframes giftPop { from { opacity: 0; transform: scale(0.8) rotate(-2deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+  /* Shared vocabulary for the demo: things rise in, locks drop, the
+     window notification slides down and breathes. Stagger via inline
+     animation-delay so a list visibly arrives one item at a time. */
+  @keyframes riseIn { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: none; } }
+  @keyframes lockDrop { from { opacity: 0; transform: translateY(-9px) scale(0.72); } to { opacity: 1; transform: none; } }
+  @keyframes unblurIn { from { filter: blur(9px) saturate(0.75); transform: scale(1.18); } to { filter: blur(0) saturate(1); transform: none; } }
+  @keyframes notifIn {
+    0% { opacity: 0; transform: translateY(-26px) scale(0.94); }
+    62% { opacity: 1; transform: translateY(3px) scale(1.012); }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes notifGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(31,174,130,0); }
+    50% { box-shadow: 0 0 0 7px rgba(31,174,130,0.11); }
+  }
+  .notif { display: flex; align-items: flex-start; gap: 11px; text-align: left; padding: 12px 14px; border-radius: 15px;
+    background: rgba(255,255,255,0.07); border: 1px solid var(--line-strong);
+    animation: notifIn .6s cubic-bezier(.2,.9,.2,1) both, notifGlow 2.4s ease-in-out .65s infinite; }
+  .notif-mark { flex: none; width: 38px; height: 38px; border-radius: 10px; background: var(--ground-2);
+    display: flex; align-items: center; justify-content: center; }
+  .notif-mark svg { width: 24px; height: auto; }
+  .notif-copy { min-width: 0; }
+  .notif-title { margin: 0; font-size: 0.95rem; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+  .notif-sub { margin: 3px 0 0; font-size: 0.82rem; color: var(--ink-2); line-height: 1.42; }
+  .notif-time { margin-left: auto; flex: none; font-family: var(--mono); font-size: 0.62rem;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); }
+  .pcard { border: 1px solid var(--line); border-radius: 11px; padding: 10px 12px; margin-top: 8px;
+    background: var(--ground-2); animation: riseIn .45s cubic-bezier(.2,.8,.2,1) both; }
+  .pcard .stage-q { margin: 0; }
+  .pcard .stage-a { margin: 3px 0 0; }
+  .lockpill { display: inline-flex; align-items: center; gap: 7px; margin-top: 11px; padding: 5px 11px; border-radius: 999px;
+    border: 1px solid var(--line-strong); background: var(--ground-2); color: var(--ink-2);
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
+    animation: lockDrop .45s cubic-bezier(.2,.8,.2,1) .3s both; }
+  @media (prefers-reduced-motion: reduce) {
+    .notif, .pcard, .lockpill, .cohort-row, .ph, .pfp svg, .pfp img { animation: none !important; }
+  }
   .demo-btn {
     background: transparent;
     border: 1px solid var(--line-strong);
@@ -301,6 +371,12 @@
     .cohort-row { font-size: 0.94rem; }
     .cohort { gap: 8px 14px; }
     .demo-label { font-size: 0.72rem; }
+    /* 13 phases of dots crowd the label on a phone — tighten them so the
+       stage label keeps a single line instead of wrapping into them. */
+    .demo-head { gap: 10px; }
+    .demo-label { flex: 1; min-width: 0; }
+    .dots { gap: 4px; flex: none; }
+    .dot { width: 6px; height: 6px; }
   }
 
   /* ── Tablet ───────────────────────────────────────────────────── */
@@ -740,6 +816,10 @@
     var REVEALS_PER_DAY = 2;
     var revealsLeft = REVEALS_PER_DAY;
     var unlocked = {};
+    /* The window opens once, at an hour nobody knows in advance.
+       Reveals are spendable all day right up until it does. */
+    var alertSeen = false;
+    var windowTime = "7:12 pm";
 
     function seedFromString(s) {
       var h = 0;
@@ -750,7 +830,9 @@
       return s.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
     // The brand mark, reused as the "seal" on the unopened #1 card.
-    var MARK_SVG = '<svg viewBox="0 0 120 80" width="34" height="23" fill="none">'
+    var LOCK_SVG = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">'
+      + '<rect x="4" y="10.5" width="16" height="10" rx="2.6"/><path d="M8,10.5 V7.4 a4,4 0 0,1 8,0 V10.5"/></svg>';
+    var MARK_SVG ='<svg viewBox="0 0 120 80" width="34" height="23" fill="none">'
       + '<path d="M60,18.1 A26,26 0 0,1 60,61.9 A26,26 0 0,1 60,18.1 Z" fill="#C98B8B" fill-opacity="0.30"/>'
       + '<circle cx="46" cy="40" r="26" stroke="#F5F2EF" stroke-opacity="0.92" stroke-width="4.5"/>'
       + '<circle cx="74" cy="40" r="26" stroke="#F5F2EF" stroke-opacity="0.92" stroke-width="4.5"/>'
@@ -795,6 +877,13 @@
       var seedBase = (myName.trim() || "guest").toLowerCase() + "|" + (myAge || 24) + "|" + new Date().toISOString().slice(0, 10);
       var seed = seedFromString(seedBase);
       var shuffled = seededShuffle(full, seed);
+      // Their window lands at an hour derived from the same seed, so it's
+      // theirs for the day rather than re-rolling on every render.
+      var wr = seededRandom(seed ^ 0x5f3759df);
+      var wh = 11 + Math.floor(wr() * 11);
+      var wm = Math.floor(wr() * 60);
+      windowTime = (wh > 12 ? wh - 12 : wh) + ":" + (wm < 10 ? "0" + wm : wm) + (wh >= 12 ? " pm" : " am");
+
       var ten = shuffled.slice(0, 10);
       // Entries flagged noTop still appear in the ten, just never as the
       // #1 reveal — swap the first eligible one up into the top slot.
@@ -815,7 +904,7 @@
       topRevealed = false;
     }
 
-    var PHASES = ["name","setup","upload","top","cohort","profile","window","ask","reveal","choice","match"];
+    var PHASES = ["name","prompts","setup","upload","top","cohort","profile","alert","window","ask","reveal","choice","match"];
     var phase = "name";
     var person = 0;
 
@@ -854,8 +943,14 @@
           + '</div>';
       }
       if (phase === "upload") {
-        return '<div><div class="photo-grid"><span class="ph">' + SIL("#2c3038") + '</span><span class="ph">' + SIL("#33302c") + '</span><span class="ph">' + SIL("#2c3330") + '</span></div>'
-          + '<p class="stage-caption" style="margin-top:12px">Your photos go in. AI places you in a bracket, privately. Nobody sees them yet, including your ten.</p></div>';
+        var shots = ["#2c3038", "#33302c", "#2c3330"];
+        return '<div><div class="photo-grid">'
+          + shots.map(function (h, i) {
+              return '<span class="ph" style="animation:riseIn .42s cubic-bezier(.2,.8,.2,1) both;animation-delay:' + (i * 0.09).toFixed(2) + 's">' + SIL(h) + '</span>';
+            }).join("")
+          + '</div>'
+          + '<div class="lockpill">' + LOCK_SVG + 'Locked</div>'
+          + '<p class="stage-caption" style="margin-top:11px">Your photos go in and stay in. Not even your ten can see them yet.</p></div>';
       }
       if (phase === "top") {
         var top1 = PEOPLE[0];
@@ -877,19 +972,67 @@
       }
       if (phase === "cohort") {
         var rows = PEOPLE.map(function (q, i) {
-          return '<span class="cohort-row' + (i === person ? " hot" : "") + '"><span class="cohort-rank">' + (i + 1) + '</span>' + q.name + '<span class="cohort-tag">' + q.tag + '</span></span>';
+          return '<span class="cohort-row' + (i === person ? " hot" : "") + '" style="animation:riseIn .4s cubic-bezier(.2,.8,.2,1) both;animation-delay:' + (i * 0.055).toFixed(3) + 's">'
+            + '<span class="cohort-rank">' + (i + 1) + '</span>' + q.name + '<span class="cohort-tag">' + q.tag + '</span></span>';
         }).join("");
         var hey = myName.trim() ? "Hey " + escapeName(myName.trim()) + ", " : "";
-        return '<div><div class="cohort">' + rows + '</div><p class="stage-caption" style="margin-top:12px">' + hey + 'ten matches in your bracket, ranked by shared vibe. #1 shares the most of your world.</p></div>';
+        return '<div><div class="cohort">' + rows + '</div><p class="stage-caption" style="margin-top:12px">' + hey + 'your ten for today, ranked by how much of your world they share.</p></div>';
+      }
+      if (phase === "prompts") {
+        var eg = [
+          ["The way to my heart", "Argue with me about music. Lose gracefully."],
+          ["What I'm actually like at 2am", "Awake, overthinking, pretending I'm not."],
+          ["Something I care about more than I should", "Getting the playlist right before anyone arrives."]
+        ];
+        var hob = ["indie music", "late drives", "street food", "bad puns"];
+        return '<div>'
+          + '<p class="stage-caption">Three answers and a few things you\'re into. That\'s your whole profile.</p>'
+          + eg.map(function (row, i) {
+              return '<div class="pcard" style="animation-delay:' + (0.1 + i * 0.13).toFixed(2) + 's">'
+                + '<p class="stage-q">' + row[0] + '</p><p class="stage-a">' + row[1] + '</p></div>';
+            }).join("")
+          + '<div class="chiprow" style="margin-top:13px">'
+          + hob.map(function (h, i) {
+              return '<span class="chip" style="animation:riseIn .38s cubic-bezier(.2,.8,.2,1) both;animation-delay:' + (0.5 + i * 0.07).toFixed(2) + 's">' + h + '</span>';
+            }).join("")
+          + '</div>'
+          + '<p class="stage-caption" style="margin-top:13px;color:var(--ink-3)">Filled in for you &mdash; nothing to type here.</p>'
+          + '</div>';
+      }
+      if (phase === "alert") {
+        return '<div style="text-align:center">'
+          + '<div class="notif">'
+          +   '<span class="notif-mark">' + MARK_SVG + '</span>'
+          +   '<div class="notif-copy">'
+          +     '<p class="notif-title">Your window is open</p>'
+          +     '<p class="notif-sub">One hour, starting now. Call or text &mdash; whatever you both want.</p>'
+          +   '</div>'
+          +   '<span class="notif-time">now</span>'
+          + '</div>'
+          + '<p class="stage-caption" style="margin-top:16px">' + windowTime + ' today. You didn\'t know it was coming &mdash; that\'s the point.</p>'
+          + '<p class="stage-caption" style="margin-top:6px;color:var(--ink-3)">Reveals close. From here, it\'s mutual.</p>'
+          + '</div>';
       }
       if (phase === "profile") {
         var isOpen = !!unlocked[p.id];
-        var tail = isOpen
-          ? '<p class="stage-caption reveal" style="margin-top:10px">Face unlocked. That spent one of today\'s two reveals.</p>'
-          : '<div class="choice" style="margin-top:10px"><button class="yes" id="spend-reveal"' + (revealsLeft > 0 ? '' : ' disabled')
-            + '>' + (revealsLeft > 0 ? 'Use 1 reveal &middot; see now' : 'No reveals left today') + '</button></div>'
-            + '<p class="stage-caption" style="margin-top:8px">Or talk first. If you both ask during the window, seeing each other costs nothing.</p>';
-        return '<div class="stage-voice">' + pfp(p, !isOpen) + '<div><p class="stage-name">' + p.name + ', ' + p.age + '</p><div class="chiprow">' + p.chips.map(chip).join("") + '</div>'
+        var tail;
+        if (isOpen) {
+          tail = '<p class="stage-caption reveal" style="margin-top:10px">Unlocked. That was one of your two.</p>';
+        } else if (alertSeen) {
+          // The window is open — reveals were the before-the-window move.
+          tail = '<div class="choice" style="margin-top:10px"><button class="yes" id="spend-reveal" disabled>Reveals closed &middot; window is open</button></div>'
+            + '<p class="stage-caption" style="margin-top:8px">Now you talk. If you both ask, seeing each other is free.</p>';
+        } else if (revealsLeft > 0) {
+          tail = '<div class="choice" style="margin-top:10px"><button class="yes" id="spend-reveal">Use 1 reveal &middot; see now</button></div>'
+            + '<p class="stage-caption" style="margin-top:8px">Two a day, spend them any time before your window opens. Or wait &mdash; after you talk, a mutual reveal is free.</p>';
+        } else {
+          tail = '<div class="choice" style="margin-top:10px"><button class="yes" id="spend-reveal" disabled>No reveals left today</button></div>'
+            + '<p class="stage-caption" style="margin-top:8px">Both spent. Seeing anyone else means talking first.</p>';
+        }
+        var pf = isOpen
+          ? '<span class="pfp"><span style="display:block;width:100%;height:100%;animation:unblurIn .55s cubic-bezier(.2,.8,.2,1) both">' + avatar(p) + '</span></span>'
+          : pfp(p, true);
+        return '<div class="stage-voice">' + pf + '<div><p class="stage-name">' + p.name + ', ' + p.age + '</p><div class="chiprow">' + p.chips.map(chip).join("") + '</div>'
           + '<p class="stage-q" style="margin-top:10px">' + p.q + '</p><p class="stage-a" style="font-size:1.05rem">' + p.a + '</p>' + tail + '</div></div>';
       }
       if (phase === "window") {
@@ -917,6 +1060,8 @@
       var p = PEOPLE[person];
       if (phase === "name") return "First, a little about you";
       if (phase === "setup") return "Who are you?";
+      if (phase === "prompts") return "Your profile · three answers";
+      if (phase === "alert") return windowTime + " · window opens";
       if (phase === "upload") return "You upload · placed privately";
       if (phase === "top") return "Your #1 · unwrap it";
       if (phase === "cohort") return "8:04 am · your ten arrive";
@@ -1063,7 +1208,11 @@
       if (phase === "top" && !topRevealed) return;
       if (phase === "name" && !(myName.trim() && myAge && myAge >= 18)) return;
       if (phase === "setup" && !(myGender && wantMeet)) return;
-      phase = PHASES[PHASES.indexOf(phase) + 1];
+      var next = PHASES[PHASES.indexOf(phase) + 1];
+      // One window a day — don't re-announce it for every match you walk.
+      if (next === "alert" && alertSeen) next = "window";
+      if (next === "alert") alertSeen = true;
+      phase = next;
       render();
     }
 
@@ -1071,7 +1220,7 @@
     resetBtn.addEventListener("click", function (e) {
       e.stopPropagation();
       phase = "name"; person = 0; myGender = null; wantMeet = null; myName = ""; myAge = null; topRevealed = false; PEOPLE = WOMEN;
-      revealsLeft = REVEALS_PER_DAY; unlocked = {};
+      revealsLeft = REVEALS_PER_DAY; unlocked = {}; alertSeen = false;
       render();
     });
     document.getElementById("demo").addEventListener("click", function (e) {
