@@ -832,18 +832,17 @@
     // Abstract gradient avatars, not real people, each a distinct hue.
     function avatar(p) {
       var id = "av" + p.id;
-      // Hair is drawn over the shoulders, not under them, so the long
-      // version actually reads as long instead of vanishing behind them.
-      var ink = "rgba(0,0,0,0.30)";
-      var body, hair;
-      if (p.masc) {
-        body = '<path d="M20,120 C22,91 40,81 60,81 C80,81 98,91 100,120 Z" fill="rgba(255,255,255,0.93)"/>';
-        hair = '<path d="M38,50 C38,29 82,29 82,50 C82,38 74,32 60,32 C46,32 38,38 38,50 Z" fill="' + ink + '"/>';
-      } else {
-        body = '<path d="M31,120 C33,95 45,85 60,85 C75,85 87,95 89,120 Z" fill="rgba(255,255,255,0.93)"/>';
-        hair = '<path d="M39,53 C39,28 81,28 81,53 C81,41 73,35 60,35 C47,35 39,41 39,53 Z" fill="' + ink + '"/>'
-             + '<path d="M39,52 C37,72 36,92 35,113 L46,113 C46,92 45,72 45,56 Z" fill="' + ink + '"/>'
-             + '<path d="M81,52 C83,72 84,92 85,113 L74,113 C74,92 75,72 75,56 Z" fill="' + ink + '"/>';
+      // Classic profile-icon silhouette. Both share the same head and
+      // shoulders, which is the shape that reads cleanly; the woman adds
+      // hair volume gathered at the crown and falling behind the shoulders.
+      var fig = "#ffffff";
+      var shape = '<circle cx="60" cy="45" r="21" fill="' + fig + '"/>'
+        + '<path d="M26,120 C28,94 41,84 60,84 C79,84 92,94 94,120 Z" fill="' + fig + '"/>';
+      if (!p.masc) {
+        shape = '<path d="M60,17 C74,17 84,28 84,44 C84,58 80,70 78,84 L66,84 '
+              + 'C68,70 71,58 71,46 C71,34 67,28 60,28 C53,28 49,34 49,46 '
+              + 'C49,58 52,70 54,84 L42,84 C40,70 36,58 36,44 C36,28 46,17 60,17 Z" fill="' + fig + '"/>'
+              + shape;
       }
       return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">'
         + '<defs><radialGradient id="' + id + '" cx="36%" cy="24%" r="90%">'
@@ -851,10 +850,7 @@
         + '<stop offset="100%" stop-color="' + p.hue[1] + '"/>'
         + '</radialGradient></defs>'
         + '<rect width="120" height="120" fill="url(#' + id + ')"/>'
-        + '<circle cx="60" cy="46" r="31" fill="rgba(0,0,0,0.14)"/>'
-        + '<circle cx="60" cy="50" r="20" fill="rgba(255,255,255,0.93)"/>'
-        + body
-        + hair
+        + '<g opacity="0.93">' + shape + '</g>'
         + '</svg>';
     }
     function pfp(p, sealed) {
