@@ -1,123 +1,143 @@
 # Nomo demo voiceover
 
-Written to be read aloud. Around 215 words across a 1:55 video, which leaves
-deliberate silence around the three reveals. Don't fill those gaps.
+For a screen recording of the interactive section only. Around 1:50.
 
-**Delivery:** this one has teeth. Play the drama, but dry, not shouty. The
-jokes land harder underplayed. Slow right down for the waiting section, then
-snap back when the window opens.
+Three jobs, in this order of importance:
+
+1. **Survive the first three seconds.** On LinkedIn this autoplays on mute
+   while someone is scrolling. If the opening line isn't on screen as a caption
+   and doing work immediately, nothing else in this file matters.
+2. **Match the screen.** Every line below is pinned to what's actually visible.
+   Never explain something the viewer isn't looking at.
+3. **Earn a "wait, that's clever."** Four moments do that heavy lifting: the
+   photos locking, being someone else's number one, the window opening at an
+   unknown hour, and the reveal needing both people. Those get room to land.
+
+**Delivery:** dry and confident. Underplay it. The product is about restraint,
+so a hype read fights the thing you're selling.
 
 ---
 
 ## The script
 
-**0:00** · *Demo card sitting still*
+**0:00** · *Demo card, nothing typed yet*
 
-> Swipe. Swipe. Swipe.
-> Ten thousand faces. Not one conversation.
+> This is a dating app where you never see a face.
 
-**0:08** · *Beat*
+**0:03** · *Beat. Let it sit.*
 
-> Nomo. As in, no more.
-> No more judging a book by its cover.
-> No more being one.
+> Not one. Not until you've actually spoken to them.
+> Watch.
 
-**0:18** · *Typing the name and age*
+**0:08** · *Typing the name and age*
 
-> Start with a little about you.
+> It starts with a name and an age.
 
-**0:22** · *Profile slide, prompts landing*
+**0:13** · *Profile slide, the prompt cards landing*
 
-> Your music. Your hobbies. Your habits.
+> Your profile isn't pictures.
+> It's your music. Your hobbies.
 > The thing you'd never admit on a first date.
-> That's the whole profile. No bio to agonise over.
 
-**0:34** · *Photos rise in, the lock drops*
+**0:24** · *Picking who you are and who you want*
 
-> Your photos? They go in. And the vault shuts.
+> You say who you are, and who you're looking for.
+
+**0:30** · *Photos rise in, the lock drops*
+
+> Your photos do go in.
+> And then they lock.
+> Nobody sees them. Not the app. Not your matches. Not yet.
 
 **0:42** · *The sealed box*
 
-> Every morning, the AI reads the room
-> and picks ten people who share your world.
+> Every morning, the AI reads ten people into your day.
+> Not a feed. Not infinite scroll. Ten.
 > And one of them stands out.
 
-**0:54** · *The unwrap*
+**0:54** · *Click. The box rattles and bursts open.*
+
+*(no words, let it play)*
+
+**0:58** · *The number one, revealed*
 
 > Your number one.
+> And here's the part that gets people.
+> Somewhere out there, you're somebody else's number one too.
 
-*(let the unwrap play, no words)*
+**1:08** · *The ten arrive, staggering in*
 
-**1:00** · *The reveal lands*
-
-> Here's the good part.
-> Somewhere out there, you're somebody's number one too.
-
-**1:08** · *The ten arrive*
-
-> Ten people. Ranked. That's the whole day.
-> There is no more. There's just Nomo.
+> Ten people. Ranked. That is the entire day.
+> Tomorrow you get ten more. Today, this is it.
 
 **1:18** · *A profile, face still hidden*
 
-> And now you wait.
-> All day. Not knowing when.
-> You'll check your phone.
-> You'll pretend you're not checking your phone.
+> You'll know how someone thinks at two in the morning
+> long before you know what they look like.
 
-**1:30** · *The phone, notification sliding in*
+**1:28** · *The phone, notification sliding in*
 
-> Then, out of nowhere, your window opens.
-> One hour. That's it.
-> Call, text, whatever you both want.
+> And then, at an hour nobody knows in advance,
+> not you, not them, a window opens.
 
-**1:42** · *The chat, both asking*
+**1:36** · *The window, the waveform*
 
-> And if you're on the same wavelength,
-> either of you can ask to see the other.
+> One hour. Call, or text. Whatever you both want.
+> After that it closes, and you've either used it or you haven't.
+
+**1:46** · *The chat, the "show each other" card*
+
+> If it's going well, either of you can ask to see the other.
+
+**1:51** · *Click Yes, then "still deciding" with the typing dots*
+
+*(no words, let the wait play)*
+
+**1:56** · *They say yes too*
+
 > It only happens if you both say yes.
-
-*(hold through "still deciding", no words)*
-
-**1:52** · *The reveal*
-
 > No pressure. Just permission.
 
-**1:57** · *Match screen*
+**2:00** · *The reveal opens*
+
+> And then, finally, you see each other.
+
+**2:05** · *Match screen*
 
 > Ten a day. One hour. Nobody judged at face value.
-> Nomo. No more wasting your time.
+> Nomo. As in, no more.
 > Waitlist's open at nomosingle dot com.
 
 ---
 
 ## 30-second cut
 
-For a Story or a Reel. Keep the unwrap, the window, and the reveal:
+For a Story, a Reel, or the top of the LinkedIn post if you want a teaser.
+Only the four clever bits:
 
-> Swipe, swipe, swipe. Ten thousand faces, not one conversation.
-> Nomo. As in, no more.
-> Ten matches a day, and one of them is your number one.
-> Somewhere out there, you're theirs.
-> Then a window opens. One hour. You talk.
-> And if you both ask, you finally see each other.
+> This is a dating app where you never see a face.
+> Ten matches a day, and your photos stay locked, even from them.
+> One of those ten is your number one.
+> And somewhere out there, you're theirs.
+> Then a window opens at an hour nobody knows in advance. One hour. You talk.
+> You only see each other if you both ask.
 > Nomo. Waitlist's open at nomosingle dot com.
 
 ---
 
 ## Notes
 
-- **The whole script hangs on one pun**, and it's your own brand name. *Nomo,
-  as in no more.* It's already the idea behind the logo and the repeated "No
-  more" on the page, so the video is just saying out loud what the site has
-  been implying. Land that line properly, it's the spine of the thing.
-- **"You'll pretend you're not checking your phone"** is the line people will
-  quote back to you. Give it a beat of silence after.
-- **Say "nomosingle dot com"** exactly like that, or a TTS engine reads the
-  punctuation.
-- **Recording yourself:** three takes, keep the third. The first is stiff, the
-  second overcorrects.
-- **Music:** sparse, under the voice, and no swell before the reveals. A build
-  turns it into an advert and undercuts the restraint the product is selling.
-- The word "algorithm" is deliberately absent, same as the site. "The AI reads
-  the room" does the same job without sounding like software.
+- **The first line is the whole video.** "This is a dating app where you never
+  see a face" is a claim that sounds broken, which is exactly why people stop
+  scrolling. Burn it into the first frame as a caption, not just audio.
+- **Captions are not optional.** LinkedIn autoplays muted. If the opening line
+  isn't legible on screen, the video is silent nonsense to most of the feed.
+- **Three silences are scripted in**: the unwrap, the "still deciding" wait, and
+  the final reveal. Every instinct will tell you to fill them. Don't. Watching
+  someone wait is what makes the mechanic feel real.
+- **"Reads ten people into your day"** is deliberate phrasing over "picks ten
+  matches." It's warmer and it avoids sounding like software.
+- **Say "nomosingle dot com"** exactly like that if you're using TTS.
+- **Music:** sparse, under the voice, no build. A swell before the reveal turns
+  it into an advert and kills the restraint you're arguing for.
+- The word "algorithm" never appears, same as the site.
