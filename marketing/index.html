@@ -833,53 +833,74 @@
 
     /* ── Interactive walkthrough: sealed → seen ─────────────────── */
     // Abstract gradient avatars, not real people, each a distinct hue.
-    var AV_SKIN = ["#f7d5b5", "#efc29a", "#e2ab7e", "#d09466", "#ba7d51"];
-    var AV_HAIR = ["#26190f", "#35241a", "#1c1410", "#46301f", "#2f2018"];
-    var AV_TOP  = ["#ece7e1", "#dcd3c9", "#cfd8dc", "#e6dcd2", "#d6dae3"];
+    var AV_SKIN = ["#f4d2b4", "#e9bd95", "#dda87c", "#c8935f", "#ad7a4e"];
+    var AV_HAIR = ["#20150e", "#2e1f16", "#171008", "#3d2718", "#281b12"];
+    var AV_TOP  = ["#e9e3dc", "#d7cec3", "#c8d3d8", "#e2d7cb", "#d0d5e0"];
+    var AV_EYE  = ["#4a3226", "#3a2a20", "#5a4030", "#332420", "#4a3a2a"];
     function avatar(p) {
       var id = "av" + p.id;
       var n = p.id;
       var skin = AV_SKIN[n % AV_SKIN.length];
       var hairc = AV_HAIR[(n * 3) % AV_HAIR.length];
       var garment = AV_TOP[(n * 2) % AV_TOP.length];
+      var eyec = AV_EYE[(n * 7) % AV_EYE.length];
       var v = n % 3;
-      var cap = '<path d="M36,57 C36,19 84,19 84,57 C84,45 76,40 60,40 C44,40 36,45 36,57 Z" fill="' + hairc + '"/>';
+      var shade = "rgba(0,0,0,0.13)";
+
+      // Hairline sits low on the forehead and the sides come past the ears,
+      // which is most of what separates a real head from a cartoon one.
+      var cap = '<path d="M39,56 C34,7 86,7 81,56 C81,42 74,34 60,34 C46,34 39,42 39,56 Z" fill="' + hairc + '"/>';
       var back = "", front = "";
       if (p.masc) {
-        if (v === 0) {                                  // short crop
+        if (v === 0) {
           front = cap;
-        } else if (v === 1) {                           // quiff
-          front = cap + '<path d="M42,28 C48,15 68,14 76,22 C65,19 52,23 46,32 Z" fill="' + hairc + '"/>';
-        } else {                                        // curls
+        } else if (v === 1) {
+          front = cap + '<path d="M43,26 C50,12 70,11 78,19 C66,15 53,19 47,29 Z" fill="' + hairc + '"/>';
+        } else {
           front = cap
-            + '<circle cx="44" cy="33" r="7" fill="' + hairc + '"/>'
-            + '<circle cx="54" cy="28" r="8" fill="' + hairc + '"/>'
-            + '<circle cx="66" cy="28" r="8" fill="' + hairc + '"/>'
-            + '<circle cx="76" cy="33" r="7" fill="' + hairc + '"/>';
+            + '<circle cx="45" cy="26" r="7.5" fill="' + hairc + '"/>'
+            + '<circle cx="55" cy="20" r="8.5" fill="' + hairc + '"/>'
+            + '<circle cx="66" cy="20" r="8.5" fill="' + hairc + '"/>'
+            + '<circle cx="76" cy="26" r="7.5" fill="' + hairc + '"/>';
         }
       } else {
-        if (v === 0) {                                  // long, past the shoulders
-          back = '<path d="M35,52 C35,25 85,25 85,52 L85,96 Q85,102 79,102 L41,102 Q35,102 35,96 Z" fill="' + hairc + '"/>';
+        if (v === 0) {
+          back = '<path d="M35,50 C35,20 85,20 85,50 L85,97 Q85,103 79,103 L41,103 Q35,103 35,97 Z" fill="' + hairc + '"/>';
           front = cap
-            + '<path d="M38,54 C36,72 35,88 35,102 L45,102 C45,88 44,72 44,58 Z" fill="' + hairc + '"/>'
-            + '<path d="M82,54 C84,72 85,88 85,102 L75,102 C75,88 76,72 76,58 Z" fill="' + hairc + '"/>';
-        } else if (v === 1) {                           // bob
-          back = '<path d="M36,52 C36,26 84,26 84,52 L84,74 Q84,81 77,81 L43,81 Q36,81 36,74 Z" fill="' + hairc + '"/>';
+            + '<path d="M39,54 C36,72 35,89 35,103 L46,103 C46,89 45,72 45,58 Z" fill="' + hairc + '"/>'
+            + '<path d="M81,54 C84,72 85,89 85,103 L74,103 C74,89 75,72 75,58 Z" fill="' + hairc + '"/>';
+        } else if (v === 1) {
+          back = '<path d="M36,50 C36,21 84,21 84,50 L84,76 Q84,83 77,83 L43,83 Q36,83 36,76 Z" fill="' + hairc + '"/>';
           front = cap;
-        } else {                                        // bun
-          front = '<circle cx="60" cy="19" r="10" fill="' + hairc + '"/>' + cap;
+        } else {
+          front = '<circle cx="60" cy="14" r="10" fill="' + hairc + '"/>' + cap;
         }
       }
-      var face = '<ellipse cx="38.5" cy="53" rx="3.4" ry="4.4" fill="' + skin + '"/>'
-        + '<ellipse cx="81.5" cy="53" rx="3.4" ry="4.4" fill="' + skin + '"/>'
-        + '<ellipse cx="60" cy="50" rx="21" ry="23" fill="' + skin + '"/>'
-        + '<path d="M49,42.5 Q53,39.8 57,41.5" stroke="' + hairc + '" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-opacity="0.8"/>'
-        + '<path d="M63,41.5 Q67,39.8 71,42.5" stroke="' + hairc + '" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-opacity="0.8"/>'
-        + '<ellipse cx="52.5" cy="50" rx="2.7" ry="3.3" fill="#33241d"/>'
-        + '<ellipse cx="67.5" cy="50" rx="2.7" ry="3.3" fill="#33241d"/>'
-        + '<circle cx="53.5" cy="48.8" r="0.95" fill="#ffffff" fill-opacity="0.9"/>'
-        + '<circle cx="68.5" cy="48.8" r="0.95" fill="#ffffff" fill-opacity="0.9"/>'
-        + '<path d="M55,58.5 Q60,63.5 65,58.5" stroke="#a8664f" stroke-width="2" fill="none" stroke-linecap="round"/>';
+
+      // Tapered jaw and a longer face rather than a circle.
+      var head = '<path d="M40,49 C40,32 48,25 60,25 C72,25 80,32 80,49 C80,61 76,69 70,74 '
+               + 'C66,77.5 63,79 60,79 C57,79 54,77.5 50,74 C44,69 40,61 40,49 Z" fill="' + skin + '"/>';
+      var face =
+          '<ellipse cx="39" cy="53" rx="3.2" ry="4.3" fill="' + skin + '"/>'
+        + '<ellipse cx="81" cy="53" rx="3.2" ry="4.3" fill="' + skin + '"/>'
+        + head
+        + '<ellipse cx="47.5" cy="60" rx="4.2" ry="2.7" fill="#d9705a" fill-opacity="0.18"/>'
+        + '<ellipse cx="72.5" cy="60" rx="4.2" ry="2.7" fill="#d9705a" fill-opacity="0.18"/>'
+        + '<path d="M46.6,44.6 Q51.5,41.8 56.4,44.2" stroke="' + hairc + '" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-opacity="0.85"/>'
+        + '<path d="M63.6,44.2 Q68.5,41.8 73.4,44.6" stroke="' + hairc + '" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-opacity="0.85"/>'
+        + '<ellipse cx="51.5" cy="52" rx="4.4" ry="3.1" fill="#fcfaf8"/>'
+        + '<ellipse cx="68.5" cy="52" rx="4.4" ry="3.1" fill="#fcfaf8"/>'
+        + '<circle cx="51.8" cy="52" r="2.6" fill="' + eyec + '"/>'
+        + '<circle cx="68.8" cy="52" r="2.6" fill="' + eyec + '"/>'
+        + '<circle cx="51.8" cy="52" r="1.15" fill="#17100c"/>'
+        + '<circle cx="68.8" cy="52" r="1.15" fill="#17100c"/>'
+        + '<circle cx="52.7" cy="50.9" r="0.8" fill="#ffffff" fill-opacity="0.95"/>'
+        + '<circle cx="69.7" cy="50.9" r="0.8" fill="#ffffff" fill-opacity="0.95"/>'
+        + '<path d="M47.4,50.2 Q51.5,47.6 55.6,50.2" stroke="' + hairc + '" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-opacity="0.9"/>'
+        + '<path d="M64.4,50.2 Q68.5,47.6 72.6,50.2" stroke="' + hairc + '" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-opacity="0.9"/>'
+        + '<path d="M58.8,54.5 C57.4,59.4 58.6,61.6 61.2,61.2" stroke="' + shade + '" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
+        + '<path d="M55.6,66 Q60,70.4 64.4,66 Q60,67.7 55.6,66 Z" fill="#a9634e"/>';
+
       return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">'
         + '<defs><radialGradient id="' + id + '" cx="34%" cy="22%" r="92%">'
         + '<stop offset="0%" stop-color="' + p.hue[0] + '"/>'
@@ -887,11 +908,12 @@
         + '</radialGradient></defs>'
         + '<rect width="120" height="120" fill="url(#' + id + ')"/>'
         + back
-        + '<rect x="53.5" y="64" width="13" height="22" rx="6.5" fill="' + skin + '" fill-opacity="0.86"/>'
-        + '<path d="M26,120 C28,94 42,84 60,84 C78,84 92,94 94,120 Z" fill="' + garment + '"/>'
+        + '<rect x="53.5" y="66" width="13" height="22" rx="6.5" fill="' + skin + '" fill-opacity="0.8"/>'
+        + '<path d="M26,120 C28,92 42,82 60,82 C78,82 92,92 94,120 Z" fill="' + garment + '"/>'
         + '<g class="av-head">' + face + front + '</g>'
         + '</svg>';
     }
+
     function pfp(p, sealed) {
       return '<span class="pfp' + (sealed ? " sealed" : "") + '">' + avatar(p) + '</span>';
     }
