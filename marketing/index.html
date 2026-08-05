@@ -833,73 +833,74 @@
 
     /* ── Interactive walkthrough: sealed → seen ─────────────────── */
     // Abstract gradient avatars, not real people, each a distinct hue.
-    var AV_SKIN = ["#f4d2b4", "#e9bd95", "#dda87c", "#c8935f", "#ad7a4e"];
-    var AV_HAIR = ["#20150e", "#2e1f16", "#171008", "#3d2718", "#281b12"];
-    var AV_TOP  = ["#e9e3dc", "#d7cec3", "#c8d3d8", "#e2d7cb", "#d0d5e0"];
-    var AV_EYE  = ["#4a3226", "#3a2a20", "#5a4030", "#332420", "#4a3a2a"];
+    /* Exactly two avatars: one woman, one man. Hair length, jaw, shoulder
+       width and top colour all point the same way, so gender reads at a
+       glance even at 84px behind a blur. Only the background hue varies. */
+    var AV_SKIN  = "#f0cda8";
+    var AV_HAIR  = "#241a12";
+    var AV_TOP_F = "#e7dcd0";
+    var AV_TOP_M = "#c6d0da";
     function avatar(p) {
       var id = "av" + p.id;
-      var n = p.id;
-      var skin = AV_SKIN[n % AV_SKIN.length];
-      var hairc = AV_HAIR[(n * 3) % AV_HAIR.length];
-      var garment = AV_TOP[(n * 2) % AV_TOP.length];
-      var eyec = AV_EYE[(n * 7) % AV_EYE.length];
-      var v = n % 3;
-      var shade = "rgba(0,0,0,0.13)";
+      var skin = AV_SKIN, hairc = AV_HAIR;
 
-      // Hairline sits low on the forehead and the sides come past the ears,
-      // which is most of what separates a real head from a cartoon one.
-      var cap = '<path d="M39,56 C34,7 86,7 81,56 C81,42 74,34 60,34 C46,34 39,42 39,56 Z" fill="' + hairc + '"/>';
-      var back = "", front = "";
+      var head = p.masc
+        ? '<path d="M39,48 C39,31 47,24 60,24 C73,24 81,31 81,48 C81,60 78,68 73,73 '
+          + 'C69,77 64,78.5 60,78.5 C56,78.5 51,77 47,73 C42,68 39,60 39,48 Z" fill="' + skin + '"/>'
+        : '<path d="M41,49 C41,32 48,25 60,25 C72,25 79,32 79,49 C79,62 75,70 69,75 '
+          + 'C65,78 63,79.5 60,79.5 C57,79.5 55,78 51,75 C45,70 41,62 41,49 Z" fill="' + skin + '"/>';
+
+      var hair, garment, shoulders, extras = "";
       if (p.masc) {
-        if (v === 0) {
-          front = cap;
-        } else if (v === 1) {
-          front = cap + '<path d="M43,26 C50,12 70,11 78,19 C66,15 53,19 47,29 Z" fill="' + hairc + '"/>';
-        } else {
-          front = cap
-            + '<circle cx="45" cy="26" r="7.5" fill="' + hairc + '"/>'
-            + '<circle cx="55" cy="20" r="8.5" fill="' + hairc + '"/>'
-            + '<circle cx="66" cy="20" r="8.5" fill="' + hairc + '"/>'
-            + '<circle cx="76" cy="26" r="7.5" fill="' + hairc + '"/>';
-        }
+        garment = AV_TOP_M;
+        shoulders = 'M22,120 C24,92 40,82 60,82 C80,82 96,92 98,120 Z';
+        // short crop with sideburns down past the ears
+        hair = '<path d="M38,57 C33,10 87,10 82,57 C82,41 74,33 60,33 C46,33 38,41 38,57 Z" fill="' + hairc + '"/>';
+        // stubble along the jaw
+        extras = '<path d="M44,58 C45,69 51,76 60,76 C69,76 75,69 76,58 C73,70 68,73 60,73 '
+               + 'C52,73 47,70 44,58 Z" fill="#2b1c12" fill-opacity="0.14"/>';
       } else {
-        if (v === 0) {
-          back = '<path d="M35,50 C35,20 85,20 85,50 L85,97 Q85,103 79,103 L41,103 Q35,103 35,97 Z" fill="' + hairc + '"/>';
-          front = cap
-            + '<path d="M39,54 C36,72 35,89 35,103 L46,103 C46,89 45,72 45,58 Z" fill="' + hairc + '"/>'
-            + '<path d="M81,54 C84,72 85,89 85,103 L74,103 C74,89 75,72 75,58 Z" fill="' + hairc + '"/>';
-        } else if (v === 1) {
-          back = '<path d="M36,50 C36,21 84,21 84,50 L84,76 Q84,83 77,83 L43,83 Q36,83 36,76 Z" fill="' + hairc + '"/>';
-          front = cap;
-        } else {
-          front = '<circle cx="60" cy="14" r="10" fill="' + hairc + '"/>' + cap;
-        }
+        garment = AV_TOP_F;
+        shoulders = 'M31,120 C33,94 45,84 60,84 C75,84 87,94 89,120 Z';
+        // long hair: full panel behind, plus strands down over the shoulders
+        hair = '<path d="M39,54 C36,74 35,92 35,106 L46,106 C46,92 45,74 45,58 Z" fill="' + hairc + '"/>'
+             + '<path d="M81,54 C84,74 85,92 85,106 L74,106 C74,92 75,74 75,58 Z" fill="' + hairc + '"/>';
+        extras = '';
       }
 
-      // Tapered jaw and a longer face rather than a circle.
-      var head = '<path d="M40,49 C40,32 48,25 60,25 C72,25 80,32 80,49 C80,61 76,69 70,74 '
-               + 'C66,77.5 63,79 60,79 C57,79 54,77.5 50,74 C44,69 40,61 40,49 Z" fill="' + skin + '"/>';
+      var backHair = p.masc ? ""
+        : '<path d="M35,50 C35,17 85,17 85,50 L85,100 Q85,106 79,106 L41,106 Q35,106 35,100 Z" fill="' + hairc + '"/>';
+      var frontCap = p.masc ? ""
+        : '<path d="M39,56 C34,10 86,10 81,56 C81,42 74,34 60,34 C46,34 39,42 39,56 Z" fill="' + hairc + '"/>';
+
       var face =
           '<ellipse cx="39" cy="53" rx="3.2" ry="4.3" fill="' + skin + '"/>'
         + '<ellipse cx="81" cy="53" rx="3.2" ry="4.3" fill="' + skin + '"/>'
         + head
-        + '<ellipse cx="47.5" cy="60" rx="4.2" ry="2.7" fill="#d9705a" fill-opacity="0.18"/>'
-        + '<ellipse cx="72.5" cy="60" rx="4.2" ry="2.7" fill="#d9705a" fill-opacity="0.18"/>'
-        + '<path d="M46.6,44.6 Q51.5,41.8 56.4,44.2" stroke="' + hairc + '" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-opacity="0.85"/>'
-        + '<path d="M63.6,44.2 Q68.5,41.8 73.4,44.6" stroke="' + hairc + '" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-opacity="0.85"/>'
+        + extras
+        + '<ellipse cx="60" cy="38" rx="13" ry="7" fill="#ffffff" fill-opacity="0.10"/>'
+        + '<ellipse cx="49" cy="56" rx="5" ry="3" fill="#ffffff" fill-opacity="0.12"/>'
+        + '<ellipse cx="71" cy="56" rx="5" ry="3" fill="#ffffff" fill-opacity="0.12"/>'
+        + '<ellipse cx="47.5" cy="60" rx="4.2" ry="2.7" fill="#d9705a" fill-opacity="0.16"/>'
+        + '<ellipse cx="72.5" cy="60" rx="4.2" ry="2.7" fill="#d9705a" fill-opacity="0.16"/>'
+        + '<path d="M46.6,44.6 Q51.5,41.8 56.4,44.2" stroke="' + hairc + '" stroke-width="'
+        + (p.masc ? "2.2" : "1.6") + '" fill="none" stroke-linecap="round" stroke-opacity="0.9"/>'
+        + '<path d="M63.6,44.2 Q68.5,41.8 73.4,44.6" stroke="' + hairc + '" stroke-width="'
+        + (p.masc ? "2.2" : "1.6") + '" fill="none" stroke-linecap="round" stroke-opacity="0.9"/>'
         + '<ellipse cx="51.5" cy="52" rx="4.4" ry="3.1" fill="#fcfaf8"/>'
         + '<ellipse cx="68.5" cy="52" rx="4.4" ry="3.1" fill="#fcfaf8"/>'
-        + '<circle cx="51.8" cy="52" r="2.6" fill="' + eyec + '"/>'
-        + '<circle cx="68.8" cy="52" r="2.6" fill="' + eyec + '"/>'
+        + '<circle cx="51.8" cy="52" r="2.6" fill="#4a3226"/>'
+        + '<circle cx="68.8" cy="52" r="2.6" fill="#4a3226"/>'
         + '<circle cx="51.8" cy="52" r="1.15" fill="#17100c"/>'
         + '<circle cx="68.8" cy="52" r="1.15" fill="#17100c"/>'
         + '<circle cx="52.7" cy="50.9" r="0.8" fill="#ffffff" fill-opacity="0.95"/>'
         + '<circle cx="69.7" cy="50.9" r="0.8" fill="#ffffff" fill-opacity="0.95"/>'
-        + '<path d="M47.4,50.2 Q51.5,47.6 55.6,50.2" stroke="' + hairc + '" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-opacity="0.9"/>'
-        + '<path d="M64.4,50.2 Q68.5,47.6 72.6,50.2" stroke="' + hairc + '" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-opacity="0.9"/>'
-        + '<path d="M58.8,54.5 C57.4,59.4 58.6,61.6 61.2,61.2" stroke="' + shade + '" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
-        + '<path d="M55.6,66 Q60,70.4 64.4,66 Q60,67.7 55.6,66 Z" fill="#a9634e"/>';
+        + '<path d="M47.0,50.4 Q51.5,47.2 56.0,50.4" stroke="' + hairc + '" stroke-width="' + (p.masc ? "1.5" : "2") + '" fill="none" stroke-linecap="round"/>'
+        + '<path d="M64.0,50.4 Q68.5,47.2 73.0,50.4" stroke="' + hairc + '" stroke-width="' + (p.masc ? "1.5" : "2") + '" fill="none" stroke-linecap="round"/>'
+
+        + '<path d="M58.8,54.5 C57.4,59.4 58.6,61.6 61.2,61.2" stroke="rgba(0,0,0,0.14)" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
+        + '<path d="M55.2,65.6 Q57.6,64.4 60,65.2 Q62.4,64.4 64.8,65.6 Q60,70.8 55.2,65.6 Z" fill="#b56a54"/>'
+        + '<path d="M56.4,66.6 Q60,68.4 63.6,66.6" stroke="#8f4f3d" stroke-width="0.8" fill="none" stroke-opacity="0.5" stroke-linecap="round"/>';
 
       return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">'
         + '<defs><radialGradient id="' + id + '" cx="34%" cy="22%" r="92%">'
@@ -907,10 +908,11 @@
         + '<stop offset="100%" stop-color="' + p.hue[1] + '"/>'
         + '</radialGradient></defs>'
         + '<rect width="120" height="120" fill="url(#' + id + ')"/>'
-        + back
+        + backHair
         + '<rect x="53.5" y="66" width="13" height="22" rx="6.5" fill="' + skin + '" fill-opacity="0.8"/>'
-        + '<path d="M26,120 C28,92 42,82 60,82 C78,82 92,92 94,120 Z" fill="' + garment + '"/>'
-        + '<g class="av-head">' + face + front + '</g>'
+        + '<path d="' + shoulders + '" fill="' + garment + '"/>'
+        + '<g class="av-head">' + face + frontCap + hair
+        + '<path d="M48,30 Q60,25 72,30" stroke="#ffffff" stroke-width="2.2" fill="none" stroke-opacity="0.13" stroke-linecap="round"/>' + '</g>'
         + '</svg>';
     }
 
