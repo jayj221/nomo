@@ -295,11 +295,7 @@
 
   /* The opening question carries the whole slide, so it gets display
      weight instead of body-copy weight, and the "#1" is the hook. */
-  .stage-lede { font-size: 1.62rem; font-weight: 700; letter-spacing: -0.028em;
-    line-height: 1.16; color: var(--ink); text-wrap: balance; margin: 0; }
-  .stage-lede .hot { color: #ffab97; }
-  .lede-rule { height: 1px; margin: 16px 0 2px;
-    background: linear-gradient(90deg, rgba(255,214,196,0.26), rgba(255,214,196,0)); }
+  h2 .hot { color: #ffab97; }
 
   /* Treasure open: it rattles, swells, bursts, then the prize springs out.
      Nothing opens on its own, which is the anticipation. */
@@ -415,23 +411,12 @@
     font-family: var(--mono); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.17em;
     text-transform: uppercase; color: rgba(255,240,232,0.88);
     animation: riseIn .4s cubic-bezier(.2,.8,.2,1) .52s both; }
-  .introwrap { position: relative; overflow: hidden; text-align: center; padding: 4px 0; }
+  .introwrap { text-align: center; padding: 4px 0; }
   .intro-logo { animation: introMark .7s cubic-bezier(.2,.8,.2,1) both; }
   .intro-logo svg { width: min(230px, 74%); height: auto; display: block; margin: 0 auto; }
   .intro-tag { margin: 14px 0 0; font-size: 0.98rem; color: var(--ink-2);
     animation: riseIn .5s ease-out .2s both; }
   @keyframes introMark { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: none; } }
-  /* Parked out of frame. Rolls down over the logo, then away, on Tap to start. */
-  .shutter { position: absolute; left: -40px; right: -40px; top: -40px; bottom: -40px;
-    background: repeating-linear-gradient(180deg,
-      #1b1721 0px, #1b1721 5px, #131019 5px, #131019 11px);
-    border-bottom: 2px solid rgba(255,214,196,0.34);
-    box-shadow: 0 14px 28px -10px rgba(0,0,0,0.75);
-    transform: translateY(-108%); pointer-events: none; }
-  .shutter-grip { position: absolute; left: 50%; bottom: 7px; width: 46px; height: 3px;
-    margin-left: -23px; border-radius: 2px; background: rgba(255,214,196,0.42); }
-  .introwrap.closing .shutter { animation: shutterDown .42s cubic-bezier(.5,0,.3,1) both; }
-  @keyframes shutterDown { from { transform: translateY(-108%); } to { transform: translateY(0); } }
 
   /* The vault: photos land, then it shuts over them. */
   .vault { position: relative; display: inline-block; padding: 14px; border-radius: 16px;
@@ -621,7 +606,7 @@
     <!-- INTERACTIVE DEMO -->
     <section class="fx demo-section">
       <span class="badge-interactive"><span class="pulse-dot"></span>Interactive</span>
-      <h2 style="margin-top:16px">See exactly how it works. <span class="tap-through">Tap through it.</span></h2>
+      <h2 style="margin-top:16px">Curious who your <span class="hot">#1</span> would be? <span class="tap-through">Tap through it.</span></h2>
       <div class="demo" id="demo">
         <div class="demo-head">
           <span class="demo-label" id="demo-stagelabel">Anonymous</span>
@@ -1122,14 +1107,11 @@
           + '<div class="choice" style="justify-content:center;margin-top:18px">'
           +   '<button class="yes" id="intro-start">Tap to start</button>'
           + '</div>'
-          + '<div class="shutter" aria-hidden="true"><span class="shutter-grip"></span></div>'
           + '</div>';
       }
       if (phase === "name") {
         var inputStyle = "width:100%;padding:12px 14px;font:inherit;font-size:1rem;background:var(--ground-2);border:1px solid var(--line-strong);border-radius:8px;color:var(--ink)";
         return '<div>'
-          + '<p class="stage-lede">Curious who your <span class="hot">#1</span> would be?</p>'
-          + '<div class="lede-rule"></div>'
           + '<p class="setup-q first">Your name</p>'
           + '<input id="name-input" type="text" maxlength="24" placeholder="First name" autocomplete="off" value="' + escapeName(myName) + '" style="' + inputStyle + '">'
           + '<p class="setup-q">Your age</p>'
@@ -1397,10 +1379,7 @@
       var introStart = document.getElementById("intro-start");
       if (introStart) introStart.addEventListener("click", function (e) {
         e.stopPropagation();
-        if (reduce) { advance(); return; }
-        var wrap = document.querySelector(".introwrap");
-        if (wrap) wrap.classList.add("closing");
-        setTimeout(advance, 430);        // shutter lands, then the demo begins
+        advance();
       });
 
       var topReveal = document.getElementById("top-reveal");
