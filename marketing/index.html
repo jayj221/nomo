@@ -415,6 +415,30 @@
     font-family: var(--mono); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.17em;
     text-transform: uppercase; color: rgba(255,240,232,0.88);
     animation: riseIn .4s cubic-bezier(.2,.8,.2,1) .52s both; }
+  /* The vault: photos land, then it shuts over them. */
+  .vault { position: relative; display: inline-block; padding: 14px; border-radius: 16px;
+    border: 1px solid var(--line-strong); background: var(--ground-2); }
+  .vault-shots { display: flex; gap: 9px; }
+  .vault-seal { position: absolute; inset: 0; border-radius: 16px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px;
+    background: rgba(12,10,15,0.74); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
+    border: 1px solid rgba(255,214,196,0.24);
+    animation: sealShut .5s cubic-bezier(.2,.9,.2,1) .85s both; }
+  .vault-lock { color: rgba(255,240,232,0.92); display: block;
+    animation: lockSnap .55s cubic-bezier(.2,.9,.2,1) 1.05s both; }
+  .vault-word { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(255,238,230,0.78);
+    animation: riseIn .4s ease-out 1.3s both; }
+  @keyframes sealShut {
+    0% { opacity: 0; transform: scale(1.18); }
+    62% { opacity: 1; transform: scale(0.975); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes lockSnap {
+    0% { opacity: 0; transform: translateY(-15px) scale(0.55); }
+    58% { opacity: 1; transform: translateY(2px) scale(1.14); }
+    100% { opacity: 1; transform: none; }
+  }
   .seelist { margin-top: 14px; border-top: 1px solid var(--line); }
   .seerow { display: flex; align-items: center; gap: 11px; padding: 9px 0;
     border-bottom: 1px solid var(--line); font-size: 0.95rem; }
@@ -949,6 +973,8 @@
     // The brand mark, reused as the "seal" on the unopened #1 card.
     var NOTE_SVG = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
       + '<path d="M9 18V5l10-2v13"/><circle cx="6.4" cy="18" r="2.6"/><circle cx="16.4" cy="16" r="2.6"/></svg>';
+    var LOCK_BIG = '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'
+      + '<rect x="4" y="10.5" width="16" height="10.5" rx="2.6"/><path d="M8,10.5 V7.4 a4,4 0 0,1 8,0 V10.5"/></svg>';
     var CROSS_SVG = '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M6,6 L18,18 M18,6 L6,18"/></svg>';
     var TICK_SVG  = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5,13 L10,18 L19,7"/></svg>';
     var LOCK_SVG ='<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">'
@@ -1087,29 +1113,23 @@
       }
       if (phase === "upload") {
         var shots = ["#2c3038", "#33302c", "#2c3330"];
-        // The obvious question here is "so who can actually see them?".
-        // Answer it outright instead of just asserting they're private.
-        var seers = [
-          [0, "Nomo itself", "never"],
-          [0, "Your ten", "not yet"],
-          [1, "One person", "if you both ask"]
-        ];
-        return '<div><div class="photo-grid" style="display:flex;gap:8px;align-items:flex-start">'
-          + shots.map(function (h, i) {
-              return '<span class="ph" style="animation:riseIn .42s cubic-bezier(.2,.8,.2,1) both;animation-delay:' + (i * 0.09).toFixed(2) + 's">' + SIL(h) + '</span>';
-            }).join("")
-          + '<span class="lockpill" style="margin-top:0;align-self:center">' + LOCK_SVG + 'Locked</span>'
+        // Show the thing happening rather than describing it: the photos
+        // land, then a vault shuts over them and the lock snaps closed.
+        return '<div style="text-align:center">'
+          + '<div class="vault">'
+          +   '<div class="vault-shots">'
+          +     shots.map(function (h, i) {
+                  return '<span class="ph" style="animation:riseIn .42s cubic-bezier(.2,.8,.2,1) both;animation-delay:' + (i * 0.11).toFixed(2) + 's">' + SIL(h) + '</span>';
+                }).join("")
+          +   '</div>'
+          +   '<div class="vault-seal">'
+          +     '<span class="vault-lock">' + LOCK_BIG + '</span>'
+          +     '<span class="vault-word">Locked</span>'
+          +   '</div>'
           + '</div>'
-          + '<p class="stage-q" style="margin-top:15px">Who can see your photos</p>'
-          + '<div class="seelist" style="margin-top:8px">'
-          + seers.map(function (r, i) {
-              return '<div class="seerow" style="animation:riseIn .4s cubic-bezier(.2,.8,.2,1) both;animation-delay:' + (0.34 + i * 0.11).toFixed(2) + 's">'
-                + '<span class="seemark ' + (r[0] ? 'yes' : 'no') + '">' + (r[0] ? TICK_SVG : CROSS_SVG) + '</span>'
-                + '<span class="seename">' + r[1] + '</span>'
-                + '<span class="seewhen">' + r[2] + '</span>'
-                + '</div>';
-            }).join("")
-          + '</div></div>';
+          + '<p class="stage-caption" style="margin-top:14px">Nobody sees them. Not us, not your ten.</p>'
+          + '<p class="stage-caption reveal" style="margin-top:4px">Not until you both ask.</p>'
+          + '</div>';
       }
       if (phase === "top") {
         var top1 = PEOPLE[0];
