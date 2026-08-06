@@ -415,6 +415,28 @@
     font-family: var(--mono); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.17em;
     text-transform: uppercase; color: rgba(255,240,232,0.88);
     animation: riseIn .4s cubic-bezier(.2,.8,.2,1) .52s both; }
+  .shutterwrap { position: relative; overflow: hidden; }
+  .shutter { position: absolute; left: -30px; right: -30px; top: -30px; bottom: -30px;
+    background: repeating-linear-gradient(180deg,
+      #1b1721 0px, #1b1721 5px, #131019 5px, #131019 11px);
+    border-bottom: 2px solid rgba(255,214,196,0.34);
+    box-shadow: 0 12px 26px -10px rgba(0,0,0,0.7);
+    animation: shutterUp 1s cubic-bezier(.72,0,.18,1) .25s both; }
+  .shutter-grip { position: absolute; left: 50%; bottom: 7px; width: 46px; height: 3px;
+    margin-left: -23px; border-radius: 2px; background: rgba(255,214,196,0.40); }
+  @keyframes shutterUp {
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(-104%); }
+  }
+  .intro-mark { display: inline-block; animation: introMark .7s cubic-bezier(.2,.8,.2,1) .55s both; }
+  .intro-mark svg { width: 104px; height: auto; display: block; }
+  .intro-word { margin: 16px 0 0; font-family: var(--mono); font-size: 0.92rem;
+    letter-spacing: 0.44em; text-transform: uppercase; color: var(--ink);
+    animation: riseIn .5s ease-out .78s both; }
+  .intro-tag { margin: 9px 0 0; font-size: 0.98rem; color: var(--ink-2);
+    animation: riseIn .5s ease-out .92s both; }
+  @keyframes introMark { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: none; } }
+
   /* The vault: photos land, then it shuts over them. */
   .vault { position: relative; display: inline-block; padding: 14px; border-radius: 16px;
     border: 1px solid var(--line-strong); background: var(--ground-2); }
@@ -1061,8 +1083,8 @@
       topRevealed = false;
     }
 
-    var PHASES = ["name","prompts","setup","upload","top","cohort","profile","alert","window","ask","reveal","choice","match"];
-    var phase = "name";
+    var PHASES = ["intro","name","prompts","setup","upload","top","cohort","profile","alert","window","ask","reveal","choice","match"];
+    var phase = "intro";
     var person = 0;
 
     var stageEl = document.getElementById("demo-stage");
@@ -1081,6 +1103,18 @@
 
     function stageHTML() {
       var p = PEOPLE[person];
+      if (phase === "intro") {
+        // A roller shutter lifts off the logo. Sets the tone for a product
+        // that is entirely about things being closed until they open.
+        return '<div class="shutterwrap"><div style="text-align:center;padding:6px 0">'
+          + '<div class="intro-mark">' + MARK_SVG + '</div>'
+          + '<p class="intro-word">Nomo</p>'
+          + '<p class="intro-tag">Ten a day. No faces, not yet.</p>'
+          + '<div class="choice" style="justify-content:center;margin-top:18px">'
+          +   '<button class="yes" id="intro-start">Tap to start</button>'
+          + '</div>'
+          + '</div><div class="shutter"><span class="shutter-grip"></span></div></div>';
+      }
       if (phase === "name") {
         var inputStyle = "width:100%;padding:12px 14px;font:inherit;font-size:1rem;background:var(--ground-2);border:1px solid var(--line-strong);border-radius:8px;color:var(--ink)";
         return '<div>'
@@ -1259,6 +1293,7 @@
 
     function labelText() {
       var p = PEOPLE[person];
+      if (phase === "intro") return "Nomo · interactive";
       if (phase === "name") return "First, a little about you";
       if (phase === "setup") return "Who are you?";
       if (phase === "prompts") return "Your profile · what goes in it";
@@ -1287,7 +1322,7 @@
 
       var ready = !!(myGender && wantMeet);
       var nameReady = !!myName.trim() && !!myAge && myAge >= 18;
-      if (phase === "choice" || phase === "ask" || phase === "top" || (phase === "reveal" && !revealOpened)) {
+      if (phase === "intro" || phase === "choice" || phase === "ask" || phase === "top" || (phase === "reveal" && !revealOpened)) {
         nextBtn.style.display = "none";
       } else if (phase === "match") {
         nextBtn.style.display = ""; nextBtn.textContent = "That’s the whole idea";
@@ -1315,7 +1350,8 @@
         if (!hint) return;
         if (phase === "match") { hint.style.display = "none"; return; }
         hint.style.display = "";
-        hint.textContent = phase === "ask" ? (askStage === "waiting" ? "Waiting on her…" : "Your call. Both have to say yes ↑")
+        hint.textContent = phase === "intro" ? "Tap to begin \u2191"
+          : phase === "ask" ? (askStage === "waiting" ? "Waiting on her…" : "Your call. Both have to say yes ↑")
           : (phase === "reveal" && !revealOpened) ? (revealOpening ? "Opening…" : "Tap to open it ↑")
           : phase === "choice" ? "Make your choice ↑"
           : phase === "top" ? (topOpening ? "Opening…" : topRevealed ? "Now see the rest of your ten ↑" : "Tap the button to open it ↑")
@@ -1346,6 +1382,9 @@
         });
         ageInput.addEventListener("click", function (e) { e.stopPropagation(); });
       }
+
+      var introStart = document.getElementById("intro-start");
+      if (introStart) introStart.addEventListener("click", function (e) { e.stopPropagation(); advance(); });
 
       var topReveal = document.getElementById("top-reveal");
       if (topReveal) topReveal.addEventListener("click", function (e) {
@@ -1466,7 +1505,7 @@
     if (backBtn) backBtn.addEventListener("click", function (e) { e.stopPropagation(); goBack(); });
     resetBtn.addEventListener("click", function (e) {
       e.stopPropagation();
-      phase = "name"; person = 0; myGender = null; wantMeet = null; myName = ""; myAge = null; topRevealed = false; topOpening = false; PEOPLE = WOMEN;
+      phase = "intro"; person = 0; myGender = null; wantMeet = null; myName = ""; myAge = null; topRevealed = false; topOpening = false; PEOPLE = WOMEN;
       alertSeen = false; askStage = "ask"; revealOpened = false; revealOpening = false;
       render();
     });
