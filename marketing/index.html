@@ -1117,8 +1117,8 @@
           +     '<span class="vault-word">Locked</span>'
           +   '</div>'
           + '</div>'
-          + '<p class="stage-caption" style="margin-top:14px">No person sees them. Not your ten, not us.</p>'
-          + '<p class="stage-caption reveal" style="margin-top:4px">Not until you both ask.</p>'
+          + '<p class="stage-caption" style="margin-top:14px">The AI reads it once to set your bracket. Then it locks.</p>'
+          + '<p class="stage-caption reveal" style="margin-top:4px">No human sees it until you both ask.</p>'
           + '</div>';
       }
       if (phase === "top") {
@@ -1263,7 +1263,7 @@
       if (phase === "setup") return "Who are you?";
       if (phase === "prompts") return "Your profile · what goes in it";
       if (phase === "alert") return windowTime + " · window opens";
-      if (phase === "upload") return "You upload · placed privately";
+      if (phase === "upload") return "You upload · read once, then locked";
       if (phase === "top") return "Your #1 · unwrap it";
       if (phase === "cohort") return "8:04 am · your ten arrive";
       if (phase === "profile") return "#" + (person + 1) + " · " + p.name + " · no photo yet";

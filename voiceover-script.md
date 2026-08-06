@@ -45,9 +45,9 @@ so a hype read fights the thing you're selling.
 
 **0:30** · *Photos rise in, the lock drops*
 
-> Your photos do go in.
-> And then they lock.
-> Nobody sees them. Not the app. Not your matches. Not yet.
+> Your photo goes in, and the AI reads it once to set your bracket.
+> Then it locks.
+> No human sees it. Not your matches, not us. Until you both ask.
 
 **0:42** · *The sealed box*
 
@@ -116,7 +116,7 @@ For a Story, a Reel, or the top of the LinkedIn post if you want a teaser.
 Only the four clever bits:
 
 > This is a dating app where you never see a face.
-> Ten matches a day, and your photos stay locked, even from them.
+> Ten matches a day. Your photo sets your bracket, then it locks.
 > One of those ten is your number one.
 > And somewhere out there, you're theirs.
 > Then a window opens at an hour nobody knows in advance. One hour. You talk.
