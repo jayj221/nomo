@@ -38,3 +38,14 @@ next-env.d.ts
 # Planning docs & prototype — kept on disk, out of the repo
 /docs/
 /prototype/
+
+# Research repo, tracked separately at jayj221/attention-asymmetry
+data_collection/
+
+# Local session config
+.claude/
+
+# Load-testing script: writes synthetic rows to the waitlist table. Stays on
+# disk. This repo is public and a fake-signup generator reads badly out of
+# context, whatever it was actually used for.
+seed-waitlist.py
