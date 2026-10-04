@@ -6,9 +6,10 @@ type Variant = "primary" | "secondary" | "ghost" | "danger";
 
 const styles: Record<Variant, string> = {
   primary:
-    "bg-white text-black hover:bg-white/90 disabled:bg-white/30 disabled:text-black/50",
+    "bg-[linear-gradient(135deg,#e6c6a4,#cd9c6d_55%,#b87f52)] text-[#241009] font-semibold " +
+    "hover:opacity-90 disabled:opacity-40",
   secondary:
-    "bg-transparent text-fg border border-white/10 hover:border-white/25 disabled:opacity-40",
+    "bg-[rgba(255,240,230,0.055)] text-fg border border-line hover:border-line-strong disabled:opacity-40",
   ghost: "bg-transparent text-secondary hover:text-fg disabled:opacity-40",
   danger: "bg-transparent text-bad border border-bad/40 hover:border-bad",
 };

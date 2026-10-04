@@ -4,43 +4,80 @@
 
 :root {
   color-scheme: dark;
+  --void: #070608;
+  --deep: #1c100c;
+  --line: rgba(255, 214, 196, 0.14);
+  --line-strong: rgba(255, 214, 196, 0.27);
+  --ink: rgba(255, 246, 240, 0.95);
+  --ink-2: rgba(255, 240, 232, 0.68);
+  --ink-3: rgba(255, 236, 226, 0.42);
 }
 
 html,
 body {
-  background: #0a0a0a;
-  color: rgba(255, 255, 255, 0.85);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--void);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Prompt answers feel personal, not like form fields */
+/* Anything a person says or feels. Never interface copy. */
 .answer-text {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   font-style: italic;
 }
 
-/* No gradients, no blur, no glow. Flat, cold, clinical. */
-* {
-  box-shadow: none !important;
+/* Anything the system says: timestamps, counters, status. */
+.system-label {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Raised surfaces sit above the page rather than in it. */
+.surface {
+  background: linear-gradient(
+    145deg,
+    rgba(32, 22, 17, 0.82),
+    rgba(12, 8, 7, 0.88)
+  );
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 
 input,
 textarea,
 select {
-  background: #111111;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 240, 230, 0.04);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--ink);
   outline: none;
+  transition: border-color 0.2s ease;
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-  border-color: rgba(255, 255, 255, 0.25);
+  border-color: var(--line-strong);
 }
 
 ::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--ink-3);
+}
+
+/* Entrances only. Nothing loops, nothing bounces. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

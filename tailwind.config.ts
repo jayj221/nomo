@@ -9,27 +9,55 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: "#0a0a0a",
-        card: "#111111",
-        line: "rgba(255,255,255,0.08)",
-        fg: "rgba(255,255,255,0.85)",
-        secondary: "rgba(255,255,255,0.4)",
-        faint: "rgba(255,255,255,0.25)",
-        good: "#1D9E75",
-        bad: "#E24B4A",
+        // semantic names the screens already use, repointed at the brand
+        bg: "#070608",
+        card: "#1c100c",
+        line: "rgba(255,214,190,0.14)",
+        "line-strong": "rgba(255,214,190,0.27)",
+        fg: "rgba(255,246,240,0.95)",
+        secondary: "rgba(255,240,232,0.68)",
+        faint: "rgba(255,236,226,0.42)",
+        // `good` is the reveal green and is EARNED: it may only appear at the
+        // moment two people connect. Never a success toast, never an icon.
+        good: "#1fae82",
+        bad: "#d4483b",
+        // brand ramp, for the few places that need a specific warm tone
+        rust: "#5a2617",
+        amber: "#8f4c27",
+        sand: "#b8794b",
+        gold: "#d8a874",
       },
       borderRadius: {
-        card: "10px",
-        btn: "6px",
+        card: "16px",
+        btn: "12px",
       },
       fontFamily: {
+        // three roles, never mixed: sans is interface, serif is what a person
+        // says or feels, mono is what the system says
         sans: [
           "-apple-system",
           "BlinkMacSystemFont",
           "'Segoe UI'",
+          "Roboto",
           "sans-serif",
         ],
-        serif: ["Georgia", "'Times New Roman'", "serif"],
+        serif: [
+          "'Iowan Old Style'",
+          "'Palatino Linotype'",
+          "Palatino",
+          "Georgia",
+          "serif",
+        ],
+        mono: ["ui-monospace", "'SF Mono'", "Menlo", "Consolas", "monospace"],
+      },
+      keyframes: {
+        rise: {
+          from: { opacity: "0", transform: "translateY(12px)" },
+          to: { opacity: "1", transform: "none" },
+        },
+      },
+      animation: {
+        rise: "rise 0.5s cubic-bezier(.2,.8,.2,1) both",
       },
     },
   },
