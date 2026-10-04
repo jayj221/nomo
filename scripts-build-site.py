@@ -37,6 +37,10 @@ HEAD = '''<!doctype html>
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://nomosingle.com/">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=clash-display@500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>html,body{{margin:0;padding:0;background:#0a0b0d}}</style>
 </head>
 <body>
