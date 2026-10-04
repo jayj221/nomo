@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(.2, .9, .3, 1.2)",
+        "createdAt": "2026-09-21T18:29:58.515Z",
+        "reason": "user confirmed: the treasurePop reveal overshoot is the requested unboxing/gift feel on the demo's #1 and mutual photo reveal"
+      }
+    ]
+  }
+}

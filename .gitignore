@@ -49,3 +49,6 @@ data_collection/
 # disk. This repo is public and a fake-signup generator reads badly out of
 # context, whatever it was actually used for.
 seed-waitlist.py
+
+# impeccable local cache
+.impeccable/hook.cache.json
