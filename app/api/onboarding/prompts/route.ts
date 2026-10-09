@@ -6,12 +6,43 @@ import {
   MAX_ANSWER_LENGTH,
   MIN_PROMPTS,
   MAX_PROMPTS,
+  questionText,
 } from "@/lib/questions";
 
 interface PromptInput {
   question_key: string;
   answer: string;
   position: number;
+}
+
+/**
+ * The caller's own prompts, in order. Used by the mobile client to show a
+ * person what others currently meet them as. Reads under the caller's own
+ * session, so RLS keeps it to their rows; unlike the lineup it is not
+ * anonymised, because these answers are already theirs.
+ */
+export async function GET() {
+  const auth = await requireUser();
+  if (isResponse(auth)) return auth;
+  const { user, supabase } = auth;
+
+  const { data } = await supabase
+    .from("prompts")
+    .select("question_key, answer, position, moderated, flagged")
+    .eq("user_id", user.id)
+    .order("position");
+
+  const prompts = (data ?? []).map((p) => ({
+    question_key: p.question_key,
+    question: questionText(p.question_key),
+    answer: p.answer,
+    position: p.position,
+    // Shown to its author either way, but the author should know when an
+    // answer is not yet visible to anyone else.
+    pending: !p.moderated || p.flagged,
+  }));
+
+  return NextResponse.json({ prompts });
 }
 
 export async function POST(request: Request) {
