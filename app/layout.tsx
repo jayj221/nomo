@@ -4,14 +4,14 @@ import "./globals.css";
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://nomo-phi.vercel.app";
 const TAGLINE = "No more fake connections. No more talk that goes nowhere.";
 const DESCRIPTION =
-  "A voice-first way to meet people. Anonymous until it isn't — you talk first, faces and names come later, only if you both choose. Join the waitlist.";
+  "An AI-first dating app where you talk over live voice before any photos are revealed. Faces and names come later, only if you both choose. Join the waitlist.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Nomo — talk first, reveal on your terms",
+  title: "Nomo: talk first, reveal on your terms",
   description: DESCRIPTION,
   openGraph: {
-    title: "Nomo — talk first, reveal on your terms",
+    title: "Nomo: talk first, reveal on your terms",
     description: TAGLINE,
     url: SITE_URL,
     siteName: "Nomo",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nomo — talk first, reveal on your terms",
+    title: "Nomo: talk first, reveal on your terms",
     description: TAGLINE,
   },
 };

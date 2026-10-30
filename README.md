@@ -1,6 +1,6 @@
 # Nomo
 
-No more fake connections. A voice-first, anonymous-first connection app. You write three prompts. People
+No more fake connections. An AI-first dating app where people talk over live voice before any photos are revealed. You write three prompts. People
 in your bracket read them. If you both like each other, a live voice call
 opens at the next window, a 15-minute period that fires for everyone at once.
 Identity reveals step by step, only when both people choose it.

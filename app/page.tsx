@@ -15,7 +15,7 @@ const STEPS = [
   {
     n: "03",
     title: "Reveal on your terms",
-    body: "The call starts anonymous — just two voices. Photos, names, socials unlock one step at a time, and only when you both choose to go further.",
+    body: "The call starts anonymous: just two voices. Photos, names, socials unlock one step at a time, and only when you both choose to go further.",
   },
 ];
 
@@ -33,8 +33,8 @@ export default function Landing() {
           <span className="text-secondary">No more talk that goes nowhere.</span>
         </h1>
         <p className="mt-6 text-base leading-relaxed text-secondary">
-          A voice-first way to meet people. Anonymous until it isn&apos;t.
-          You talk first — faces and names come later, only if you both want
+          An AI-first dating app. Anonymous until it isn&apos;t.
+          You talk first; faces and names come later, only if you both want
           them to.
         </p>
 
