@@ -1085,26 +1085,6 @@
         c.age = ageFor(idx);
         return c;
       });
-      // Two names always get each other. Set after the age pass above so
-      // these ages stay fixed instead of being derived from the visitor's.
-      var egg = (myName || "").trim().toLowerCase();
-      if (egg === "jayant" && wantMeet !== "guys") {
-        PEOPLE[0] = {
-          id: 99, name: "Naisha", age: 21, tag: "sings",
-          hue: ["#f0b7c2", "#4a2634"],
-          chips: ["singing", "ukulele", "sleeping"],
-          q: "The thing you notice first",
-          a: "She smiles like a dream. The algorithm never had to work for this one."
-        };
-      } else if (egg === "naisha" && wantMeet !== "girls") {
-        PEOPLE[0] = {
-          id: 98, name: "Jayant", age: 22, masc: true, tag: "builds things",
-          hue: ["#a7bdf0", "#26304a"],
-          chips: ["building things", "late nights", "long drives"],
-          q: "The thing you notice first",
-          a: "He was already there. The algorithm never had to work for this one."
-        };
-      }
       person = 0;
       topRevealed = false;
     }
