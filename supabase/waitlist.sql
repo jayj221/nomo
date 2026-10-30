@@ -1,4 +1,4 @@
--- Minimal waitlist table — run this on its own to get a live waitlist
+-- Minimal waitlist table: run this on its own to get a live waitlist
 -- without the full app schema. Safe to run before schema.sql; it's also
 -- included there. Anonymous visitors may insert (join) but never read the
 -- list back (no email harvesting via the public anon key).

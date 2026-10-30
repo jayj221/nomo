@@ -1,4 +1,4 @@
--- Window — full schema. Run in the Supabase SQL editor.
+-- Window: full schema. Run in the Supabase SQL editor.
 -- RLS is enabled on every table. bracket_score / bracket_tier are
 -- excluded from client reads via column-level grants (see bottom).
 
@@ -24,7 +24,7 @@ create table public.users (
   email text unique not null,
   created_at timestamptz default now(),
   onboarding_complete boolean default false,
-  bracket_score numeric(4,2),          -- AI-assigned, 0–10
+  bracket_score numeric(4,2),          -- AI-assigned, 0 to 10
   bracket_tier integer check (bracket_tier between 1 and 10),
   score_viewed boolean default false,  -- the score is shown ONCE to its owner
   vibe_tags text[],                    -- music/mentality tags, drive lineup ranking
@@ -101,7 +101,7 @@ where a.from_user < a.to_user;
 
 -- ---------------------------------------------------------- daily_match
 -- The daily lineup: 10 same-bracket people per user per day, ranked
--- 1–10 by vibe/tag compatibility. rank 1 = most compatible.
+-- 1 to 10 by vibe/tag compatibility. rank 1 = most compatible.
 create table public.daily_match (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references public.users(id) on delete cascade,
@@ -234,7 +234,7 @@ grant update (first_name, gender, seeking, city, age, last_active, vibe_tags)
 -- the one-time score view flows through the API, never direct reads.
 
 -- photos: owner can insert/read their own. Other users NEVER read photos
--- directly — reveals go through the server (signed URLs, unlock-gated).
+-- directly; reveals go through the server (signed URLs, unlock-gated).
 create policy "photos own" on public.photos
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 revoke select on public.photos from authenticated, anon;

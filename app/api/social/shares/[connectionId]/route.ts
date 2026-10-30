@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireUser, isResponse } from "@/lib/auth";
 
-// You see what they shared, they see what you shared — per platform,
+// You see what they shared, they see what you shared, per platform,
 // only after you both chose to share that platform.
 export async function GET(
   _request: Request,

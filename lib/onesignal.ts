@@ -1,4 +1,4 @@
-// OneSignal REST API — web push for window notifications.
+// OneSignal REST API: web push for window notifications.
 // Copy rule: no emoji, no exclamation marks.
 
 export async function sendWindowNotification(message: string): Promise<void> {

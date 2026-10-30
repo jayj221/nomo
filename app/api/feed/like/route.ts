@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Could not save" }, { status: 500 });
   }
 
-  // Mutual check needs admin — RLS only exposes likes the caller sent
+  // Mutual check needs admin: RLS only exposes likes the caller sent
   const { data: reverse } = await admin
     .from("likes")
     .select("id")

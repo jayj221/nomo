@@ -1,4 +1,4 @@
-// Unlock step model — encoded in one place.
+// Unlock step model: encoded in one place.
 //
 // connections.unlock_step: 1=prompts, 2=voice, 3=photo, 4=name+profile, 5=chat+socials
 // calls.unlock_step:       1=voice only, 2=photo, 3=name+profile, 4=chat

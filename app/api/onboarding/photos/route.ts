@@ -8,7 +8,7 @@ export const maxDuration = 60;
 // Client uploads photos to its own storage folder, runs facial-geometry
 // scoring locally (MediaPipe landmarks → symmetry/proportion metrics),
 // and posts paths + per-photo scores here. The server clamps and stores
-// them, computes the bracket, and — exactly once — returns the placement
+// them, computes the bracket, and, exactly once, returns the placement
 // to its owner. After that the score is never exposed again, to anyone.
 export async function POST(request: Request) {
   const auth = await requireUser();

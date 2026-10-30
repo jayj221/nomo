@@ -153,7 +153,7 @@ export function LivenessCheck() {
     <div className="flex flex-1 flex-col">
       <h1 className="text-xl font-semibold">One last thing</h1>
       <p className="mt-1 text-sm text-secondary">
-        We need to confirm you&apos;re a real person. Nothing is stored —
+        We need to confirm you&apos;re a real person. Nothing is stored;
         this runs entirely on your device.
       </p>
 

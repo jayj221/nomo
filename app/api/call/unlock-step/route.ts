@@ -52,12 +52,12 @@ export async function POST(request: Request) {
   const theirAgreed = isA ? call.step_unlocked_by_b : call.step_unlocked_by_a;
 
   if (!theirAgreed) {
-    // First of the two — record consent and wait
+    // First of the two: record consent and wait
     await admin.from("calls").update({ [myFlag]: true }).eq("id", callId);
     return NextResponse.json({ step: call.unlock_step, both_agreed: false });
   }
 
-  // Both agreed — advance the step and reset flags for the next one
+  // Both agreed: advance the step and reset flags for the next one
   const newStep = call.unlock_step + 1;
 
   // Photo reveals are budgeted: 2 per user per day. Check both sides

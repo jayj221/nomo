@@ -1,4 +1,4 @@
-// OpenAI Moderation API — prompt answers are checked before going live.
+// OpenAI Moderation API: prompt answers are checked before going live.
 
 export interface ModerationResult {
   flagged: boolean;
@@ -8,7 +8,7 @@ export async function moderateText(text: string): Promise<ModerationResult> {
   // Launch fallback: no key configured → moderation is skipped rather
   // than blocking onboarding. Set OPENAI_API_KEY to enable it.
   if (!process.env.OPENAI_API_KEY) {
-    console.warn("OPENAI_API_KEY not set — skipping moderation");
+    console.warn("OPENAI_API_KEY not set, skipping moderation");
     return { flagged: false };
   }
   const res = await fetch("https://api.openai.com/v1/moderations", {

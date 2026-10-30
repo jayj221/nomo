@@ -71,7 +71,7 @@ export async function ensureLineup(
   if (!me?.bracket_tier) return [];
 
   // People shown on previous days can appear again only after everyone
-  // else in the bracket has been cycled — simplest form: exclude the
+  // else in the bracket has been cycled; simplest form: exclude the
   // last 3 days of lineups.
   const threeDaysAgo = new Date(Date.now() - 3 * 24 * 3600 * 1000)
     .toISOString()

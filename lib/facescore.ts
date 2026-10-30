@@ -1,5 +1,5 @@
 // Facial-geometry scoring: MediaPipe FaceLandmarker landmarks →
-// symmetry + proportion metrics → 1–10 score.
+// symmetry + proportion metrics → 1 to 10 score.
 //
 // Honest engineering note: this is a heuristic, not a measurement of
 // beauty. "Golden ratio" facial math has no scientific standing and
@@ -34,7 +34,7 @@ function dist(a: Point, b: Point): number {
 }
 
 export interface FaceMetrics {
-  symmetry: number; // 0–1, 1 = perfectly mirrored
+  symmetry: number; // 0 to 1, 1 = perfectly mirrored
   eyeSpacing: number; // inner-eye gap / face width
   faceRatio: number; // face height / face width
   mouthNoseBalance: number; // mouth width / eye-outer span
@@ -78,13 +78,13 @@ export function computeMetrics(pts: Point[]): FaceMetrics {
   };
 }
 
-/** How close v is to target, mapped to 0–1 with a tolerance band. */
+/** How close v is to target, mapped to 0 to 1 with a tolerance band. */
 function closeness(v: number, target: number, tolerance: number): number {
   return Math.max(0, 1 - Math.abs(v - target) / tolerance);
 }
 
 /**
- * Metrics → 1–10. Symmetry dominates; proportion terms measure
+ * Metrics → 1 to 10. Symmetry dominates; proportion terms measure
  * distance from population-typical ratios.
  */
 export function scoreFromMetrics(m: FaceMetrics): number {
@@ -93,7 +93,7 @@ export function scoreFromMetrics(m: FaceMetrics): number {
       closeness(m.faceRatio, 1.3, 0.45) +
       closeness(m.mouthNoseBalance, 0.75, 0.3)) /
     3;
-  const raw = 0.55 * m.symmetry + 0.45 * proportions; // 0–1
+  const raw = 0.55 * m.symmetry + 0.45 * proportions; // 0 to 1
   return Math.max(1, Math.min(10, Math.round(raw * 9 + 1)));
 }
 

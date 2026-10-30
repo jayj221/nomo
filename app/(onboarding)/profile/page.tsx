@@ -131,7 +131,7 @@ export default function ProfilePage() {
         </div>
 
         <p className="mt-3 text-xs uppercase tracking-widest text-faint">
-          Your vibe · pick {MIN_TAGS}–{MAX_TAGS} ({tags.length} picked)
+          Your vibe · pick {MIN_TAGS} to {MAX_TAGS} ({tags.length} picked)
         </p>
         <div className="flex flex-wrap gap-2">
           {VIBE_TAGS.map((tag) => (

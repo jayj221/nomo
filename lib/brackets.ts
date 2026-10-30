@@ -1,8 +1,8 @@
-// Bracket assignment logic. A user's bracket (1–10) is computed from
+// Bracket assignment logic. A user's bracket (1 to 10) is computed from
 // facial-geometry scoring at onboarding. It is shown ONCE to the user
-// themselves, then never again — and never to anyone else.
+// themselves, then never again, and never to anyone else.
 
-export type BracketTier = number; // integer 1–10
+export type BracketTier = number; // integer 1 to 10
 
 export function assignTier(score: number): BracketTier {
   return Math.max(1, Math.min(10, Math.round(score)));
@@ -19,7 +19,7 @@ export function bracketScoreFromPhotos(photoScores: number[]): number {
 // reveals per day. Scarcity is the product.
 export const REVEALS_PER_DAY = 2;
 
-// Behavioral score adjustments (0–10, starts at 5.0)
+// Behavioral score adjustments (0 to 10, starts at 5.0)
 export const BEHAVIORAL_START = 5.0;
 export const SKIP_TOO_FAST_PENALTY = 0.4; // skipped a call within 5 seconds
 export const NO_PICKUP_PENALTY = 0.15; // opened window, never joined a call

@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     prompts.length > MAX_PROMPTS
   ) {
     return NextResponse.json(
-      { error: `Pick ${MIN_PROMPTS}–${MAX_PROMPTS}` },
+      { error: `Pick ${MIN_PROMPTS} to ${MAX_PROMPTS}` },
       { status: 400 },
     );
   }
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
       p.answer.length > MAX_ANSWER_LENGTH
     ) {
       return NextResponse.json(
-        { error: `Answers must be 1–${MAX_ANSWER_LENGTH} characters` },
+        { error: `Answers must be 1 to ${MAX_ANSWER_LENGTH} characters` },
         { status: 400 },
       );
     }

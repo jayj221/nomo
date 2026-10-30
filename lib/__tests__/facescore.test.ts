@@ -40,7 +40,7 @@ describe("computeMetrics", () => {
 });
 
 describe("scoreFromMetrics / scoreFace", () => {
-  it("stays within 1–10", () => {
+  it("stays within 1 to 10", () => {
     expect(scoreFace(syntheticFace())).toBeGreaterThanOrEqual(1);
     expect(scoreFace(syntheticFace())).toBeLessThanOrEqual(10);
     expect(

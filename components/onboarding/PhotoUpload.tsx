@@ -45,7 +45,7 @@ async function getLandmarker() {
 }
 
 // Face presence + geometry scoring, entirely on-device. The photo's
-// landmarks never leave the browser — only the resulting number does.
+// landmarks never leave the browser; only the resulting number does.
 async function analyzePhoto(
   file: File,
 ): Promise<{ face: boolean; score: number }> {
@@ -58,7 +58,7 @@ async function analyzePhoto(
     if (!pts || pts.length < 400) return { face: false, score: 0 };
     return { face: true, score: scoreFace(pts) };
   } catch {
-    // Model failed to load — don't block the user; neutral placement.
+    // Model failed to load. Don't block the user; neutral placement.
     return { face: true, score: 5 };
   }
 }
@@ -144,14 +144,14 @@ export function PhotoUpload() {
     return (
       <div className="flex flex-1 flex-col">
         <p className="text-[11px] uppercase tracking-widest text-faint">
-          Your placement — shown once, only to you
+          Your placement, shown once, only to you
         </p>
         <div className="mt-8 flex flex-col items-center rounded-card border border-line bg-card p-10 text-center">
           <p className="text-6xl font-light tabular-nums">{tier}</p>
           <p className="mt-2 text-sm text-secondary">of 10 brackets</p>
           <p className="mt-6 max-w-xs text-sm leading-relaxed text-secondary">
-            Everyone in your daily ten is in this same bracket. Nobody —
-            including them — ever sees this number. After this screen,
+            Everyone in your daily ten is in this same bracket. Nobody,
+            including them, ever sees this number. After this screen,
             neither do you.
           </p>
           <p className="mt-4 max-w-xs text-xs leading-relaxed text-faint">
@@ -161,7 +161,7 @@ export function PhotoUpload() {
         </div>
         <div className="mt-auto pt-8">
           <Button onClick={() => router.push("/prompts")}>
-            Understood — continue
+            Understood, continue
           </Button>
         </div>
       </div>
@@ -174,8 +174,8 @@ export function PhotoUpload() {
     <div className="flex flex-1 flex-col">
       <h1 className="text-xl font-semibold">Your photos</h1>
       <p className="mt-1 text-sm text-secondary">
-        {MIN_PHOTOS}–{MAX_PHOTOS} photos. Analyzed on your device, then kept
-        private — nobody sees them until you both choose a reveal.
+        {MIN_PHOTOS} to {MAX_PHOTOS} photos. Analyzed on your device, then kept
+        private; nobody sees them until you both choose a reveal.
       </p>
 
       <div className="mt-6 grid grid-cols-3 gap-3">

@@ -18,7 +18,7 @@ export function createServerSupabase() {
               cookieStore.set(name, value, options),
             );
           } catch {
-            // called from a Server Component — middleware refreshes sessions
+            // called from a Server Component; middleware refreshes sessions
           }
         },
       },

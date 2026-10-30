@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "The window has closed" }, { status: 410 });
   }
 
-  // Calls only fire between mutual likes — never one-sided
+  // Calls only fire between mutual likes, never one-sided
   const [{ data: myLike }, { data: theirLike }] = await Promise.all([
     admin.from("likes").select("id").eq("from_user", user.id).eq("to_user", otherUserId).maybeSingle(),
     admin.from("likes").select("id").eq("from_user", otherUserId).eq("to_user", user.id).maybeSingle(),
@@ -86,7 +86,7 @@ export async function POST(request: Request) {
     });
   }
 
-  // Text sessions need no Daily room — realtime broadcast carries them.
+  // Text sessions need no Daily room; realtime broadcast carries them.
   const room = mode === "voice" ? await createRoom() : null;
   const token =
     room !== null ? await createMeetingToken(room.name, user.id) : null;

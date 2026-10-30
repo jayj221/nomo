@@ -8,7 +8,7 @@ export interface AnonymousPrompt {
 
 /** A profile as the client is allowed to see it pre-reveal: prompts only. */
 export interface AnonymousProfile {
-  profile_id: string; // opaque — the target user id, used for like/pass
+  profile_id: string; // opaque: the target user id, used for like/pass
   prompts: AnonymousPrompt[];
   liked: boolean;
   mutual: boolean;
@@ -27,7 +27,7 @@ export interface ActiveWindow {
 
 export interface AvailableConnection {
   connection_user_id: string;
-  label: string; // "Person 1", "Person 2" — anonymous
+  label: string; // "Person 1", "Person 2" (anonymous)
 }
 
 export type UnlockStep = 1 | 2 | 3 | 4 | 5;
@@ -40,7 +40,7 @@ export interface CallState {
 }
 
 export interface RevealPayload {
-  photo_url?: string; // signed URL, 15-min expiry — only after step 3
+  photo_url?: string; // signed URL, 15-min expiry, only after step 3
   first_name?: string; // only after step 4
   age?: number;
   city?: string;

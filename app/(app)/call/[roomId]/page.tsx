@@ -44,7 +44,7 @@ export default function CallPage() {
   const [error, setError] = useState<string | null>(null);
   const [remoteTrack, setRemoteTrack] = useState<MediaStreamTrack | null>(null);
 
-  // Text-session chat: ephemeral, broadcast-only. Nothing is stored —
+  // Text-session chat: ephemeral, broadcast-only. Nothing is stored;
   // the real chat unlocks at step 5 like everything else.
   const [chat, setChat] = useState<
     { id: string; mine: boolean; content: string }[]
@@ -119,7 +119,7 @@ export default function CallPage() {
       if (cancelled) return;
 
       if (creds.mode === "text") {
-        // No Daily room — realtime broadcast carries the session.
+        // No Daily room; realtime broadcast carries the session.
         setMode("text");
         setPhase("live");
         setTimeout(() => setOpenerVisible(false), 10_000);
@@ -520,7 +520,7 @@ export default function CallPage() {
               {myExtend
                 ? "Waiting for them"
                 : showExtend
-                  ? `I'm in — extend (${remaining}s)`
+                  ? `I'm in, extend (${remaining}s)`
                   : "Extend"}
             </Button>
           </div>

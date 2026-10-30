@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 interface Props {
-  // Remote audio track — the waveform reacts when the other person speaks
+  // Remote audio track: the waveform reacts when the other person speaks
   track: MediaStreamTrack | null;
 }
 

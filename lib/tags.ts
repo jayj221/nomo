@@ -1,5 +1,5 @@
-// Vibe tags — used to rank the daily ten inside a bracket.
-// Users pick 3–8 at onboarding. Overlap drives lineup ordering.
+// Vibe tags: used to rank the daily ten inside a bracket.
+// Users pick 3 to 8 at onboarding. Overlap drives lineup ordering.
 
 export const VIBE_TAGS = [
   // music

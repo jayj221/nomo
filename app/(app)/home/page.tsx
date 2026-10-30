@@ -16,7 +16,7 @@ interface LineupProfile {
 }
 
 // Today's ten: read them all, mark who you'd talk to. When the window
-// opens, mutual interest becomes a call — most-compatible first.
+// opens, mutual interest becomes a call, most-compatible first.
 export default function HomePage() {
   const [profiles, setProfiles] = useState<LineupProfile[] | null>(null);
   const [open, setOpen] = useState<string | null>(null);

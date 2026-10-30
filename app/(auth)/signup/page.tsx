@@ -36,7 +36,7 @@ export default function SignupPage() {
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-6">
       <h1 className="text-2xl font-semibold">Nomo</h1>
       <p className="mt-1 text-sm text-secondary">
-        No more fake connections. Anonymous first, voice before faces —
+        No more fake connections. Anonymous first, voice before faces;
         nothing reveals unless you both choose it.
       </p>
 

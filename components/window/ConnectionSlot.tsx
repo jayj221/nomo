@@ -15,7 +15,7 @@ interface Props {
   busy?: boolean;
 }
 
-// Voice leads, text is allowed — the order of the buttons is the nudge.
+// Voice leads, text is allowed; the order of the buttons is the nudge.
 export function ConnectionSlot({ connection, onJoin, busy }: Props) {
   return (
     <div className="flex items-center gap-3 rounded-card border border-line bg-card p-3">

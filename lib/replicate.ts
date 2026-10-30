@@ -1,9 +1,9 @@
-// Replicate — aesthetic photo scoring. Server-side only; scores are
+// Replicate: aesthetic photo scoring. Server-side only; scores are
 // stored in the database and never returned to any client.
 
 const REPLICATE_API = "https://api.replicate.com/v1";
 
-// Aesthetic scoring model (LAION aesthetic predictor). Outputs ~0–10.
+// Aesthetic scoring model (LAION aesthetic predictor). Outputs ~0 to 10.
 const MODEL_VERSION =
   process.env.REPLICATE_MODEL_VERSION ??
   "methexis-inc/img2prompt-aesthetic:latest";
@@ -32,7 +32,7 @@ async function replicateFetch(
 }
 
 /**
- * Score a single photo 0–10. Takes a signed URL to the image.
+ * Score a single photo 0 to 10. Takes a signed URL to the image.
  * Polls the prediction until it settles (Replicate is async).
  */
 export async function scorePhoto(imageUrl: string): Promise<number> {

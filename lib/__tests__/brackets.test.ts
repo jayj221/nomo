@@ -6,7 +6,7 @@ import {
 } from "@/lib/brackets";
 
 describe("assignTier", () => {
-  it("rounds scores to integer brackets 1–10", () => {
+  it("rounds scores to integer brackets 1 to 10", () => {
     expect(assignTier(0)).toBe(1); // floor at 1
     expect(assignTier(1.4)).toBe(1);
     expect(assignTier(5.5)).toBe(6);
@@ -31,7 +31,7 @@ describe("bracketScoreFromPhotos", () => {
 });
 
 describe("clampScore", () => {
-  it("clamps into the 0–10 range", () => {
+  it("clamps into the 0 to 10 range", () => {
     expect(clampScore(-1)).toBe(0);
     expect(clampScore(11)).toBe(10);
     expect(clampScore(5.123)).toBe(5.12);

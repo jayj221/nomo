@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     vibe_tags.some((t: string) => !validTags.has(t))
   ) {
     return NextResponse.json(
-      { error: `Pick ${MIN_TAGS}–${MAX_TAGS} vibe tags` },
+      { error: `Pick ${MIN_TAGS} to ${MAX_TAGS} vibe tags` },
       { status: 400 },
     );
   }

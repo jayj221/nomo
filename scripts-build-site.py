@@ -3,7 +3,7 @@
 Each source file in marketing/ is content-only (title + style + body).
 For GitHub Pages, we wrap it with a proper <html>/<head>/<body> that
 sets the viewport, charset, and social-share meta. Every page inherits
-the same shell — change here, all pages update.
+the same shell: change here, all pages update.
 """
 import os
 import re

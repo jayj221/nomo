@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Service-role client. Bypasses RLS — server-side only. This is the ONLY
+// Service-role client. Bypasses RLS; server-side only. This is the ONLY
 // path that may read bracket_score / bracket_tier / behavioral_score, and
 // those values must never be included in a response payload.
 export function createAdminSupabase() {

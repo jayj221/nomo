@@ -5,7 +5,7 @@ import { getPromptsFor } from "@/lib/feed";
 import { ensureLineup } from "@/lib/lineup";
 
 // Today's ten: same-bracket people ranked by vibe compatibility.
-// Anonymous — prompts and tags only. No photos, names, or ages.
+// Anonymous: prompts and tags only. No photos, names, or ages.
 export async function GET() {
   const auth = await requireUser();
   if (isResponse(auth)) return auth;

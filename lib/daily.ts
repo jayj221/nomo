@@ -1,4 +1,4 @@
-// Daily.co REST API — voice-only private rooms.
+// Daily.co REST API: voice-only private rooms.
 
 const DAILY_API = "https://api.daily.co/v1";
 
